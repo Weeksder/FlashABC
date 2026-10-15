@@ -297,16 +297,19 @@
             user-select: none;
             z-index: 7;
         }
-        #spellingGameModal #spellTimer,
         #matchGameModal #matchShell[data-orient="portrait"] #matchTimer {
             position: absolute;
             right: 16px;
             bottom: 12px;
+            top: auto;
+            left: auto;
+            transform: none;
         }
         #matchGameModal #matchShell[data-orient="landscape"] #matchTimer {
             position: absolute;
             right: auto;
-            bottom: auto;
+            bottom: 12px;
+            top: auto;
             transform: translateX(-50%);
         }
         #findLetterBottomBar {
@@ -317,11 +320,235 @@
             justify-content: center;
             padding: 6px 16px 10px;
         }
+        #findLetterIndex {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            margin: 0;
+            padding: 0;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.72rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
+            font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+            letter-spacing: 0.04em;
+            line-height: 1.6;
+            pointer-events: none;
+            user-select: none;
+        }
         #findLetterModal #findLetterTimer {
             position: absolute;
             right: 16px;
             top: 50%;
             transform: translateY(-50%);
+        }
+        #spellingGameModal #spellTimer {
+            position: absolute;
+            right: 16px;
+            bottom: 12px;
+            top: auto;
+            transform: none;
+        }
+        #spellIndex,
+        #matchIndex {
+            position: absolute;
+            left: 16px;
+            bottom: 12px;
+            top: auto;
+            transform: none;
+            margin: 0;
+            padding: 0;
+            color: #35654D;
+            font-size: 0.72rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
+            font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+            letter-spacing: 0.04em;
+            line-height: 1.6;
+            pointer-events: none;
+            user-select: none;
+            z-index: 7;
+        }
+        #spellingBottomBar,
+        #matchBottomBar {
+            display: none;
+        }
+        #spellSettingsBackdrop,
+        #matchSettingsBackdrop {
+            display: none;
+            position: absolute;
+            inset: 0;
+            z-index: 40;
+            background: rgba(18, 18, 20, 0.16);
+            -webkit-backdrop-filter: blur(8px) saturate(120%);
+            backdrop-filter: blur(8px) saturate(120%);
+            pointer-events: none;
+        }
+        #spellingGameModal.spell-tools-open #spellSettingsBackdrop,
+        #matchGameModal.match-tools-open #matchSettingsBackdrop {
+            display: block;
+            pointer-events: auto;
+        }
+        #spellTools,
+        #matchTools {
+            display: none;
+            position: absolute;
+            z-index: 50;
+            width: 54px;
+            height: 54px;
+            overflow: visible;
+            pointer-events: none;
+        }
+        #spellTools .fullscreen-btn,
+        #matchTools .fullscreen-btn {
+            pointer-events: auto;
+            position: relative;
+            bottom: auto;
+            left: auto;
+        }
+        #spellGearBtn,
+        #matchGearBtn {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            border-radius: 50%;
+            background: none;
+            box-shadow: none;
+            color: #35654D;
+            overflow: visible;
+            -webkit-appearance: none;
+            appearance: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #spellGearBtn:hover,
+        #spellGearBtn:active,
+        #matchGearBtn:hover,
+        #matchGearBtn:active {
+            background: none;
+        }
+        #spellGearBtn svg,
+        #matchGearBtn svg {
+            width: 32px;
+            height: 32px;
+            display: block;
+            flex-shrink: 0;
+            overflow: visible;
+            pointer-events: none;
+        }
+        #spellingGameModal .answer-slot.spell-peeking .answer-letter {
+            animation: spellPeekFade 2s ease-out forwards;
+        }
+        #spellingGameModal .answer-slot.spell-peeking {
+            animation: spellPeekBgFade 2s ease-out forwards;
+        }
+        @keyframes spellPeekFade {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        @keyframes spellPeekBgFade {
+            from { background-color: #f0f8f3; }
+            to { background-color: transparent; }
+        }
+        #spellToolPanel,
+        #matchToolPanel {
+            display: none;
+            position: absolute;
+            top: calc(100% + 20px);
+            left: 0;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 28px;
+        }
+        #spellingGameModal.spell-tools-open #spellToolPanel,
+        #matchGameModal.match-tools-open #matchToolPanel {
+            display: flex;
+            animation: flToolDrop 0.18s ease-out;
+        }
+        #spellToolPanel .fullscreen-btn,
+        #matchToolPanel .fullscreen-btn {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            min-height: 48px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            border-radius: 50%;
+            background: white;
+            color: #35654D;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+            filter: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #spellToolPanel .fullscreen-btn:hover,
+        #matchToolPanel .fullscreen-btn:hover {
+            background: white;
+            opacity: 0.92;
+            transform: scale(1.06);
+        }
+        #spellToolPanel .fullscreen-btn:active,
+        #matchToolPanel .fullscreen-btn:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+        #spellToolPanel .fullscreen-btn svg,
+        #matchToolPanel .fullscreen-btn svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+        #matchWordSizeBox {
+            pointer-events: auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+            min-width: 220px;
+            overflow: hidden;
+        }
+        #matchWordSizeBox .word-size-row {
+            border-bottom: none;
+            border-radius: 16px;
+        }
+        @media (min-width: 700px) and (min-height: 520px) {
+            #spellToolPanel .fullscreen-btn,
+            #matchToolPanel .fullscreen-btn {
+                width: 56px;
+                height: 56px;
+                min-width: 56px;
+                min-height: 56px;
+            }
+            #spellToolPanel .fullscreen-btn svg,
+            #matchToolPanel .fullscreen-btn svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+        @media (max-width: 480px) {
+            #spellToolPanel,
+            #matchToolPanel {
+                top: calc(100% + 16px);
+                gap: 22px;
+            }
+        }
+        @media (orientation: landscape) and (max-height: 500px) {
+            #spellToolPanel,
+            #matchToolPanel {
+                top: calc(100% + 10px);
+                gap: 10px;
+            }
         }
         #spellingGameModal #spellingCard {
             display: flex;
@@ -2060,38 +2287,8 @@
             object-fit: contain;
             display: block;
         }
-        #matchSettingsBackdrop {
-            display: none;
-            position: absolute;
-            inset: 0;
-            z-index: 25;
-            background: transparent;
-        }
         #matchSettingsMenu .word-size-row {
             border-bottom: none;
-        }
-        #matchGameModal.match-settings-open #matchSettingsBackdrop {
-            display: block;
-        }
-        #matchOverlaySettings {
-            display: none;
-            position: absolute;
-            z-index: 30;
-            overflow: visible;
-        }
-        #matchOverlaySettings .fullscreen-btn {
-            color: #35654D;
-        }
-        #matchSettingsMenu {
-            display: none;
-            position: absolute;
-            bottom: 60px;
-            left: 0;
-            z-index: 31;
-        }
-        #matchOverlaySettings.match-settings-open #matchSettingsMenu,
-        #matchSettingsMenu.match-open {
-            display: block;
         }
         #matchGameModal .match-word {
             display: inline;
@@ -2112,15 +2309,16 @@
         }
         #matchGameModal #matchProgressBar {
             position: absolute;
-            top: 8px;
-            left: 12px;
-            right: 12px;
+            top: 14px;
+            right: 20px;
+            left: auto;
             display: flex;
             align-items: flex-start;
-            justify-content: space-between;
+            justify-content: flex-end;
             z-index: 5;
             pointer-events: none;
             gap: 8px;
+            overflow: visible;
         }
         #matchGameModal #matchTopBar {
             position: absolute;
@@ -2262,11 +2460,11 @@
             flex-shrink: 0;
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
         }
-        /* Find the Letter top bar: Back | A a | star + controls — frees bubble space */
+        /* Find the Letter top bar: gear | A a | star — one row, vertically centered */
         #findLetterTopBar {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
             gap: 8px;
             padding: 8px 12px 10px;
             flex-shrink: 0;
@@ -2274,16 +2472,134 @@
             min-height: 64px;
             box-sizing: border-box;
         }
+        #findLetterSettingsBackdrop {
+            display: none;
+            position: absolute;
+            inset: 0;
+            z-index: 40;
+            background: rgba(18, 18, 20, 0.16);
+            -webkit-backdrop-filter: blur(8px) saturate(120%);
+            backdrop-filter: blur(8px) saturate(120%);
+            pointer-events: none;
+        }
+        #findLetterModal.fl-tools-open #findLetterSettingsBackdrop {
+            display: block;
+            pointer-events: auto;
+        }
+        #findLetterTools {
+            position: relative;
+            z-index: 50;
+            justify-self: start;
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+            overflow: visible;
+            pointer-events: none;
+        }
+        #findLetterTools .fullscreen-btn {
+            pointer-events: auto;
+        }
+        #findLetterToolPanel {
+            display: none;
+            position: absolute;
+            top: calc(100% + 20px);
+            left: 0;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 28px;
+        }
+        #findLetterModal.fl-tools-open #findLetterToolPanel {
+            display: flex;
+            animation: flToolDrop 0.18s ease-out;
+        }
+        #findLetterHelpModal {
+            z-index: 21000;
+        }
+        @keyframes flToolDrop {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #findLetterModal .fullscreen-btn {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            border-radius: 50%;
+            background: none;
+            box-shadow: none;
+            z-index: 1;
+            color: #fff;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #findLetterModal #findLetterGearBtn {
+            width: 50px;
+            height: 50px;
+            color: #fff;
+            background: none;
+            box-shadow: none;
+            border-radius: 50%;
+            overflow: visible;
+        }
+        #findLetterGearBtn svg {
+            width: 32px;
+            height: 32px;
+            display: block;
+            pointer-events: none;
+            overflow: visible;
+            flex-shrink: 0;
+        }
+        #findLetterToolPanel .fullscreen-btn {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            min-height: 48px;
+            background: white;
+            color: #35654D;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+            filter: none;
+        }
+        #findLetterToolPanel .fullscreen-btn:hover {
+            background: white;
+            opacity: 0.92;
+            transform: scale(1.06);
+        }
+        #findLetterToolPanel .fullscreen-btn:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+        #findLetterToolPanel .fullscreen-btn svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+        @media (min-width: 700px) and (min-height: 520px) {
+            #findLetterToolPanel .fullscreen-btn {
+                width: 56px;
+                height: 56px;
+                min-width: 56px;
+                min-height: 56px;
+            }
+            #findLetterToolPanel .fullscreen-btn svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
         #findLetterPrompt {
             position: relative;
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
-            gap: 12px;
-            flex: 1 1 auto;
+            justify-self: center;
+            gap: 32px;
             min-width: 0;
             overflow: visible;
-            padding: 0 6px 2px;
+            padding: 0 6px;
         }
         #findLetterUpper,
         #findLetterLower {
@@ -2294,17 +2610,19 @@
             line-height: 1.2;
             display: inline-block;
             overflow: visible;
-            padding: 0 2px 0.18em;
+            padding: 0 2px;
             margin: 0;
-            vertical-align: baseline;
+            vertical-align: middle;
         }
-        #findLetterUpper { color: #f5ead0; }
-        #findLetterLower { color: #ff9500; }
+        #findLetterUpper,
+        #findLetterLower { color: #fff; }
         #findLetterTopRight {
             display: flex;
             align-items: center;
+            justify-content: flex-end;
+            justify-self: end;
             gap: 4px;
-            flex-shrink: 0;
+            min-width: 0;
         }
         /* Big gold star bank — header right, away from bubble field */
         #findLetterCoinBank {
@@ -2368,6 +2686,14 @@
             display: block;
         }
         @media (max-width: 480px) {
+            #findLetterTools {
+                width: 54px;
+                height: 54px;
+            }
+            #findLetterToolPanel {
+                top: calc(100% + 16px);
+                gap: 22px;
+            }
             #findLetterTopBar {
                 padding: 6px 8px 8px;
                 min-height: 56px;
@@ -2376,7 +2702,6 @@
             #findLetterUpper,
             #findLetterLower {
                 font-size: clamp(2.1rem, 11vw, 3.2rem);
-                padding-bottom: 0.2em;
             }
             #findLetterCoinBank .fl-coin-bank-glyph,
             #findLetterCoinBank .fl-coin-bank-glyph .fl-coin-svg {
@@ -2395,21 +2720,18 @@
             }
         }
         @media (min-width: 700px) and (min-height: 520px) {
-            #matchSettingsMenu .settings-menu-main {
+            #matchWordSizeBox {
                 min-width: 248px;
             }
-            #matchSettingsMenu .word-size-label {
+            #matchWordSizeBox .word-size-label {
                 font-size: 18px !important;
             }
-            #matchSettingsMenu .word-size-a-sm { font-size: 15px !important; }
-            #matchSettingsMenu .word-size-a-lg { font-size: 26px !important; }
-            #matchSettingsMenu .word-size-thumb {
+            #matchWordSizeBox .word-size-a-sm { font-size: 15px !important; }
+            #matchWordSizeBox .word-size-a-lg { font-size: 26px !important; }
+            #matchWordSizeBox .word-size-thumb {
                 width: 32px;
                 height: 32px;
             }
-        }
-        @media (orientation: landscape) and (max-height: 500px) {
-            #matchSettingsMenu { bottom: 48px; }
         }
         #matchGameModal .match-mark-layer {
             position: absolute;
@@ -4030,9 +4352,148 @@
             overflow: visible;
             flex: 0 1 auto;
         }
+        .game-menu-titlebar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 0 16px;
+            min-height: 36px;
+        }
+        .game-menu-titlebar h2 {
+            margin: 0;
+        }
+        .game-menu-close {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #e53935;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         @media (min-width: 700px) {
             #gameMenuModal .modal-content {
                 max-width: min(400px, 92vw) !important;
+            }
+        }
+
+        /* Tablet / PC: floating square game tiles (phones keep the list). */
+        @media (min-width: 501px) and (min-height: 501px) {
+            #gameMenuModal.modal {
+                background: rgba(18, 18, 20, 0.55);
+                -webkit-backdrop-filter: blur(10px) saturate(120%);
+                backdrop-filter: blur(10px) saturate(120%);
+            }
+            #gameMenuModal .modal-content {
+                background: transparent !important;
+                box-shadow: none !important;
+                border: none !important;
+                max-width: none !important;
+                width: auto !important;
+                min-width: 0 !important;
+                padding: 12px 16px 20px !important;
+                overflow: visible !important;
+                max-height: none !important;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            #gameMenuModal .game-menu-titlebar {
+                display: inline-flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 16px;
+                background: white;
+                border-radius: 14px;
+                padding: 8px 10px 8px 22px;
+                margin: 0 auto 20px;
+                box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+                position: relative;
+            }
+            #gameMenuModal .game-menu-titlebar h2 {
+                color: #35654D;
+                font-size: clamp(1.45rem, 2.6vw, 1.85rem) !important;
+                margin: 0;
+                line-height: 1;
+                text-shadow: none;
+            }
+            #gameMenuModal .game-menu-close {
+                position: static;
+                transform: none;
+                color: #e53935;
+                padding: 6px;
+                margin: 0;
+            }
+            #gameMenuModal .game-menu-close svg {
+                width: 22px;
+                height: 22px;
+            }
+            #gameMenuMinCardsBanner {
+                margin-bottom: 16px !important;
+                width: 100%;
+            }
+            #gameMenuButtons {
+                display: grid !important;
+                gap: clamp(12px, 1.8vw, 18px) !important;
+                justify-content: center;
+                align-content: center;
+            }
+            #gameMenuModal .game-menu-tile {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 8px !important;
+                width: var(--game-tile);
+                height: var(--game-tile);
+                min-width: 0;
+                padding: 8px 6px 6px !important;
+                box-sizing: border-box;
+                background: white;
+                box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+            }
+            #gameMenuModal .game-menu-tile:hover {
+                opacity: 0.94;
+                transform: scale(1.03);
+            }
+            #gameMenuModal .game-menu-tile svg {
+                width: 72%;
+                height: auto;
+                max-width: 140px;
+                max-height: 58%;
+                flex: 0 1 auto;
+                min-height: 0;
+            }
+            #gameMenuModal .game-menu-tile .game-menu-name {
+                font-size: clamp(1.08rem, 2.4vw, 1.38rem) !important;
+                font-weight: 700;
+                line-height: 1.12;
+                text-align: center;
+                white-space: normal !important;
+                overflow: visible;
+                flex: 0 0 auto !important;
+                width: 100%;
+                min-height: 0;
+                display: block;
+                padding: 0;
+            }
+        }
+        @media (min-width: 501px) and (min-height: 501px) and (orientation: landscape) {
+            #gameMenuButtons {
+                --game-tile: min(220px, 28vw, 42vh);
+                grid-template-columns: repeat(3, var(--game-tile));
+            }
+        }
+        @media (min-width: 501px) and (min-height: 501px) and (orientation: portrait) {
+            #gameMenuButtons {
+                --game-tile: min(220px, 40vw, 24vh);
+                grid-template-columns: repeat(2, var(--game-tile));
             }
         }
 
@@ -6451,7 +6912,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1378-settings-above-blur">
+    <meta name="flashabc-build" content="1400-games-dismiss-icons">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -6815,11 +7276,11 @@
         <div id="settingsBackdrop" onclick="closeSettingsMenu()" ontouchend="event.preventDefault(); closeSettingsMenu()"></div>
         <!-- Fixed card overlays: always in DOM, unaffected by card-container size or overflow -->
         <div id="cardOverlaySettings" style="display:none; position:fixed; z-index:10000;">
-            <button id="settingsGearBtn" class="fullscreen-btn" style="position:relative; bottom:auto; left:auto; color:#35654D;"
+            <button id="settingsGearBtn" class="fullscreen-btn" style="position:relative; bottom:auto; left:auto; color:#35654D; overflow:visible; -webkit-appearance:none; appearance:none;"
                     onclick="event.stopPropagation(); toggleSettingsMenu()"
                     ontouchend="event.stopPropagation(); event.preventDefault(); toggleSettingsMenu()"
                     title="Settings">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" overflow="visible" style="overflow:visible">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                 </svg>
@@ -7156,12 +7617,14 @@
         </div>
     </div>
 
-    <div class="modal" id="gameMenuModal">
+    <div class="modal" id="gameMenuModal" onclick="onGameMenuDismiss(event)">
         <div class="modal-content" style="max-width:380px;width:auto;min-width:min(280px,92vw);position:relative;padding:18px 16px 16px;overflow-x:visible;">
-            <button onclick="closeGameMenu()" style="position:absolute;top:12px;right:12px;background:none;border:none;cursor:pointer;color:#aaa;padding:4px;display:flex;align-items:center;justify-content:center;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-            <h2 style="font-size:1.55rem;font-weight:700;color:#35654D;margin:0 28px 16px;text-align:center;">Games</h2>
+            <div class="game-menu-titlebar">
+                <h2 style="font-size:1.55rem;font-weight:700;color:#35654D;margin:0;text-align:center;">Games</h2>
+                <button type="button" class="game-menu-close" onclick="closeGameMenu()" title="Close" aria-label="Close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
             <!-- Visible on Edge/iPad when toast/alert fail — needs 4+ cards -->
             <div id="gameMenuMinCardsBanner" style="display:none;margin:0 4px 12px;padding:12px 14px;background:#ffebee;border:2px solid #e53935;border-radius:10px;color:#b71c1c;font-size:0.95rem;font-weight:700;text-align:center;line-height:1.35;">
                 ⚠️ You need at least 4 cards to play games.
@@ -7169,46 +7632,40 @@
 
             <div id="gameMenuButtons" style="display:flex;flex-direction:column;gap:8px;">
 
-                <button id="guessGameBtn" onclick="startGame('guess')"
+                <button id="guessGameBtn" class="game-menu-tile" onclick="startGame('guess')"
                     style="display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 14px;background:white;border:2.5px solid #35654D;border-radius:10px;cursor:pointer;transition:opacity 0.2s;font-family:inherit;">
                     <svg width="36" height="36" viewBox="0 0 38 38" fill="none" stroke="#35654D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="0.9" y="12" width="10" height="14" rx="1.2"/><path d="M4.5 17a1.4 1.4 0 012.5 1c0 1.1-1.2 1.3-1.2 2.2"/><circle cx="5.8" cy="23.5" r="0.55" fill="#35654D" stroke="none"/><rect x="14" y="12" width="10" height="14" rx="1.2"/><rect x="27" y="12" width="10" height="14" rx="1.2"/></svg>
-                    <span id="guessGameBtnLabel" style="font-size:1.15rem;font-weight:600;color:#35654D;font-family:inherit;">Guess the Word</span>
+                    <span id="guessGameBtnLabel" class="game-menu-name" style="font-size:1.15rem;font-weight:600;color:#35654D;font-family:inherit;">Guess the Word</span>
                 </button>
 
-                <button id="bombGameBtn" onclick="startGame('bomb')"
+                <button id="bombGameBtn" class="game-menu-tile" onclick="startGame('bomb')"
                     style="display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 14px;background:white;border:2.5px solid #e53935;border-radius:10px;cursor:pointer;transition:opacity 0.2s;font-family:inherit;">
                     <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#e53935" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="17" r="8"/><path d="M17 11.5c1.2-1.2 2.5-3 4-3"/><path d="M19.5 8c.6-1 1.5-1.2 2.2-.6"/><line x1="22" y1="5.5" x2="22" y2="4"/><line x1="24" y1="7.5" x2="25.5" y2="7.5"/><line x1="23.5" y1="5" x2="25" y2="3.5"/></svg>
-                    <span id="bombGameBtnLabel" style="font-size:1.15rem;font-weight:600;color:#e53935;font-family:inherit;">Bomb</span>
+                    <span id="bombGameBtnLabel" class="game-menu-name" style="font-size:1.15rem;font-weight:600;color:#e53935;font-family:inherit;">Bomb</span>
                 </button>
 
-                <button id="spellingGameBtn" onclick="startGame('spelling')"
+                <button id="spellingGameBtn" class="game-menu-tile" onclick="startGame('spelling')"
                     style="display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 14px;background:white;border:2.5px solid #1565c0;border-radius:10px;cursor:pointer;transition:opacity 0.2s;font-family:inherit;">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/><line x1="3" y1="21" x2="7" y2="17"/></svg>
-                    <span id="spellingGameBtnLabel" style="font-size:1.15rem;font-weight:600;color:#1565c0;font-family:inherit;">Spell Me</span>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/><line x1="3" y1="21" x2="7" y2="17"/></svg>
+                    <span id="spellingGameBtnLabel" class="game-menu-name" style="font-size:1.15rem;font-weight:600;color:#1565c0;font-family:inherit;">Spell Me</span>
                 </button>
 
-                <button id="matchGameBtn" onclick="startGame('match')"
+                <button id="matchGameBtn" class="game-menu-tile" onclick="startGame('match')"
                     style="display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 14px;background:white;border:2.5px solid #6a1b9a;border-radius:10px;cursor:pointer;transition:opacity 0.2s;font-family:inherit;">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6a1b9a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    <span id="matchGameBtnLabel" style="font-size:1.15rem;font-weight:600;color:#6a1b9a;font-family:inherit;">Match the Picture</span>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6a1b9a" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span id="matchGameBtnLabel" class="game-menu-name" style="font-size:1.15rem;font-weight:600;color:#6a1b9a;font-family:inherit;">Match the Picture</span>
                 </button>
 
-                <button id="findLetterGameBtn" onclick="startGame('findletter')"
+                <button id="findLetterGameBtn" class="game-menu-tile" onclick="startGame('findletter')"
                     style="display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 14px;background:white;border:2.5px solid #00897b;border-radius:10px;cursor:pointer;transition:opacity 0.2s;font-family:inherit;">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00897b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3.2"/><circle cx="16.5" cy="7.5" r="2.4"/><circle cx="15" cy="16" r="3.6"/><path d="M7.2 9.2l.4.2M16.2 7.3l.3.2"/></svg>
-                    <span id="findLetterGameBtnLabel" style="font-size:1.15rem;font-weight:600;color:#00897b;font-family:inherit;">Find the Letter</span>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00897b" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3.2"/><circle cx="16.5" cy="7.5" r="2.4"/><circle cx="15" cy="16" r="3.6"/><path d="M7.2 9.2l.4.2M16.2 7.3l.3.2"/></svg>
+                    <span id="findLetterGameBtnLabel" class="game-menu-name" style="font-size:1.15rem;font-weight:600;color:#00897b;font-family:inherit;">Find the Letter</span>
                 </button>
 
-                <button onclick="startGame('saytheword')"
+                <button id="sayTheWordGameBtn" class="game-menu-tile" onclick="startGame('saytheword')"
                     style="display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 14px;background:white;border:2.5px solid #e65100;border-radius:10px;cursor:pointer;transition:opacity 0.2s;font-family:inherit;">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                    <span style="font-size:1.15rem;font-weight:600;color:#e65100;font-family:inherit;">Say the Word</span>
-                </button>
-
-                <button onclick="closeGameMenu()"
-                    style="display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 14px;background:none;border:2px solid #ddd;border-radius:10px;cursor:pointer;margin-top:2px;color:#999;font-size:0.85rem;font-weight:500;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                    Back
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    <span class="game-menu-name" style="font-size:1.15rem;font-weight:600;color:#e65100;font-family:inherit;">Say the Word</span>
                 </button>
 
             </div>
@@ -7235,7 +7692,7 @@
                 <button onclick="openGuessGameHelp()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; font-size: 1.2rem;" title="How to Play">
                     ❓
                 </button>
-                <button onclick="closeGuessGame()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" title="Back to Menu">
+                <button onclick="requestEndGame('guess')" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" title="Back to Menu">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
                     </svg>
@@ -7284,7 +7741,7 @@
                 <button onclick="openBombGameHelp()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; font-size: 1.2rem;" title="How to Play">
                     ❓
                 </button>
-                <button onclick="closeBombGame()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" title="Back to Menu">
+                <button onclick="requestEndGame('bomb')" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" title="Back to Menu">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
                     </svg>
@@ -7315,57 +7772,78 @@
     </div>
 
     <div id="spellingGameModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#35654D;z-index:20000;flex-direction:column;">
-        <!-- Game content -->
-        <div id="spellingGameContent" style="flex:1;display:flex;flex-direction:column;min-height:0;padding:0 16px 12px;box-sizing:border-box;overflow-y:auto;"></div>
-        <!-- Bottom bar — title + dots -->
-        <div id="spellingBottomBar" style="display:none;">
-            <span style="font-size:0.9rem;font-weight:700;color:rgba(255,255,255,0.7);">✏️ Spell Me</span>
+        <div id="spellSettingsBackdrop" onclick="event.stopPropagation(); closeSpellTools()" ontouchend="event.stopPropagation(); event.preventDefault(); closeSpellTools()"></div>
+        <div id="spellTools">
+            <button type="button" class="fullscreen-btn" id="spellGearBtn" onclick="event.stopPropagation(); toggleSpellTools()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleSpellTools()" title="Menu" aria-expanded="false">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" overflow="visible" style="overflow:visible">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0 1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l-.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+            <div id="spellToolPanel">
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeSpellTools(); requestEndGame('spell');" style="color:#e53935;" title="Back">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeSpellTools(); startNewSpellingGame();" style="color:#35654D;" title="Shuffle">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeSpellTools(); skipSpellingCard();" style="color:#00838f;" title="Skip">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); spellSayCurrentWord();" style="color:#ff9500;" title="Say It">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeSpellTools(); peekSpelling();" ontouchend="event.stopPropagation(); event.preventDefault(); closeSpellTools(); peekSpelling();" style="color:#9c27b0;" title="Peek">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" id="spellClearBtn" onclick="event.stopPropagation(); closeSpellTools(); clearSpellingAnswer();" style="color:#1565c0;display:none;" title="Clear all letters">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                </button>
+            </div>
         </div>
+        <div id="spellingGameContent" style="flex:1;display:flex;flex-direction:column;min-height:0;padding:0 16px 12px;box-sizing:border-box;overflow-y:auto;"></div>
     </div>
 
     <!-- Match the Picture Game Modal -->
     <div id="matchGameModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#35654D;z-index:20000;flex-direction:column;">
-        <div id="matchGameContent" style="flex:1;display:flex;flex-direction:column;min-height:0;padding:0 16px 0;box-sizing:border-box;"></div>
-        <div id="matchBottomBar" style="flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:6px 16px 10px;">
-            <span style="font-size:0.9rem;font-weight:700;color:rgba(255,255,255,0.7);">🖼️ Match the Picture</span>
-        </div>
-        <div id="matchSettingsBackdrop" onclick="closeMatchSettings()" ontouchend="event.preventDefault(); closeMatchSettings()"></div>
-        <div id="matchOverlaySettings" style="display:none; position:absolute; z-index:30;">
-            <button id="matchSettingsGearBtn" class="fullscreen-btn" style="position:relative; bottom:auto; left:auto; color:#35654D;"
-                    onclick="event.stopPropagation(); toggleMatchSettings()"
-                    ontouchend="event.stopPropagation(); event.preventDefault(); toggleMatchSettings()"
-                    title="Settings">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div id="matchSettingsBackdrop" onclick="event.stopPropagation(); closeMatchTools()" ontouchend="event.stopPropagation(); event.preventDefault(); closeMatchTools()"></div>
+        <div id="matchTools">
+            <button type="button" class="fullscreen-btn" id="matchGearBtn" onclick="event.stopPropagation(); toggleMatchTools()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleMatchTools()" title="Menu" aria-expanded="false">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" overflow="visible" style="overflow:visible">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l-.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                 </svg>
             </button>
-            <div id="matchSettingsMenu" style="display:none; position:absolute; bottom:60px; left:0;">
-                <div class="settings-menu-main">
-                <div class="word-size-row" onclick="event.stopPropagation()">
-                    <div class="word-size-label">Word size</div>
-                    <div class="word-size-slider">
-                        <span class="word-size-a-sm" aria-hidden="true">A</span>
-                        <div class="word-size-track" id="matchWordSizeTrack" role="slider" aria-label="Word size" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
-                            <span class="word-size-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-                            <button type="button" class="word-size-thumb" id="matchWordSizeThumb" tabindex="-1" aria-hidden="true"></button>
+            <div id="matchToolPanel">
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeMatchTools(); requestCloseMatchGame();" style="color:#e53935;" title="Back">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeMatchTools(); shuffleMatchGame();" style="color:#35654D;" title="Shuffle">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeMatchTools(); skipMatchQuestion();" style="color:#00838f;" title="Skip">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeMatchTools(); openMatchHelp();" style="color:#9c27b0;" title="Help">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </button>
+                <div id="matchWordSizeBox" onclick="event.stopPropagation()" ontouchend="event.stopPropagation()">
+                    <div class="word-size-row">
+                        <div class="word-size-label">Word size</div>
+                        <div class="word-size-slider">
+                            <span class="word-size-a-sm" aria-hidden="true">A</span>
+                            <div class="word-size-track" id="matchWordSizeTrack" role="slider" aria-label="Word size" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
+                                <span class="word-size-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                                <button type="button" class="word-size-thumb" id="matchWordSizeThumb" tabindex="-1" aria-hidden="true"></button>
+                            </div>
+                            <span class="word-size-a-lg" aria-hidden="true">A</span>
                         </div>
-                        <span class="word-size-a-lg" aria-hidden="true">A</span>
                     </div>
                 </div>
-                </div>
             </div>
         </div>
-        <div id="matchEndConfirm" onclick="declineEndMatchGame()" style="display:none;position:absolute;inset:0;z-index:80;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
-            <div onclick="event.stopPropagation()" ontouchend="event.stopPropagation()" style="background:white;border-radius:20px;padding:28px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
-                <h2 style="margin:0 0 10px;color:#35654D;font-size:1.45rem;">Do you want to end this game?</h2>
-                <p style="margin:0 0 22px;color:#666;font-size:0.98rem;line-height:1.4;">Yes ends it so you can start a new game. No keeps this game so you can continue.</p>
-                <div style="display:flex;gap:12px;justify-content:center;">
-                    <button type="button" class="btn btn-secondary" onclick="event.stopPropagation(); declineEndMatchGame()" style="flex:1;padding:12px;justify-content:center;">No</button>
-                    <button type="button" class="btn btn-success" onclick="event.stopPropagation(); confirmEndMatchGame()" style="flex:1;padding:12px;justify-content:center;">Yes</button>
-                </div>
-            </div>
-        </div>
+        <div id="matchGameContent" style="flex:1;display:flex;flex-direction:column;min-height:0;padding:0 16px 12px;box-sizing:border-box;"></div>
+        <div id="matchBottomBar" style="flex-shrink:0;display:none;"></div>
     </div>
 
     <!-- Match Game Help Modal -->
@@ -7384,11 +7862,30 @@
 
     <!-- Find the Letter Game Modal -->
     <div id="findLetterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#35654D;z-index:20000;flex-direction:column;">
+        <div id="findLetterSettingsBackdrop" onclick="event.stopPropagation(); closeFindLetterTools()" ontouchend="event.stopPropagation(); event.preventDefault(); closeFindLetterTools()"></div>
         <div id="findLetterTopBar">
-            <button type="button" onclick="closeFindLetterGame()" style="background:none;border:none;cursor:pointer;padding:6px;display:flex;align-items:center;gap:6px;color:white;font-size:1rem;font-weight:600;flex-shrink:0;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Back
+            <div id="findLetterTools">
+            <button type="button" class="fullscreen-btn" id="findLetterGearBtn" onclick="event.stopPropagation(); toggleFindLetterTools()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleFindLetterTools()" title="Menu" aria-expanded="false">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" overflow="visible" style="overflow:visible">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l-.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
             </button>
+            <div id="findLetterToolPanel">
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeFindLetterTools(false); requestEndGame('findletter');" style="color:#e53935;" title="Back">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeFindLetterTools(false); shuffleFindLetterGame();" style="color:#35654D;" title="Shuffle">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeFindLetterTools(false); skipFindLetterRound();" style="color:#00838f;" title="Skip">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                </button>
+                <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeFindLetterTools(); openFindLetterHelp();" style="color:#9c27b0;" title="Help">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </button>
+            </div>
+            </div>
             <div id="findLetterPrompt">
                 <span id="findLetterUpper">A</span>
                 <span id="findLetterLower">a</span>
@@ -7398,14 +7895,11 @@
                     <div class="fl-coin-bank-glyph" aria-hidden="true"></div>
                     <span id="findLetterCoinNumBig">0</span>
                 </div>
-                <button type="button" onclick="skipFindLetterRound()" style="background:none;border:none;cursor:pointer;padding:6px;color:white;" title="Next letter">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-                </button>
-                <button type="button" onclick="openFindLetterHelp()" style="background:none;border:none;cursor:pointer;padding:6px;color:white;font-size:1.4rem;">❓</button>
             </div>
         </div>
-        <div id="findLetterField" style="flex:1;min-height:0;position:relative;overflow:hidden;margin:0 12px;border-radius:20px;background:rgba(255,255,255,0.08);"></div>
+        <div id="findLetterField" style="flex:1;min-height:0;position:relative;overflow:hidden;margin:0 12px;border-radius:20px;background:#000;"></div>
         <div id="findLetterBottomBar">
+            <div id="findLetterIndex" aria-live="polite">1 / 1</div>
             <span style="font-size:0.9rem;font-weight:700;color:rgba(255,255,255,0.7);">🔤 Find the Letter</span>
             <div id="findLetterTimer" aria-hidden="true">00:00</div>
         </div>
@@ -7423,6 +7917,15 @@
             <button class="btn btn-success" onclick="document.getElementById('findLetterHelpModal').classList.remove('active')" style="width:100%;padding:12px;justify-content:center;">Got it!</button>
         </div>
     </div>
+    <div id="gameEndConfirm" onclick="hideContinueGameConfirm()" style="display:none;position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
+        <div onclick="event.stopPropagation()" ontouchend="event.stopPropagation()" style="background:white;border-radius:20px;padding:28px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+            <h2 style="margin:0 0 22px;color:#35654D;font-size:1.45rem;">Do you want to continue previous game?</h2>
+            <div style="display:flex;gap:12px;justify-content:center;">
+                <button type="button" class="btn btn-secondary" onclick="event.stopPropagation(); declineContinueGame()" style="flex:1;padding:12px;justify-content:center;">No</button>
+                <button type="button" class="btn btn-success" onclick="event.stopPropagation(); confirmContinueGame()" style="flex:1;padding:12px;justify-content:center;">Yes</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Match Game Extra Words Modal -->
     <div class="modal" id="matchExtraWordsModal">
@@ -7435,7 +7938,7 @@
             <p style="color:#888;font-size:0.82rem;margin:-4px 0 10px;line-height:1.35;">Auto-fills 3–6 letter lookalikes (same length, close spelling). Skips two-word names and hyphens.</p>
             <textarea id="matchExtraWordsInput" style="width:100%;height:140px;border:1.5px solid #ddd;border-radius:8px;padding:10px;font-size:15px;resize:vertical;box-sizing:border-box;" placeholder="e.g.&#10;Dog&#10;Cat&#10;Fish"></textarea>
             <div style="display:flex;gap:10px;margin-top:14px;">
-                <button class="btn btn-secondary" onclick="document.getElementById('matchExtraWordsModal').classList.remove('active')" style="flex:1;padding:12px;justify-content:center;">Cancel</button>
+                <button class="btn btn-secondary" onclick="cancelMatchExtraWords()" style="flex:1;padding:12px;justify-content:center;">Cancel</button>
                 <button class="btn btn-success" onclick="confirmMatchExtraWords()" style="flex:1;padding:12px;justify-content:center;">Start Game</button>
             </div>
         </div>
@@ -7536,7 +8039,7 @@
         
         <div style="display:flex;align-items:center;justify-content:space-between;
                     padding:10px 16px;flex-shrink:0;">
-            <button onclick="stwClose()"
+            <button onclick="requestEndGame('stw')"
                 style="background:none;border:none;cursor:pointer;padding:6px;
                        display:flex;align-items:center;gap:6px;color:white;
                        font-size:1rem;font-weight:600;">
@@ -8346,7 +8849,8 @@
             eliminated: false,
             cardsRemaining: 0,
             bombCount: 3,
-            gridSize: 9
+            gridSize: 9,
+            hasMoved: false
         };
         let bombGridSize = 9; // 9, 12, or 15 — same toggle pattern as Guess the Word
 
@@ -8479,6 +8983,18 @@
             el.style.display = '';
             el.textContent = formatSpellTimer(findLetterTimerNowMs());
         }
+        function updateFindLetterIndex() {
+            const el = document.getElementById('findLetterIndex');
+            if (!el) return;
+            const q = (findLetterState && findLetterState.letterQueue) || [];
+            const n = q.length;
+            if (!n) {
+                el.textContent = '';
+                return;
+            }
+            const i = Math.min((findLetterState.letterIndex || 0) + 1, n);
+            el.textContent = i + ' / ' + n;
+        }
         function stopFindLetterTimerTick() {
             if (_findLetterTimerTick) {
                 clearInterval(_findLetterTimerTick);
@@ -8607,13 +9123,9 @@
             // Tablet/PC: same stack as portrait — picture on top, tiles below.
             // Phones keep the old landscape side-by-side (picture on the left).
             const sideBySide = !bigTiles && isLandscape && !isLongSpell;
-            // Tablet/PC: landscape buttons sit on the right, same as portrait.
-            let toolsTop = sideBySide;
-            let toolsSide = !toolsTop;
-            if (bigTiles) {
-                toolsTop = false;
-                toolsSide = true;
-            }
+            // Tools live as a gear overlay on the white card, not a side/top column.
+            const toolsTop = false;
+            const toolsSide = false;
 
             const fsPx = Math.round(Math.min(Math.max(vw * 0.075, 36), 72));
 
@@ -8708,6 +9220,7 @@
             letter: 'A',
             letterQueue: [],
             letterIndex: 0,
+            hasMoved: false,
             bubbles: [],
             remainingCorrect: 0,
             raf: 0,
@@ -8729,6 +9242,7 @@
             findLetterState.deckSig = '';
             findLetterState.letterQueue = [];
             findLetterState.letterIndex = 0;
+            findLetterState.hasMoved = false;
             const field = document.getElementById('findLetterField');
             if (field) field.innerHTML = '';
             if (typeof resetFindLetterTimer === 'function') resetFindLetterTimer();
@@ -8748,6 +9262,7 @@
                     resetFindLetterSession();
                     return false;
                 }
+                if (!(g.hasMoved || g.letterIndex > 0 || g.coins > 0)) return false;
                 return true;
             } catch (e) { return false; }
         }
@@ -8944,7 +9459,55 @@
                 findLetterState.raf = 0;
             }
         }
+        function closeFindLetterTools(resume) {
+            const modal = document.getElementById('findLetterModal');
+            if (modal) modal.classList.remove('fl-tools-open');
+            const gear = document.getElementById('findLetterGearBtn');
+            if (gear) gear.setAttribute('aria-expanded', 'false');
+            if (resume === false) return;
+            if (findLetterState.active && findLetterState.bubbles && findLetterState.bubbles.length) {
+                flStartLoop();
+            }
+        }
+        function toggleFindLetterTools() {
+            const modal = document.getElementById('findLetterModal');
+            if (!modal) return;
+            if (modal.classList.contains('fl-tools-open')) {
+                closeFindLetterTools();
+                return;
+            }
+            flStopLoop();
+            modal.classList.add('fl-tools-open');
+            const gear = document.getElementById('findLetterGearBtn');
+            if (gear) gear.setAttribute('aria-expanded', 'true');
+        }
+        function shuffleFindLetterGame() {
+            if (typeof stopCheersSound === 'function') stopCheersSound();
+            const letters = [];
+            const seen = {};
+            (cards || []).forEach(function (c) {
+                const L = flLetterOf(c && c.backText);
+                if (L && !seen[L]) { seen[L] = 1; letters.push(L); }
+            });
+            if (!letters.length) {
+                if (typeof showToast === 'function') showToast('Need words that start with a letter', 2500);
+                return;
+            }
+            findLetterState.active = true;
+            findLetterState.coins = 0;
+            findLetterState.deckSig = findLetterDeckSig();
+            findLetterState.letterQueue = fisherYatesShuffle(letters.slice());
+            findLetterState.letterIndex = 0;
+            findLetterState.hasMoved = false;
+            findLetterState.idSeq = 0;
+            flUpdateCoins();
+            if (typeof startFindLetterTimer === 'function') startFindLetterTimer(true);
+            if (typeof showToast === 'function') showToast('🔀 Shuffled!', 1200);
+            updateFindLetterIndex();
+            flBuildRound();
+        }
         function startFindLetterGame() {
+            closeFindLetterTools(false);
             flMountGoldCoins();
             const sig = findLetterDeckSig();
             if (hasActiveFindLetterSession() && findLetterState.bubbles.length) {
@@ -8954,6 +9517,7 @@
                 if (up) up.textContent = findLetterState.letter;
                 if (lo) lo.textContent = findLetterState.letter.toLowerCase();
                 if (typeof startFindLetterTimer === 'function') startFindLetterTimer(false);
+                updateFindLetterIndex();
                 flStartLoop();
                 return;
             }
@@ -8973,6 +9537,7 @@
             findLetterState.deckSig = sig;
             findLetterState.letterQueue = fisherYatesShuffle(letters.slice());
             findLetterState.letterIndex = 0;
+            findLetterState.hasMoved = false;
             findLetterState.idSeq = 0;
             flUpdateCoins();
             if (typeof startFindLetterTimer === 'function') startFindLetterTimer(true);
@@ -8981,23 +9546,94 @@
             });
         }
         function closeFindLetterGame() {
+            if (typeof hideGameEndConfirm === 'function') hideGameEndConfirm();
             if (typeof stopCheersSound === 'function') stopCheersSound();
             if (typeof pauseFindLetterTimer === 'function') pauseFindLetterTimer();
+            closeFindLetterTools(false);
             flStopLoop();
             const modal = document.getElementById('findLetterModal');
-            if (modal) modal.style.display = 'none';
+            if (modal) {
+                modal.classList.remove('fl-tools-open');
+                modal.style.display = 'none';
+            }
             document.body.style.overflow = '';
             if (typeof openGameMenu === 'function') openGameMenu();
+        }
+        let _endGameKind = null;
+        let _continueGameType = null;
+        function hideGameEndConfirm() {
+            const el = document.getElementById('gameEndConfirm');
+            if (el) el.style.display = 'none';
+            _endGameKind = null;
+            _continueGameType = null;
+        }
+        function hideContinueGameConfirm() {
+            hideGameEndConfirm();
+        }
+        function showContinueGameConfirm(gameType) {
+            _continueGameType = gameType;
+            const el = document.getElementById('gameEndConfirm');
+            if (el) el.style.display = 'flex';
+        }
+        function closeGameByKind(kind) {
+            if (kind === 'spell' && typeof closeSpellingGame === 'function') closeSpellingGame();
+            else if (kind === 'findletter' && typeof closeFindLetterGame === 'function') closeFindLetterGame();
+            else if (kind === 'guess' && typeof closeGuessGame === 'function') closeGuessGame();
+            else if (kind === 'bomb' && typeof closeBombGame === 'function') closeBombGame();
+            else if (kind === 'stw' && typeof stwClose === 'function') stwClose();
+        }
+        function resetGameByKind(kind) {
+            if (kind === 'spell' && typeof resetSpellingGameSession === 'function') resetSpellingGameSession();
+            else if (kind === 'findletter' && typeof resetFindLetterSession === 'function') resetFindLetterSession();
+            else if (kind === 'guess' && typeof resetGuessGameSession === 'function') resetGuessGameSession();
+            else if (kind === 'bomb' && typeof resetBombGameSession === 'function') resetBombGameSession();
+            else if (kind === 'match' && typeof resetMatchGameSession === 'function') resetMatchGameSession();
+        }
+        function gameTypeToKind(gameType) {
+            if (gameType === 'spelling') return 'spell';
+            if (gameType === 'findletter') return 'findletter';
+            if (gameType === 'guess') return 'guess';
+            if (gameType === 'bomb') return 'bomb';
+            if (gameType === 'match') return 'match';
+            return gameType;
+        }
+        function requestEndGame(kind) {
+            if (kind === 'stw') {
+                const settings = document.getElementById('stwSettingsOverlay');
+                if (settings && settings.style.display === 'flex') {
+                    if (typeof stwClose === 'function') stwClose();
+                    return;
+                }
+            }
+            closeGameByKind(kind);
+        }
+        function launchGameType(gameType, opts) {
+            if (typeof window._startGame === 'function') window._startGame(gameType, opts);
+            else if (typeof startGame === 'function') startGame(gameType, opts);
+        }
+        function confirmContinueGame() {
+            const t = _continueGameType;
+            hideContinueGameConfirm();
+            if (t) launchGameType(t, { skipContinuePrompt: true });
+        }
+        function declineContinueGame() {
+            const t = _continueGameType;
+            hideContinueGameConfirm();
+            if (!t) return;
+            resetGameByKind(gameTypeToKind(t));
+            launchGameType(t, { skipContinuePrompt: true });
         }
         function openFindLetterHelp() {
             document.getElementById('findLetterHelpModal').classList.add('active');
         }
         function skipFindLetterRound() {
             if (!findLetterState.active) return;
+            findLetterState.hasMoved = true;
             findLetterState.letterIndex++;
             flBuildRound();
         }
         function flShowComplete() {
+            closeFindLetterTools(false);
             flStopLoop();
             findLetterState.active = false;
             if (typeof pauseFindLetterTimer === 'function') pauseFindLetterTimer();
@@ -9008,6 +9644,7 @@
                 : '';
             const barTimer = document.getElementById('findLetterTimer');
             if (barTimer) barTimer.style.display = showClock ? '' : 'none';
+            updateFindLetterIndex();
             const field = document.getElementById('findLetterField');
             if (field) {
                 field.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;gap:16px;padding:24px;box-sizing:border-box;">' +
@@ -9033,6 +9670,7 @@
             }
             const letter = queue[findLetterState.letterIndex];
             findLetterState.letter = letter;
+            updateFindLetterIndex();
             const up = document.getElementById('findLetterUpper');
             const lo = document.getElementById('findLetterLower');
             if (up) up.textContent = letter;
@@ -9165,6 +9803,7 @@
         function flTapBubble(id) {
             const b = findLetterState.bubbles.find(function (x) { return x.id === id; });
             if (!b || b.popped) return;
+            findLetterState.hasMoved = true;
             if (b.correct) {
                 b.popped = true;
                 // No green swoosh — the 3D coin flying to the bank is the success cue
@@ -9208,6 +9847,10 @@
                 if (!findLetterState.active) return;
                 const modal = document.getElementById('findLetterModal');
                 if (!modal || modal.style.display !== 'flex') {
+                    findLetterState.raf = 0;
+                    return;
+                }
+                if (modal.classList.contains('fl-tools-open')) {
                     findLetterState.raf = 0;
                     return;
                 }
@@ -9354,6 +9997,7 @@
             bombGameState.eliminated = false;
             bombGameState.cardsRemaining = 0;
             bombGameState.deckSig = '';
+            bombGameState.hasMoved = false;
         }
 
         /** Import / add / replace / clear deck: every minigame starts fresh. Shuffle of the same cards does not. */
@@ -18574,6 +19218,19 @@
             });
         }
 
+        function onGameMenuDismiss(ev) {
+            const t = ev && ev.target;
+            if (!t) return;
+            if (t.closest && t.closest('.game-menu-tile, .game-menu-titlebar, .game-menu-close, #gameMenuMinCardsBanner')) return;
+            const isPhone = Math.min(window.innerWidth, window.innerHeight) <= 500;
+            if (isPhone && t.id !== 'gameMenuModal') return;
+            closeGameMenu();
+        }
+        function cancelMatchExtraWords() {
+            const m = document.getElementById('matchExtraWordsModal');
+            if (m) m.classList.remove('active');
+            if (typeof openGameMenu === 'function') openGameMenu();
+        }
         function closeGameMenu() {
             if (typeof window._closeGameMenu === 'function') {
                 window._closeGameMenu();
@@ -18584,14 +19241,14 @@
             if (m) m.classList.remove('active');
         }
 
-        function startGame(gameType) {
+        function startGame(gameType, opts) {
             if (typeof window._startGame === 'function') {
-                window._startGame(gameType);
+                window._startGame(gameType, opts);
                 return;
             }
             // Menu buttons only work after ensureGameCode; load then start
             ensureGameCode().then(function() {
-                if (typeof window._startGame === 'function') window._startGame(gameType);
+                if (typeof window._startGame === 'function') window._startGame(gameType, opts);
             }).catch(function(err) {
                 console.error(err);
                 if (typeof showToast === 'function') showToast('⚠️ Could not load games', 3000);
@@ -20226,7 +20883,7 @@
                 // Backspace = remove one letter; Delete = clear-all (undo button)
                 if (e.key === 'Backspace')  { e.preventDefault(); backspaceSpellingLetter(); return; }
                 if (e.key === 'Delete')     { e.preventDefault(); clearSpellingAnswer(); return; }
-                if (e.key === 'Escape')     { e.preventDefault(); closeSpellingGame(); return; }
+                if (e.key === 'Escape')     { e.preventDefault(); requestEndGame('spell'); return; }
                 if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
                     e.preventDefault();
                     const typed = e.key.toUpperCase();
@@ -20966,7 +21623,10 @@
                 if (typeof ensureSpellSets === 'function') ensureSpellSets();
                 const g = spellingGameState;
                 if (!g.gameCards || g.gameCards.length === 0) return false;
-                if (g.spelledCards && g.spelledCards.size >= g.gameCards.length) return false;
+                const spelled = g.spelledCards && g.spelledCards.size ? g.spelledCards.size : 0;
+                const skipped = g.skippedCards && g.skippedCards.size ? g.skippedCards.size : 0;
+                if (spelled === 0 && skipped === 0) return false;
+                if (spelled >= g.gameCards.length) return false;
                 if (gameDeckSigChanged(g.deckSig)) {
                     resetSpellingGameSession();
                     return false;
@@ -20979,7 +21639,7 @@
         function hasActiveBombSession() {
             try {
                 const g = bombGameState;
-                if (!(g && g.gameCards && g.gameCards.length > 0 && !g.eliminated && g.cardsRemaining > 0)) return false;
+                if (!(g && g.gameCards && g.gameCards.length > 0 && !g.eliminated && g.cardsRemaining > 0 && g.hasMoved)) return false;
                 if (gameDeckSigChanged(g.deckSig)) {
                     resetBombGameSession();
                     return false;
@@ -20997,8 +21657,13 @@
                 }
                 const g = matchGameState;
                 if (typeof ensureMatchSets === 'function') ensureMatchSets();
-                return !!(g && g.questions && g.questions.length > 0 &&
-                    !(g.matchedQs && g.matchedQs.size >= g.questions.length));
+                if (!(g && g.questions && g.questions.length > 0)) return false;
+                if (g.matchedQs && g.matchedQs.size >= g.questions.length) return false;
+                const moved = (g.matchedQs && g.matchedQs.size > 0) ||
+                    (g.skippedQs && g.skippedQs.size > 0) ||
+                    (g.currentQ > 0) ||
+                    !!g.wrongAttempt;
+                return !!moved;
             } catch (e) { return false; }
         }
         function setGameMenuContLabel(id, baseName, active) {
@@ -21121,7 +21786,15 @@
             return false;
         }
 
-        function startGame(gameType) {
+        function gameTypeHasContinuableSession(gameType) {
+            if (gameType === 'spelling') return typeof hasActiveSpellingSession === 'function' && hasActiveSpellingSession();
+            if (gameType === 'findletter') return typeof hasActiveFindLetterSession === 'function' && hasActiveFindLetterSession();
+            if (gameType === 'guess') return typeof hasActiveGuessSession === 'function' && hasActiveGuessSession();
+            if (gameType === 'bomb') return typeof hasActiveBombSession === 'function' && hasActiveBombSession();
+            if (gameType === 'match') return typeof hasActiveMatchSession === 'function' && hasActiveMatchSession();
+            return false;
+        }
+        function startGame(gameType, opts) {
             if (typeof stopCheersSound === 'function') stopCheersSound();
             var am = (typeof audioManager !== 'undefined') ? audioManager : window.audioManager;
             if (am && typeof am.warmup === 'function' &&
@@ -21379,6 +22052,7 @@
         }
 
         function stwClose() {
+            if (typeof hideGameEndConfirm === 'function') hideGameEndConfirm();
             stwStopAll();
             window.removeEventListener('resize', stwSizeGrid);
             const settings = document.getElementById('stwSettingsOverlay');
@@ -22136,45 +22810,25 @@
             renderMatchGame();
         }
 
-        function hideMatchEndConfirm() {
-            const el = document.getElementById('matchEndConfirm');
-            if (el) el.style.display = 'none';
-        }
+        function hideMatchEndConfirm() {}
 
         function requestCloseMatchGame() {
-            closeMatchSettings();
-            const g = matchGameState;
-            if (typeof ensureMatchSets === 'function') ensureMatchSets();
-            const active = !!(g && g.questions && g.questions.length &&
-                !(g.matchedQs && g.matchedQs.size >= g.questions.length));
-            if (!active) {
-                closeMatchGame();
-                return;
-            }
-            const el = document.getElementById('matchEndConfirm');
-            if (el) el.style.display = 'flex';
-        }
-
-        function confirmEndMatchGame() {
-            hideMatchEndConfirm();
-            resetMatchGameSession();
-            closeMatchGame();
-        }
-
-        function declineEndMatchGame() {
-            hideMatchEndConfirm();
+            closeMatchTools();
             closeMatchGame();
         }
 
         function closeMatchGame() {
             if (typeof stopCheersSound === 'function') stopCheersSound();
             if (typeof pauseMatchTimer === 'function') pauseMatchTimer();
-            hideMatchEndConfirm();
-            closeMatchSettings();
-            const matchGear = document.getElementById('matchOverlaySettings');
+            closeMatchTools();
+            const matchGear = document.getElementById('matchTools');
             if (matchGear) matchGear.style.display = 'none';
             document.body.style.overflow = '';
-            document.getElementById('matchGameModal').style.display = 'none';
+            const modal = document.getElementById('matchGameModal');
+            if (modal) {
+                modal.classList.remove('match-tools-open');
+                modal.style.display = 'none';
+            }
             openGameMenu();
         }
 
@@ -22251,7 +22905,7 @@
         }
 
         function openMatchHelp() {
-            closeMatchSettings();
+            closeMatchTools();
             document.getElementById('matchGameHelpModal').classList.add('active');
         }
 
@@ -22286,9 +22940,9 @@
             const { questions, currentQ, score } = matchGameState;
 
             if (questions.length && matchGameState.matchedQs.size >= questions.length) {
-                closeMatchSettings();
+                closeMatchTools();
                 if (typeof pauseMatchTimer === 'function') pauseMatchTimer();
-                const matchGear = document.getElementById('matchOverlaySettings');
+                const matchGear = document.getElementById('matchTools');
                 if (matchGear) matchGear.style.display = 'none';
                 playSound('cheersSound');
                 const showMatchClock = !(typeof gameClockIsPhone === 'function' && gameClockIsPhone());
@@ -22345,14 +22999,6 @@
             const isDesktop = vw >= 900 && vh >= 600;
             const isCompact = vh <= 520;
             const isPhone = Math.min(vw, vh) <= 500;
-            // Portrait: tools on top. Landscape: tools on the right side.
-            const toolsTop = !isLandscape;
-            const toolsSide = isLandscape;
-            const toolGutter = toolsSide ? (isCompact ? 56 : (isDesktop ? 76 : 68)) : 12;
-            const topChrome = toolsTop ? 66 : 22;
-            const btnGap = isPhone ? (toolsTop ? 10 : 14) : (toolsTop ? (isDesktop ? 64 : 56) : (isDesktop ? 48 : 44));
-            const iconSz = toolsTop ? 22 : (isCompact ? 22 : 26);
-            const progressRight = toolsSide ? Math.max(toolGutter, 12) : 8;
             const sizeIdx = Math.max(0, Math.min(3, matchWordSizeIndex | 0));
             const shellBorder = isLandscape ? '#e53935' : '#35654D';
             const choiceWidth = MATCH_CHOICE_WIDTHS[sizeIdx] || '42%';
@@ -22375,38 +23021,13 @@
                         ${choicesHTML}
                     </div>`;
             const tabletLift = '';
-
-            const toolsBtnsHTML = `
-                <button type="button" class="spell-glass-btn" onclick="requestCloseMatchGame()" style="color:#e53935;" title="Back">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                </button>
-                <button type="button" class="spell-glass-btn" onclick="shuffleMatchGame()" style="color:#35654D;" title="Shuffle">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-                </button>
-                <button type="button" class="spell-glass-btn" onclick="skipMatchQuestion()" style="color:#00838f;" title="Skip">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-                </button>
-                <button type="button" class="spell-glass-btn" onclick="openMatchHelp()" style="color:#9c27b0;" title="Help">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                </button>`;
-            const topToolsHTML = toolsTop
-                ? `<div id="matchTopBar"><div id="matchBtnPanel" style="gap:${btnGap}px !important;">${toolsBtnsHTML}</div></div>`
-                : '';
-            const sideToolsHTML = toolsSide
-                ? `<div id="matchBtnPanel" class="spell-tools-side" style="gap:${btnGap}px !important;">${toolsBtnsHTML}</div>`
-                : '';
             const dotsHTML = buildMatchDotsHTML(questions.length, currentQ);
             const progressHTML = `
-                <div id="matchProgressBar" style="top:8px;right:${progressRight}px;left:12px;">
-                    <span style="color:#555;font-size:0.72rem;font-weight:700;line-height:1.6;background:none;padding:0;padding-top:1px;">
-                        ${currentQ + 1} / ${questions.length}
-                    </span>
+                <div id="matchProgressBar">
                     ${dotsHTML}
                 </div>`;
-            const mainPadTop = toolsTop ? topChrome : (isLandscape ? 8 : 0);
-            const cardPad = toolsSide
-                ? (isDesktop ? `14px ${toolGutter}px 14px 16px` : `12px ${toolGutter}px 12px 12px`)
-                : (isCompact ? '8px 10px 8px 10px' : '10px 14px 12px 14px');
+            const cardPad = isCompact ? '8px 10px 8px 10px' : '10px 14px 12px 14px';
+            const mainPadTop = 22;
 
             content.innerHTML = `
                 <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;min-height:0;box-sizing:border-box;padding:${isLandscape ? '4px 0 0' : (isDesktop ? '10px 0 0' : '8px 0 0')};">
@@ -22415,13 +23036,12 @@
                             box-shadow:0 10px 40px rgba(0,0,0,0.2);border:3px solid ${shellBorder};
                             display:flex;flex-direction:column;padding:${cardPad};box-sizing:border-box;overflow:hidden;position:relative;">
                     ${progressHTML}
-                    ${topToolsHTML}
-                    ${sideToolsHTML}
                     <div id="matchMain" style="flex:1;min-height:0;min-width:0;display:flex;flex-direction:${isLandscape ? 'row' : 'column'};
                                 gap:${isLandscape ? '10px' : '0'};padding-top:${mainPadTop}px;box-sizing:border-box;">
                     ${isLandscape ? choicesBlock + imageBlock : imageBlock + choicesBlock}
                     ${tabletLift}
                     </div>
+                    <div id="matchIndex" aria-live="polite">${currentQ + 1} / ${questions.length}</div>
                     ${timerHTML}
                 </div>
                 </div>`;
@@ -22439,27 +23059,26 @@
         function positionMatchGear() {
             const modal = document.getElementById('matchGameModal');
             const shell = document.getElementById('matchShell');
-            const gear = document.getElementById('matchOverlaySettings');
-            if (!modal || !gear) return;
+            const tools = document.getElementById('matchTools');
+            if (!modal || !tools) return;
             if (!shell || modal.style.display !== 'flex') {
-                gear.style.display = 'none';
+                tools.style.display = 'none';
                 return;
             }
-            const modalRect = modal.getBoundingClientRect();
-            const shellRect = shell.getBoundingClientRect();
-            const offset = -2;
-            gear.style.display = 'block';
-            gear.style.position = 'absolute';
-            gear.style.bottom = Math.max(0, (modalRect.bottom - shellRect.bottom + offset)) + 'px';
-            gear.style.left = Math.max(0, (shellRect.left - modalRect.left + offset)) + 'px';
+            const mr = modal.getBoundingClientRect();
+            const cr = shell.getBoundingClientRect();
+            const inset = 8;
+            tools.style.display = 'block';
+            tools.style.position = 'absolute';
+            tools.style.top = Math.max(0, (cr.top - mr.top + inset)) + 'px';
+            tools.style.left = Math.max(0, (cr.left - mr.left + inset)) + 'px';
+            tools.style.bottom = 'auto';
         }
 
-        /** Landscape: same height as the gear button's center, centered on the word column. */
         function positionMatchTimer() {
             const shell = document.getElementById('matchShell');
             const timer = document.getElementById('matchTimer');
             const wrap = document.getElementById('matchChoicesWrap');
-            const gearBtn = document.getElementById('matchSettingsGearBtn');
             if (!shell || !timer) return;
             if (shell.getAttribute('data-orient') !== 'landscape' || !wrap) {
                 timer.style.left = '';
@@ -22473,50 +23092,36 @@
             const w = wrap.getBoundingClientRect();
             timer.style.left = ((w.left - s.left) + w.width / 2) + 'px';
             timer.style.right = 'auto';
+            timer.style.top = 'auto';
+            timer.style.bottom = '12px';
             timer.style.transform = 'translateX(-50%)';
-            const g = gearBtn ? gearBtn.getBoundingClientRect() : null;
-            if (g && g.height) {
-                const th = timer.offsetHeight || 20;
-                timer.style.bottom = 'auto';
-                timer.style.top = ((g.top + g.height / 2) - s.top - th / 2) + 'px';
-            } else {
-                timer.style.top = 'auto';
-                timer.style.bottom = '0px';
-            }
         }
 
-        function closeMatchSettings() {
-            const menu = document.getElementById('matchSettingsMenu');
-            const bd = document.getElementById('matchSettingsBackdrop');
-            const ov = document.getElementById('matchOverlaySettings');
+        function closeMatchTools() {
             const modal = document.getElementById('matchGameModal');
-            if (menu) {
-                menu.style.display = 'none';
-                menu.classList.remove('match-open');
+            if (modal) {
+                modal.classList.remove('match-tools-open');
+                modal.classList.remove('match-settings-open');
             }
-            if (bd) bd.classList.remove('open');
-            if (ov) ov.classList.remove('match-settings-open');
-            if (modal) modal.classList.remove('match-settings-open');
+            const gear = document.getElementById('matchGearBtn');
+            if (gear) gear.setAttribute('aria-expanded', 'false');
         }
+        function closeMatchSettings() { closeMatchTools(); }
 
-        function toggleMatchSettings() {
-            const menu = document.getElementById('matchSettingsMenu');
+        function toggleMatchTools() {
             const modal = document.getElementById('matchGameModal');
-            const ov = document.getElementById('matchOverlaySettings');
-            if (!menu) return;
-            const isOpen = menu.style.display === 'block' || menu.style.display === 'flex' ||
-                (ov && ov.classList.contains('match-settings-open'));
-            if (isOpen) {
-                closeMatchSettings();
+            if (!modal) return;
+            if (modal.classList.contains('match-tools-open')) {
+                closeMatchTools();
                 return;
             }
-            menu.style.display = 'block';
-            menu.classList.add('match-open');
-            if (ov) ov.classList.add('match-settings-open');
-            if (modal) modal.classList.add('match-settings-open');
+            modal.classList.add('match-tools-open');
+            const gear = document.getElementById('matchGearBtn');
+            if (gear) gear.setAttribute('aria-expanded', 'true');
             bindMatchWordSizeSlider();
             requestAnimationFrame(syncMatchWordSizeSlider);
         }
+        function toggleMatchSettings() { toggleMatchTools(); }
 
         function saveMatchWordSize() {
             try { localStorage.setItem('flashabc_match_word_size', String(matchWordSizeIndex)); } catch (e) {}
@@ -22615,38 +23220,42 @@
             const shell = document.getElementById('matchShell');
             const choices = document.getElementById('matchChoicesWrap');
             const isLandscape = !!(shell && shell.getAttribute('data-orient') === 'landscape');
-            const weights = [];
-            const sizes = [];
 
-            function applyOne(i, size) {
-                const el = document.getElementById('matchLabel' + i);
-                if (!el) return;
-                el.style.display = 'block';
-                el.style.width = '100%';
-                el.style.whiteSpace = 'normal';
-                el.style.overflowWrap = 'break-word';
-                el.style.wordBreak = 'normal';
-                el.style.maxWidth = '100%';
-                el.style.fontSize = size + 'rem';
-                el.style.lineHeight = '1.2';
+            function applyAll(size) {
+                for (let i = 0; i < numOpts; i++) {
+                    const el = document.getElementById('matchLabel' + i);
+                    if (!el) continue;
+                    el.style.display = 'block';
+                    el.style.width = '100%';
+                    el.style.whiteSpace = 'normal';
+                    el.style.overflowWrap = 'break-word';
+                    el.style.wordBreak = 'normal';
+                    el.style.maxWidth = '100%';
+                    el.style.fontSize = size + 'rem';
+                    el.style.lineHeight = '1.2';
+                }
+            }
+            function anyOverflow() {
+                for (let i = 0; i < numOpts; i++) {
+                    const el = document.getElementById('matchLabel' + i);
+                    if (el && el.scrollWidth > el.clientWidth + 2) return true;
+                }
+                return false;
             }
 
+            let shared = 5.0;
             for (let i = 0; i < numOpts; i++) {
                 const opt = q && q.options ? q.options[i] : '';
-                weights[i] = matchOptionWeight(opt);
-                sizes[i] = Math.round(matchAutoSizeRem(opt) * scale * 100) / 100;
-                applyOne(i, sizes[i]);
+                shared = Math.min(shared, matchAutoSizeRem(opt) * scale);
             }
+            shared = Math.round(shared * 100) / 100;
+            applyAll(shared);
 
-            for (let i = 0; i < numOpts; i++) {
-                const el = document.getElementById('matchLabel' + i);
-                if (!el) continue;
-                let attempts = 0;
-                while (sizes[i] > MIN_SIZE && attempts < 80 && el.scrollWidth > el.clientWidth + 2) {
-                    sizes[i] = Math.round((sizes[i] - STEP) * 100) / 100;
-                    applyOne(i, sizes[i]);
-                    attempts++;
-                }
+            let attempts = 0;
+            while (shared > MIN_SIZE && attempts < 80 && anyOverflow()) {
+                shared = Math.round((shared - STEP) * 100) / 100;
+                applyAll(shared);
+                attempts++;
             }
 
             const main = document.getElementById('matchMain');
@@ -22666,19 +23275,10 @@
                     budget = Math.max(90, main.clientHeight - minImg - 8);
                     choices.style.maxHeight = budget + 'px';
                 }
-                let attempts = 0;
-                while (attempts < 80 && choices.scrollHeight > budget) {
-                    let longestI = -1;
-                    let longestW = -1;
-                    for (let i = 0; i < numOpts; i++) {
-                        if (sizes[i] > MIN_SIZE && weights[i] >= longestW) {
-                            longestW = weights[i];
-                            longestI = i;
-                        }
-                    }
-                    if (longestI < 0) break;
-                    sizes[longestI] = Math.round((sizes[longestI] - STEP) * 100) / 100;
-                    applyOne(longestI, sizes[longestI]);
+                attempts = 0;
+                while (shared > MIN_SIZE && attempts < 80 && choices.scrollHeight > budget) {
+                    shared = Math.round((shared - STEP) * 100) / 100;
+                    applyAll(shared);
                     attempts++;
                 }
             }
@@ -22742,6 +23342,7 @@
         // ==================== END MATCH THE PICTURE GAME ====================
 
         function closeGuessGame() {
+            if (typeof hideGameEndConfirm === 'function') hideGameEndConfirm();
             if (typeof stopCheersSound === 'function') stopCheersSound();
             clearTimeout(_gtwHintTimer); _gtwHintTimer = null;
             // If game is finished, clear the state
@@ -22999,7 +23600,7 @@
                         </svg>
                     </button>
                     <button onclick="openGuessGameHelp()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" title="How to Play">❓</button>
-                    <button onclick="closeGuessGame()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Back to Menu">
+                    <button onclick="requestEndGame('guess')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Back to Menu">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
                 </div>
@@ -23125,6 +23726,7 @@
         }
 
         function closeBombGame() {
+            if (typeof hideGameEndConfirm === 'function') hideGameEndConfirm();
             clearBombRevealSound();
             document.getElementById('bombGameModal').classList.remove('active');
             document.querySelector('.container').style.filter = '';
@@ -23226,6 +23828,7 @@
                 bombGameState.bombCount = targets.bombs;
                 bombGameState.gridSize = targets.board;
                 bombGameState.roundSize = 9;
+                bombGameState.hasMoved = false;
                 bombGameState.deckSig = (typeof currentDeckMatchSignature === 'function') ? currentDeckMatchSignature() : '';
                 return;
             }
@@ -23245,6 +23848,7 @@
             bombGameState.bombCount = targets.bombs;
             bombGameState.gridSize = size;
             bombGameState.roundSize = size;
+            bombGameState.hasMoved = false;
             bombGameState.deckSig = (typeof currentDeckMatchSignature === 'function') ? currentDeckMatchSignature() : '';
         }
 
@@ -23438,7 +24042,7 @@
                         </svg>
                     </button>
                     <button onclick="openBombGameHelp()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" title="How to Play">❓</button>
-                    <button onclick="closeBombGame()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Back to Menu">
+                    <button onclick="requestEndGame('bomb')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Back to Menu">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
                 </div>
@@ -23524,6 +24128,7 @@
         function selectBombCard(cardIndex) {
             const card = bombGameState.gameCards[cardIndex];
             if (!card || bombGameState.cardsRemaining <= 0) return;
+            bombGameState.hasMoved = true;
             const isBomb = !!card.isBomb;
             const soundId = isBomb ? 'explosionSound' : 'correctSound';
             clearBombRevealSound();
@@ -23566,7 +24171,7 @@
                         </svg>
                     </button>
                     <button onclick="openBombGameHelp()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" title="How to Play">❓</button>
-                    <button onclick="closeBombGame()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Back to Menu">
+                    <button onclick="requestEndGame('bomb')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Back to Menu">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
                 </div>
@@ -23668,16 +24273,78 @@
             renderBombGame();
         }
 
+        function closeSpellTools() {
+            const modal = document.getElementById('spellingGameModal');
+            if (modal) modal.classList.remove('spell-tools-open');
+            const gear = document.getElementById('spellGearBtn');
+            if (gear) gear.setAttribute('aria-expanded', 'false');
+        }
+        function positionSpellGear() {
+            const modal = document.getElementById('spellingGameModal');
+            const card = document.getElementById('spellingCard');
+            const tools = document.getElementById('spellTools');
+            if (!modal || !tools) return;
+            if (!card || modal.style.display !== 'flex') {
+                tools.style.display = 'none';
+                return;
+            }
+            const mr = modal.getBoundingClientRect();
+            const cr = card.getBoundingClientRect();
+            const inset = 8;
+            tools.style.display = 'block';
+            tools.style.position = 'absolute';
+            tools.style.top = Math.max(0, (cr.top - mr.top + inset)) + 'px';
+            tools.style.left = Math.max(0, (cr.left - mr.left + inset)) + 'px';
+        }
+        function toggleSpellTools() {
+            const modal = document.getElementById('spellingGameModal');
+            if (!modal) return;
+            if (modal.classList.contains('spell-tools-open')) {
+                closeSpellTools();
+                return;
+            }
+            modal.classList.add('spell-tools-open');
+            const gear = document.getElementById('spellGearBtn');
+            if (gear) gear.setAttribute('aria-expanded', 'true');
+        }
+        function spellSayCurrentWord() {
+            closeSpellTools();
+            const cards = (spellingGameState && spellingGameState.gameCards) || [];
+            const i = (spellingGameState && spellingGameState.currentCardIndex) || 0;
+            const t = cards[i] && cards[i].backText;
+            if (t && typeof speakText === 'function') speakText(String(t).trim());
+        }
+        function updateSpellIndex() {
+            const el = document.getElementById('spellIndex');
+            if (!el) return;
+            const cards = (spellingGameState && spellingGameState.gameCards) || [];
+            const n = cards.length;
+            if (!n) {
+                el.textContent = '';
+                return;
+            }
+            const i = Math.min(((spellingGameState.currentCardIndex || 0) + 1), n);
+            el.textContent = i + ' / ' + n;
+        }
         function closeSpellingGame() {
+            if (typeof hideGameEndConfirm === 'function') hideGameEndConfirm();
             if (typeof stopCheersSound === 'function') stopCheersSound();
             if (typeof pauseSpellTimer === 'function') pauseSpellTimer();
+            closeSpellTools();
             // Leave spellingGameState intact so menu can show Spell Me (Continue)
-            document.getElementById('spellingGameModal').style.display = 'none';
+            const modal = document.getElementById('spellingGameModal');
+            if (modal) {
+                modal.classList.remove('spell-tools-open');
+                modal.style.display = 'none';
+            }
+            const tools = document.getElementById('spellTools');
+            if (tools) tools.style.display = 'none';
             openGameMenu();
         }
 
         function startNewSpellingGame() {
             if (typeof stopCheersSound === 'function') stopCheersSound();
+            closeSpellTools();
             // In-game Shuffle: new order + clear progress and tile placements
             resetSpellingProgress();
             spellingGameState.gameCards = shuffleSpellCards(spellingGameState.gameCards || []);
@@ -23797,7 +24464,11 @@
         }
 
         function showSpellingComplete() {
+            closeSpellTools();
+            const tools = document.getElementById('spellTools');
+            if (tools) tools.style.display = 'none';
             if (typeof pauseSpellTimer === 'function') pauseSpellTimer();
+            if (typeof updateSpellIndex === 'function') updateSpellIndex();
             const content = document.getElementById('spellingGameContent');
             playSound('cheersSound');
             const showSpellClock = !gameClockIsPhone();
@@ -23824,7 +24495,10 @@
             const word = (spellingGameState.correctWord || (spellingGameState.gameCards[spellingGameState.currentCardIndex] || {}).backText || '').trim();
             const L = getSpellLayout({ word });
             const key = [L.mainClass, L.tierClass, L.fsPx, L.tileScale, L.sideBySide ? 1 : 0, L.spellTier, L.toolsTop ? 1 : 0, L.bigTiles ? 1 : 0, Math.round(L.vw / 40), Math.round(L.vh / 40)].join('|');
-            if (key === _spellLayoutKey && document.getElementById('spellingCard')) return;
+            if (key === _spellLayoutKey && document.getElementById('spellingCard')) {
+                if (typeof positionSpellGear === 'function') positionSpellGear();
+                return;
+            }
             _spellLayoutKey = key;
             renderSpellingGame({ preserveState: true });
         }
@@ -24000,57 +24674,18 @@
             const checkMinW = L.isCompact ? 130 : 160;
             const checkPad = L.isCompact ? '10px 20px' : '12px 28px';
             const checkFs = L.isCompact ? '0.95rem' : '1.05rem';
-            // Keep tool icons close to original glass-btn scale (top bar uses CSS 40px on short landscape)
-            const iconSz = L.toolsTop ? 22 : (L.isCompact ? 22 : 26);
             const bankGap = letterGap;
-            const speakEsc = currentCard.backText.trim().replace(/'/g, "\\'");
 
             // Balanced multi-row dots (never a lonely last row like 15+1)
             const dotsHTML = buildSpellingDotsHTML(gameCards, currentCardIndex);
 
-            const toolsBtnsHTML = `
-                <button type="button" class="spell-glass-btn" onclick="closeSpellingGame()" style="color:#e53935;" title="Back">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                </button>
-                <button type="button" class="spell-glass-btn" onclick="startNewSpellingGame()" style="color:#35654D;" title="Shuffle">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-                </button>
-                <button type="button" class="spell-glass-btn" onclick="skipSpellingCard()" style="color:#00838f;" title="Skip">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-                </button>
-                <button type="button" class="spell-glass-btn" onclick="event.stopPropagation();speakText('${speakEsc}')" style="color:#ff9500;" title="Say It">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                </button>
-                <button type="button" class="spell-glass-btn" onpointerdown="event.preventDefault();event.stopPropagation();peekSpelling(true);try{this.setPointerCapture(event.pointerId)}catch(err){}" onpointerup="peekSpelling(false)" onpointercancel="peekSpelling(false)" onmousedown="peekSpelling(true)" onmouseup="peekSpelling(false)" ontouchstart="event.stopPropagation();peekSpelling(true)" ontouchend="event.stopPropagation();peekSpelling(false)" ontouchcancel="peekSpelling(false)" style="color:#9c27b0;" title="Peek">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                </button>
-                <button type="button" class="spell-glass-btn" id="spellClearBtn" onclick="event.stopPropagation();clearSpellingAnswer()" style="color:#1565c0;display:none;" title="Clear all letters">
-                    <svg width="${iconSz}" height="${iconSz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                </button>`;
-
-            // Index left; dots top-right. Same top/right inset (8px) when tools are not on the side.
-            // Portrait with side tools: extra right inset so dots clear the button column.
-            const progressRight = L.toolsSide ? Math.max(L.toolGutter, 12) : 8;
             const progressHTML = `
-                <div id="spellProgressBar" style="top:8px;right:${progressRight}px;left:12px;">
-                    <span style="color:#555;font-size:0.72rem;font-weight:700;line-height:1.6;background:none;padding:0;padding-top:1px;">
-                        ${currentCardIndex + 1} / ${gameCards.length}
-                    </span>
+                <div id="spellProgressBar" style="top:8px;right:8px;left:12px;justify-content:flex-end;">
                     ${dotsHTML}
                 </div>`;
 
-            // Short landscape only: tools top-centered (separate row under progress)
-            const topToolsHTML = L.toolsTop ? `
-                <div id="spellTopBar">
-                    <div id="spellingBtnPanel" style="background:transparent;border:none;box-shadow:none;gap:${L.btnGap}px !important;">
-                        ${toolsBtnsHTML}
-                    </div>
-                </div>` : '';
-
-            const sideToolsHTML = L.toolsSide ? `
-                <div id="spellingBtnPanel" class="spell-tools-side" style="gap:${L.btnGap}px !important;background:transparent;border:none;box-shadow:none;pointer-events:auto;">
-                    ${toolsBtnsHTML}
-                </div>` : '';
+            const topToolsHTML = '';
+            const sideToolsHTML = '';
 
             content.innerHTML = `
                 <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;min-height:0;box-sizing:border-box;padding:${L.outerPad};">
@@ -24105,12 +24740,18 @@
 
                         ${sideToolsHTML}
 
+                        <div id="spellIndex" aria-live="polite">1 / 1</div>
                         ${L.isPhone ? '' : '<div id="spellTimer" aria-hidden="true">00:00</div>'}
                     </div>
                 </div>`;
 
             renderSpellingGameState();
+            if (typeof updateSpellIndex === 'function') updateSpellIndex();
             if (typeof updateSpellTimerDisplay === 'function') updateSpellTimerDisplay();
+            if (typeof positionSpellGear === 'function') {
+                positionSpellGear();
+                requestAnimationFrame(positionSpellGear);
+            }
             if (typeof applySpellLetterFonts === 'function') applySpellLetterFonts();
 
             // Remember layout so resize handler can skip no-op reflows
@@ -24806,6 +25447,7 @@
         }
 
         function renderSpellingGameState() {
+            if (typeof cancelSpellPeek === 'function') cancelSpellPeek();
             const lift = SPELL_GLYPH_LIFT;
 
             document.querySelectorAll('.answer-slot').forEach((slot) => {
@@ -24929,41 +25571,29 @@
         }
 
         let _spellPeekOn = false;
-        function spellPeekOff() {
-            peekSpelling(false);
-        }
-        function spellBindPeekRelease() {
-            document.addEventListener('pointerup', spellPeekOff, true);
-            document.addEventListener('mouseup', spellPeekOff, true);
-            document.addEventListener('touchend', spellPeekOff, true);
-            document.addEventListener('touchcancel', spellPeekOff, true);
-            window.addEventListener('blur', spellPeekOff);
-        }
-        function spellUnbindPeekRelease() {
-            document.removeEventListener('pointerup', spellPeekOff, true);
-            document.removeEventListener('mouseup', spellPeekOff, true);
-            document.removeEventListener('touchend', spellPeekOff, true);
-            document.removeEventListener('touchcancel', spellPeekOff, true);
-            window.removeEventListener('blur', spellPeekOff);
-        }
-        function peekSpelling(show) {
-            if (!show) {
-                if (!_spellPeekOn) return;
-                _spellPeekOn = false;
-                spellUnbindPeekRelease();
-                renderSpellingGameState();
-                return;
+        let _spellPeekTimer = null;
+        function cancelSpellPeek() {
+            if (_spellPeekTimer) {
+                clearTimeout(_spellPeekTimer);
+                _spellPeekTimer = null;
             }
-            if (_spellPeekOn) return;
+            _spellPeekOn = false;
+            document.querySelectorAll('#spellingGameModal .answer-slot.spell-peeking').forEach(function (slot) {
+                slot.classList.remove('spell-peeking');
+            });
+        }
+        function peekSpelling() {
+            cancelSpellPeek();
+            const chars = (spellingGameState && spellingGameState.correctWord) ? String(spellingGameState.correctWord).split('') : [];
+            if (!chars.length) return;
             _spellPeekOn = true;
-            spellBindPeekRelease();
-            const chars = (spellingGameState.correctWord || '').split('');
             let charIdx = 0;
-            document.querySelectorAll('.answer-slot').forEach(slot => {
+            document.querySelectorAll('#spellingGameModal .answer-slot').forEach(function (slot) {
                 const idx = parseInt(slot.getAttribute('data-index'), 10);
                 const slotVal = spellingGameState.answerSlots[idx];
                 const letterEl = slot.querySelector('.answer-letter') || slot;
                 const lineEl = slot.querySelector('.answer-underline');
+                slot.classList.remove('spell-peeking');
                 if (isSpellSeparator(slotVal)) {
                     if (letterEl) letterEl.textContent = '\u00a0';
                     return;
@@ -24972,13 +25602,20 @@
                 const peekCh = chars[charIdx] || '';
                 letterEl.textContent = peekCh || '\u00a0';
                 letterEl.style.color = peekCh ? spellLetterColor(peekCh) : '#35654D';
-                letterEl.style.opacity = '0.55';
+                letterEl.style.opacity = '1';
                 if (peekCh) {
                     slot.style.background = SPELL_FILL_BG;
                     if (lineEl) lineEl.style.display = 'none';
+                    void slot.offsetWidth;
+                    slot.classList.add('spell-peeking');
                 }
                 charIdx++;
             });
+            _spellPeekTimer = setTimeout(function () {
+                _spellPeekTimer = null;
+                _spellPeekOn = false;
+                if (typeof renderSpellingGameState === 'function') renderSpellingGameState();
+            }, 2000);
         }
 
         function checkSpelling() {
@@ -25101,7 +25738,7 @@
                         </svg>
                     </button>
                     <button onclick="openGuessGameHelp()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" title="How to Play">❓</button>
-                    <button onclick="closeGuessGame()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Back to Menu">
+                    <button onclick="requestEndGame('guess')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Back to Menu">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
                 </div>
