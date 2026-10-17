@@ -6912,7 +6912,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1400-games-dismiss-icons">
+    <meta name="flashabc-build" content="1401-match-swipe">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -7854,6 +7854,7 @@
             <ul style="text-align:left;color:#555;margin-bottom:20px;padding-left:20px;line-height:2;">
                 <li>✅ Correct — moves to next picture</li>
                 <li>❌ Wrong — try again</li>
+                <li>👆 Swipe left / right on the picture to skip ahead or go back</li>
                 <li>One question per card in your deck</li>
             </ul>
             <button class="btn btn-success" onclick="document.getElementById('matchGameHelpModal').classList.remove('active')" style="width:100%;padding:12px;justify-content:center;">Got it!</button>
@@ -22898,6 +22899,18 @@
             renderMatchGame();
         }
 
+        function matchPrevQuestion() {
+            ensureMatchSets();
+            const g = matchGameState;
+            // No wrap: last question only via next (swipe left)
+            for (let idx = g.currentQ - 1; idx >= 0; idx--) {
+                if (!g.matchedQs.has(idx)) {
+                    goToMatchQuestion(idx);
+                    return;
+                }
+            }
+        }
+
         function skipMatchQuestion() {
             const g = matchGameState;
             if (!g || !g.questions || !g.questions.length) return;
@@ -23054,6 +23067,42 @@
                 positionMatchGear();
                 positionMatchTimer();
             }));
+
+            // Card swipe only OUTSIDE word choices (same gesture as Spell Me)
+            const _matchCard = document.getElementById('matchShell');
+            if (_matchCard) {
+                let sx = 0, sy = 0, active = false;
+                const inMatchPlayArea = (t) => !!(t && (
+                    t.closest('#matchChoicesWrap') ||
+                    t.closest('[id^="matchOpt"]') ||
+                    t.closest('button')
+                ));
+                _matchCard.addEventListener('touchstart', (e) => {
+                    if (inMatchPlayArea(e.target)) { active = false; return; }
+                    sx = e.touches[0].clientX; sy = e.touches[0].clientY; active = true;
+                }, { passive: true });
+                _matchCard.addEventListener('touchend', (e) => {
+                    if (!active) return;
+                    active = false;
+                    const dx = e.changedTouches[0].clientX - sx;
+                    const dy = e.changedTouches[0].clientY - sy;
+                    if (Math.abs(dx) > SPELL_CARD_SWIPE_MIN && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                        if (dx < 0) matchNextQuestion(); else matchPrevQuestion();
+                    }
+                }, { passive: true });
+                let mx = 0, md = false;
+                _matchCard.addEventListener('mousedown', (e) => {
+                    if (inMatchPlayArea(e.target)) { md = false; return; }
+                    mx = e.clientX; md = true;
+                });
+                _matchCard.addEventListener('mouseup', (e) => {
+                    if (!md) return; md = false;
+                    const dx = e.clientX - mx;
+                    if (Math.abs(dx) > SPELL_CARD_SWIPE_MIN) {
+                        if (dx < 0) matchNextQuestion(); else matchPrevQuestion();
+                    }
+                });
+            }
         }
 
         function positionMatchGear() {
