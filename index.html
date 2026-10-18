@@ -6912,7 +6912,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1401-match-swipe">
+    <meta name="flashabc-build" content="1402-sample-shuffle">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -15454,13 +15454,21 @@
             sampleDeckData = null;
         }
 
+        function isDefaultSampleDeckName(name) {
+            const n = String(name || '').toLowerCase().replace(/\.json$/i, '').trim();
+            return n === 'fruits_sample_set' || n === 'animals_sample_set';
+        }
+
         function createFromSampleDeck() {
             if (!sampleDeckData || !sampleDeckData.cards) {
                 showToast('⚠️ Sample deck not ready yet', 2000);
                 return;
             }
             const cardCount = sampleDeckData.cards.length;
-            cards = sampleDeckData.cards;
+            // Always freshly shuffle Fruits / Animals samples on Create
+            cards = (typeof fisherYatesShuffle === 'function')
+                ? fisherYatesShuffle(sampleDeckData.cards)
+                : sampleDeckData.cards.slice();
             currentIndex = 0;
             isFlipped = false;
             if (typeof resetAllGameSessions === 'function') resetAllGameSessions();
@@ -15589,9 +15597,16 @@
 
             try {
                 const cardCount = loadedSessionData.cards.length; // Save count before closing modal
+                // Fruits / Animals sample JSON: always import in a fresh shuffle order
+                const shuffleDefaults = typeof isDefaultSampleDeckName === 'function'
+                    && isDefaultSampleDeckName(typeof getLoadedFileName === 'function' ? getLoadedFileName() : '');
+                let incomingCards = loadedSessionData.cards;
+                if (shuffleDefaults && typeof fisherYatesShuffle === 'function') {
+                    incomingCards = fisherYatesShuffle(incomingCards);
+                }
 
                 if (mode === 'replace') {
-                    const incoming = loadedSessionData.cards;
+                    const incoming = incomingCards;
                     const discarded = Math.max(0, incoming.length - 30);
                     cards = incoming.slice(0, 30);
                     currentIndex = 0;
@@ -15604,7 +15619,7 @@
                 } else if (mode === 'add') {
                     loadedUnitIds.clear();
                     currentLoadedUnitId = null;
-                    const newCards = loadedSessionData.cards;
+                    const newCards = incomingCards;
                     const totalAfter = cards.length + newCards.length;
 
                     if (totalAfter > 30) {
@@ -24379,6 +24394,7 @@
             if (typeof hideGameEndConfirm === 'function') hideGameEndConfirm();
             if (typeof stopCheersSound === 'function') stopCheersSound();
             if (typeof pauseSpellTimer === 'function') pauseSpellTimer();
+            if (typeof spellClearTouchDrag === 'function') spellClearTouchDrag({ cancelLive: true });
             closeSpellTools();
             // Leave spellingGameState intact so menu can show Spell Me (Continue)
             const modal = document.getElementById('spellingGameModal');
@@ -24555,6 +24571,8 @@
         function renderSpellingGame(opts) {
             const preserveState = !!(opts && opts.preserveState);
             if (!preserveState) _spellTryAgain = false;
+            // Full card re-render: drop any stuck multi-touch drag ghost
+            if (typeof spellClearTouchDrag === 'function') spellClearTouchDrag({ cancelLive: true });
             const content = document.getElementById('spellingGameContent');
             const { currentCardIndex, gameCards, spelledCards } = spellingGameState;
             if (!content || !gameCards || !gameCards.length) return;
@@ -24633,6 +24651,7 @@
                 ontouchstart="spellingTouchStart(event,${idx},'slot')"
                 ontouchmove="spellingTouchMove(event)"
                 ontouchend="spellingTouchEnd(event)"
+                ontouchcancel="spellingTouchCancel(event)"
                 style="width:${tileW}px;height:${tileH}px;min-width:${tileW}px;min-height:${tileH}px;
                        display:inline-flex;align-items:center;justify-content:center;
                        cursor:pointer;overflow:hidden;touch-action:none;padding:0;
@@ -24700,6 +24719,7 @@
                     ontouchstart="spellingTouchStart(event,${idx},'tile')"
                     ontouchmove="spellingTouchMove(event)"
                     ontouchend="spellingTouchEnd(event)"
+                    ontouchcancel="spellingTouchCancel(event)"
                     style="display:inline-flex;align-items:center;justify-content:center;
                            width:${tileW}px;height:${tileH}px;min-width:${tileW}px;min-height:${tileH}px;
                            font-size:${lineFS};line-height:1;font-weight:${window.SPELL_LETTER_WEIGHT||'400'};
@@ -25372,6 +25392,71 @@
 
         // ---- Touch drag (letter placement only — never card swipe) ----
         let _spellTouch = null;
+        let _spellTouchSafetyBound = false;
+
+        function spellTouchById(touchList, id) {
+            if (!touchList) return null;
+            for (let i = 0; i < touchList.length; i++) {
+                if (touchList[i].identifier === id) return touchList[i];
+            }
+            return null;
+        }
+
+        function spellRemoveTouchGhosts(ghost) {
+            if (ghost) {
+                try { ghost.style.display = 'none'; ghost.remove(); } catch (err) { /* ignore */ }
+            }
+            document.querySelectorAll('.spell-touch-ghost').forEach(function (g) {
+                try { g.remove(); } catch (err) { /* ignore */ }
+            });
+        }
+
+        function spellBindTouchSafety() {
+            if (_spellTouchSafetyBound) return;
+            _spellTouchSafetyBound = true;
+            document.addEventListener('touchcancel', spellingDocTouchCancel, true);
+            document.addEventListener('touchend', spellingDocTouchEndSafety, true);
+        }
+
+        function spellUnbindTouchSafety() {
+            if (!_spellTouchSafetyBound) return;
+            _spellTouchSafetyBound = false;
+            document.removeEventListener('touchcancel', spellingDocTouchCancel, true);
+            document.removeEventListener('touchend', spellingDocTouchEndSafety, true);
+        }
+
+        /** Wipe floating drag ghost + live preview (second finger / touchcancel / orphan). */
+        function spellClearTouchDrag(opts) {
+            opts = opts || {};
+            const ghost = _spellTouch && _spellTouch.ghost;
+            _spellTouch = null;
+            spellRemoveTouchGhosts(ghost);
+            clearSpellDropHover();
+            clearSpellInsertMarks();
+            spellUnbindTouchSafety();
+            if (opts.cancelLive !== false && _spellLive) {
+                spellCancelLive();
+            }
+        }
+
+        function spellingDocTouchCancel(e) {
+            if (!_spellTouch) return;
+            if (spellTouchById(e.touches, _spellTouch.touchId)) return;
+            spellClearTouchDrag({ cancelLive: true });
+        }
+
+        /** If our finger ended but the tile was re-rendered away, still clear the ghost. */
+        function spellingDocTouchEndSafety(e) {
+            if (!_spellTouch) return;
+            if (!spellTouchById(e.changedTouches, _spellTouch.touchId)) return;
+            if (spellTouchById(e.touches, _spellTouch.touchId)) return;
+            const pending = _spellTouch;
+            setTimeout(function () {
+                if (_spellTouch && pending && _spellTouch === pending) {
+                    spellClearTouchDrag({ cancelLive: true });
+                }
+            }, 0);
+        }
 
         function spellingTouchStart(e, index, type) {
             const letter = type === 'tile'
@@ -25380,11 +25465,24 @@
             if (!isSpellLetter(letter)) return;
             // Don't let the card-level swipe tracker claim this gesture
             e.stopPropagation();
-            const t = e.touches[0];
+
+            // Second finger (or orphaned prior drag): never leave a stuck ghost.
+            // Cancel the active gesture; do not start a new one while multi-touching.
+            if (_spellTouch || e.touches.length > 1) {
+                spellClearTouchDrag({ cancelLive: true });
+                if (e.touches.length > 1) {
+                    try { e.preventDefault(); } catch (err) { /* ignore */ }
+                    return;
+                }
+            }
+
+            const t = e.changedTouches[0] || e.touches[0];
+            if (!t) return;
             const rect = e.currentTarget.getBoundingClientRect();
 
             const ghostSize = Math.max(44, Math.min(rect.width, rect.height));
             const ghost = document.createElement('div');
+            ghost.className = 'spell-touch-ghost';
             ghost.textContent = letter;
             ghost.setAttribute('aria-hidden', 'true');
             ghost.style.cssText = `position:fixed;z-index:99999;pointer-events:none;
@@ -25399,15 +25497,25 @@
 
             _spellTouch = {
                 type, index, ghost, letter,
+                touchId: t.identifier,
                 startX: t.clientX, startY: t.clientY,
                 offX: ghostSize / 2, offY: ghostSize / 2,
                 isDragging: false
             };
+            spellBindTouchSafety();
         }
 
         function spellingTouchMove(e) {
             if (!_spellTouch) return;
-            const t = e.touches[0];
+            const t = spellTouchById(e.touches, _spellTouch.touchId);
+            if (!t) return;
+            // Extra finger appeared mid-drag — cancel so the ghost cannot stick
+            if (e.touches.length > 1) {
+                e.preventDefault();
+                e.stopPropagation();
+                spellClearTouchDrag({ cancelLive: true });
+                return;
+            }
             const dx = t.clientX - _spellTouch.startX;
             const dy = t.clientY - _spellTouch.startY;
             const adx = Math.abs(dx);
@@ -25423,8 +25531,10 @@
             if (_spellTouch.isDragging) {
                 e.preventDefault();
                 e.stopPropagation();
-                _spellTouch.ghost.style.left = (t.clientX - _spellTouch.offX) + 'px';
-                _spellTouch.ghost.style.top  = (t.clientY - _spellTouch.offY) + 'px';
+                if (_spellTouch.ghost) {
+                    _spellTouch.ghost.style.left = (t.clientX - _spellTouch.offX) + 'px';
+                    _spellTouch.ghost.style.top  = (t.clientY - _spellTouch.offY) + 'px';
+                }
                 spellLivePreview(t.clientX, t.clientY);
             }
         }
@@ -25435,18 +25545,28 @@
             });
         }
 
+        function spellingTouchCancel(e) {
+            if (!_spellTouch) return;
+            // Only cancel if our tracked finger was cancelled / is gone
+            if (e && e.changedTouches && !spellTouchById(e.changedTouches, _spellTouch.touchId)
+                && spellTouchById(e.touches, _spellTouch.touchId)) {
+                return;
+            }
+            e && e.stopPropagation && e.stopPropagation();
+            spellClearTouchDrag({ cancelLive: true });
+        }
+
         function spellingTouchEnd(e) {
             if (!_spellTouch) return;
-            const t = e.changedTouches[0];
+            const t = spellTouchById(e.changedTouches, _spellTouch.touchId);
+            if (!t) return;
             const { type, index, ghost, isDragging } = _spellTouch;
             _spellTouch = null;
+            spellUnbindTouchSafety();
 
             clearSpellDropHover();
             clearSpellInsertMarks();
-            if (ghost) {
-                ghost.style.display = 'none';
-                ghost.remove();
-            }
+            spellRemoveTouchGhosts(ghost);
 
             // Pure tap — never treat as page swipe (swipes only start outside play area)
             if (!isDragging) {
