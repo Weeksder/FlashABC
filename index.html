@@ -3490,11 +3490,6 @@
         #newFolderModal {
             z-index: 20020;
         }
-        #unitConfigModal .ucm-folders-scroll {
-            max-height: min(28vh, 220px);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
 
         .modal-content h2 {
             margin-bottom: 25px;
@@ -5608,6 +5603,43 @@
         body.settings-menu-open #settingsBackdrop {
             z-index: 15000;
         }
+        /* Ghost word-size preview: card footprint + same fit as card-back; under gear panel */
+        #wordSizeGhost {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 15000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            margin: 0;
+            transform: none;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            overflow: hidden;
+            transition: opacity 0.16s ease, visibility 0.16s ease;
+            color: #ffffff;
+            text-shadow: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        #wordSizeGhost .card-text,
+        #wordSizeGhost .card-text-auto-scale {
+            max-width: 100%;
+            width: 100%;
+            color: #ffffff;
+            pointer-events: none;
+        }
+        #wordSizeGhost .vowel {
+            color: #ff9500;
+        }
+        #wordSizeGhost.visible {
+            opacity: 1;
+            visibility: visible;
+        }
         body.settings-menu-open #cardOverlaySettings {
             z-index: 15001 !important;
         }
@@ -6052,6 +6084,7 @@
         #manageSidePanelOverlay.behind-modal { z-index: 14999; }
         #manageSidePanel:not(.msp-edit-mode) .msp-del-btn { display: none; }
         #manageSidePanel:not(.msp-edit-mode) .msp-drag-handle { display: none; }
+        #manageSidePanel:not(.msp-edit-mode) .msp-unit-count { display: none; }
         #manageSidePanel.msp-edit-mode .msp-deck-btn { display: none; }
         #manageSidePanel .msp-toolbar {
             padding: 6px 10px;
@@ -6341,15 +6374,21 @@
             --ucm-list-h: min(56vh, 460px);
             --ucm-list-min: 280px;
         }
-        #unitConfigModal #unitsListWrap,
-        #unitConfigModal #groupsListWrap {
+        #unitConfigModal #unitsListWrap {
             position: relative;
             height: var(--ucm-list-h);
             min-height: var(--ucm-list-min);
             flex-shrink: 0;
         }
-        #unitConfigModal .ucm-units-scroll,
-        #unitConfigModal .ucm-folders-scroll {
+        /* Folders tab: shorter bins list so + Folder stays on screen without scrolling the modal */
+        #unitConfigModal #groupsListWrap {
+            position: relative;
+            height: min(26vh, 180px);
+            min-height: 100px;
+            max-height: min(26vh, 180px);
+            flex-shrink: 0;
+        }
+        #unitConfigModal .ucm-units-scroll {
             height: 100%;
             max-height: none;
             overflow-y: auto;
@@ -6357,6 +6396,46 @@
             -webkit-overflow-scrolling: touch;
             padding-bottom: 4px;
             box-sizing: border-box;
+        }
+        #unitConfigModal .ucm-folders-scroll {
+            height: 100%;
+            max-height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+            box-sizing: border-box;
+        }
+        #unitConfigModal #ucmTabFolders.active {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        #unitConfigModal #foldersBottomActions {
+            flex-shrink: 0;
+            position: sticky;
+            bottom: 0;
+            z-index: 3;
+            margin-top: 8px;
+            padding-top: 8px;
+            padding-bottom: 2px;
+            background: linear-gradient(to top, #fff 70%, rgba(255,255,255,0.92));
+        }
+        #unitConfigModal #addFolderBtn {
+            flex: 1;
+            padding: 11px 16px;
+            border: 1.5px solid #f0c94d;
+            border-radius: 10px;
+            background: #ffe082;
+            cursor: pointer;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #6b4e1a;
+            box-shadow: 0 1px 4px rgba(240, 201, 77, 0.35);
+        }
+        #unitConfigModal #addFolderBtn:active {
+            transform: scale(0.98);
+            background: #ffd54f;
         }
         #unitConfigModal .ucm-units-scroll::-webkit-scrollbar,
         #unitConfigModal .ucm-folders-scroll::-webkit-scrollbar {
@@ -6820,7 +6899,8 @@
             padding:10px 14px;background:#c8dfc8;
             border-bottom:1px solid #e0e0e0;cursor:pointer;
             user-select:none;-webkit-user-select:none;
-            min-height:42px;box-sizing:border-box;
+            min-height:42px;height:42px;box-sizing:border-box;
+            overflow:hidden;
         }
         .msp-group-header:hover { background:#b8d4b8; }
         .msp-group-header.msp-uncat-header {
@@ -6840,10 +6920,21 @@
         .msp-group-header.msp-uncat-header .msp-group-name { color:#8a3d54; }
         .msp-group-header.msp-uncat-header .msp-group-arrow { color:#c07a90; }
         .msp-group-header.msp-uncat-header .msp-group-count { color:#c07a90; }
-        .msp-group-arrow { font-size:11px;color:#888;transition:transform 0.2s;flex-shrink:0; }
+        .msp-group-arrow { font-size:12px;color:#888;transition:transform 0.2s;flex-shrink:0;line-height:1; }
         .msp-group-arrow.collapsed { transform:rotate(-90deg); }
-        .msp-group-name { font-size:0.88rem;font-weight:700;color:#1a3d2b;flex:1; }
-        .msp-group-count { font-size:0.75rem;color:#aaa; }
+        /* Folder headers larger than unit names; row height stays fixed at 42px */
+        .msp-group-name {
+            font-size:1.12rem;
+            font-weight:700;
+            color:#1a3d2b;
+            flex:1;
+            min-width:0;
+            line-height:1.1;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .msp-group-count { font-size:0.75rem;color:#aaa;line-height:1;flex-shrink:0; }
         .msp-group-body.collapsed { display:none; }
         .msp-group-empty { padding:10px 20px 10px 36px;font-size:0.82rem;color:#bbb;font-style:italic; }
         .msp-drop-active { background:#e8f5e9 !important;outline:2px dashed #35654D;outline-offset:-2px; }
@@ -6912,7 +7003,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1402-sample-shuffle">
+    <meta name="flashabc-build" content="1414-msp-date-edit-only">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -7274,6 +7365,7 @@
             </button>
         </div>
         <div id="settingsBackdrop" onclick="closeSettingsMenu()" ontouchend="event.preventDefault(); closeSettingsMenu()"></div>
+        <div id="wordSizeGhost" aria-hidden="true"></div>
         <!-- Fixed card overlays: always in DOM, unaffected by card-container size or overflow -->
         <div id="cardOverlaySettings" style="display:none; position:fixed; z-index:10000;">
             <button id="settingsGearBtn" class="fullscreen-btn" style="position:relative; bottom:auto; left:auto; color:#35654D; overflow:visible; -webkit-appearance:none; appearance:none;"
@@ -7585,6 +7677,25 @@
         </div>
     </div>
 
+    <!-- Duplicate deck name on import: Replace or Cancel -->
+    <div id="deckNameConflictModal" onclick="if(event.target===this) resolveDeckNameConflict('cancel')"
+         style="display:none;position:fixed;inset:0;z-index:26000;background:rgba(0,0,0,0.55);
+                align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
+        <div role="dialog" aria-modal="true" aria-labelledby="deckNameConflictTitle"
+             style="background:white;border-radius:16px;max-width:420px;width:100%;padding:24px 22px 20px;
+                    box-shadow:0 12px 40px rgba(0,0,0,0.28);text-align:center;box-sizing:border-box;"
+             onclick="event.stopPropagation()">
+            <h2 id="deckNameConflictTitle" style="margin:0 0 12px;color:#35654D;font-size:1.2rem;">Deck already exists</h2>
+            <p id="deckNameConflictMessage" style="margin:0 0 22px;color:#444;font-size:1rem;line-height:1.45;"></p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <button type="button" class="btn btn-secondary" onclick="resolveDeckNameConflict('cancel')"
+                        style="padding:12px 22px;min-width:120px;">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="resolveDeckNameConflict('replace')"
+                        style="padding:12px 22px;min-width:120px;background:#35654D;color:#fff;">Replace</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Help Menu Modal -->
     <div class="modal" id="helpMenuModal">
         <div class="modal-content" style="width:fit-content;max-width:90vw;position:relative;padding:20px 20px 20px;">
@@ -7684,9 +7795,9 @@
                 </div>
                 <span style="width:1px; height:18px; background:#e0e0e0;"></span>
                 <button onclick="startNewGuessGame()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" title="Shuffle Cards">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
-                        <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/><path d="M15.6 2.6l3.6 3.2-4.2.8"/>
+                        <path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/><path d="M8.4 21.4l-3.6-3.2 4.2-.8"/>
                     </svg>
                 </button>
                 <button onclick="openGuessGameHelp()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; font-size: 1.2rem;" title="How to Play">
@@ -7733,9 +7844,9 @@
                 </div>
                 <span style="width:1px; height:18px; background:#e0e0e0;"></span>
                 <button onclick="startNewBombGame()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" title="Shuffle Cards">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
-                        <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/><path d="M15.6 2.6l3.6 3.2-4.2.8"/>
+                        <path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/><path d="M8.4 21.4l-3.6-3.2 4.2-.8"/>
                     </svg>
                 </button>
                 <button onclick="openBombGameHelp()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; font-size: 1.2rem;" title="How to Play">
@@ -7785,7 +7896,12 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 </button>
                 <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeSpellTools(); startNewSpellingGame();" style="color:#35654D;" title="Shuffle">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/>
+                        <path d="M15.6 2.6l3.6 3.2-4.2.8"/>
+                        <path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/>
+                        <path d="M8.4 21.4l-3.6-3.2 4.2-.8"/>
+                    </svg>
                 </button>
                 <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeSpellTools(); skipSpellingCard();" style="color:#00838f;" title="Skip">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
@@ -7819,7 +7935,7 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 </button>
                 <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeMatchTools(); shuffleMatchGame();" style="color:#35654D;" title="Shuffle">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/><path d="M15.6 2.6l3.6 3.2-4.2.8"/><path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/><path d="M8.4 21.4l-3.6-3.2 4.2-.8"/></svg>
                 </button>
                 <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeMatchTools(); skipMatchQuestion();" style="color:#00838f;" title="Skip">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
@@ -7877,7 +7993,7 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 </button>
                 <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeFindLetterTools(false); shuffleFindLetterGame();" style="color:#35654D;" title="Shuffle">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/><path d="M15.6 2.6l3.6 3.2-4.2.8"/><path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/><path d="M8.4 21.4l-3.6-3.2 4.2-.8"/></svg>
                 </button>
                 <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeFindLetterTools(false); skipFindLetterRound();" style="color:#00838f;" title="Skip">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
@@ -8353,10 +8469,8 @@
                     <div id="foldersMoreLabel" style="display:none;text-align:center;font-size:0.75rem;font-weight:700;color:#35654D;
                          padding:2px 0 0;position:relative;z-index:1;">more</div>
                 </div>
-                <div id="foldersBottomActions" style="display:flex;gap:10px;margin-top:12px;align-items:stretch;">
-                    <button type="button" id="addFolderBtn" onclick="openNewFolderModal()"
-                        style="flex:1;padding:11px 16px;border:1.5px dashed #35654D;border-radius:10px;
-                               background:#f7faf8;cursor:pointer;font-size:0.92rem;font-weight:700;color:#35654D;">
+                <div id="foldersBottomActions" style="display:flex;gap:10px;align-items:stretch;">
+                    <button type="button" id="addFolderBtn" onclick="openNewFolderModal()">
                         + Folder
                     </button>
                     <button type="button" id="foldersFinishBtn" onclick="finishFoldersTab()"
@@ -9700,7 +9814,17 @@
             });
             const correctN = 3 + Math.floor(Math.random() * 3);
             const items = [];
-            for (let n = 0; n < correctN; n++) {
+            // Seed mix so rounds are never letters-only (or images-only) when both exist
+            items.push({
+                kind: 'letter',
+                ch: Math.random() < 0.5 ? letter : letter.toLowerCase(),
+                correct: true
+            });
+            if (matchImgs.length) {
+                const seedImg = matchImgs[Math.floor(Math.random() * matchImgs.length)];
+                items.push({ kind: 'image', card: seedImg, correct: true });
+            }
+            while (items.length < correctN) {
                 const pick = correctPool[Math.floor(Math.random() * correctPool.length)];
                 items.push(pick.kind === 'image'
                     ? { kind: 'image', card: pick.card, correct: true }
@@ -9712,7 +9836,12 @@
                 if (distractors.length >= Math.ceil(wrongN / 2)) return;
                 distractors.push({ kind: 'image', card: c, correct: false });
             });
+            // If this letter has no matching card image, still force ≥1 image distractor when possible
+            if (!items.some(function (it) { return it.kind === 'image'; }) && otherImgs.length && !distractors.length) {
+                distractors.push({ kind: 'image', card: otherImgs[0], correct: false });
+            }
             const lettersPool = alphabet.split('');
+            fisherYatesShuffle(lettersPool);
             let guard = 0;
             while (distractors.length < wrongN && guard < 80) {
                 if (!lettersPool.length) {
@@ -9724,6 +9853,34 @@
                 guard++;
             }
             fisherYatesShuffle(distractors).slice(0, wrongN).forEach(function (d) { items.push(d); });
+
+            // Final guarantee: at least one image and one letter when the deck can supply them
+            const allImgs = matchImgs.concat(otherImgs);
+            if (!items.some(function (it) { return it.kind === 'image'; }) && allImgs.length) {
+                const imgCard = matchImgs.length
+                    ? matchImgs[Math.floor(Math.random() * matchImgs.length)]
+                    : allImgs[Math.floor(Math.random() * allImgs.length)];
+                let replaceAt = items.findIndex(function (it) { return it.kind === 'letter' && !it.correct; });
+                if (replaceAt < 0) replaceAt = items.findIndex(function (it) { return it.kind === 'letter'; });
+                if (replaceAt >= 0) {
+                    items[replaceAt] = {
+                        kind: 'image',
+                        card: imgCard,
+                        correct: matchImgs.indexOf(imgCard) >= 0
+                    };
+                }
+            }
+            if (!items.some(function (it) { return it.kind === 'letter'; })) {
+                let replaceAt = items.findIndex(function (it) { return it.kind === 'image' && !it.correct; });
+                if (replaceAt < 0) replaceAt = items.findIndex(function (it) { return it.kind === 'image'; });
+                if (replaceAt >= 0) {
+                    items[replaceAt] = {
+                        kind: 'letter',
+                        ch: Math.random() < 0.5 ? letter : letter.toLowerCase(),
+                        correct: true
+                    };
+                }
+            }
             fisherYatesShuffle(items);
 
             const placed = [];
@@ -10538,6 +10695,7 @@
             if (menu) menu.style.display = 'none';
             if (bd) bd.classList.remove('open');
             document.body.classList.remove('settings-menu-open');
+            if (typeof hideWordSizeGhost === 'function') hideWordSizeGhost(0);
         }
 
         function setSwipeChromeHidden(hidden) {
@@ -15702,6 +15860,21 @@
             });
         }
 
+        // Overwrite an existing unit in place (keeps id + folder membership)
+        function putUnitToDB(unit) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('Database not ready'));
+                    return;
+                }
+                const transaction = db.transaction([UNITS_STORE], 'readwrite');
+                const store = transaction.objectStore(UNITS_STORE);
+                const request = store.put(unit);
+                request.onsuccess = () => resolve(unit.id);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
         // Delete unit from IndexedDB
         function deleteUnitFromDB(id) {
             return new Promise((resolve, reject) => {
@@ -15711,6 +15884,35 @@
 
                 request.onsuccess = () => resolve();
                 request.onerror = () => reject(request.error);
+            });
+        }
+
+        let _deckNameConflictResolver = null;
+
+        function resolveDeckNameConflict(choice) {
+            const modal = document.getElementById('deckNameConflictModal');
+            if (modal) modal.style.display = 'none';
+            const resolve = _deckNameConflictResolver;
+            _deckNameConflictResolver = null;
+            if (typeof resolve === 'function') resolve(choice === 'replace' ? 'replace' : 'cancel');
+        }
+
+        /** Prompt when importing a deck whose name already exists. Returns 'replace' | 'cancel'. */
+        function promptReplaceOrCancelDeck(deckName) {
+            return new Promise(function (resolve) {
+                const modal = document.getElementById('deckNameConflictModal');
+                const msg = document.getElementById('deckNameConflictMessage');
+                if (!modal || !msg) {
+                    resolve('cancel');
+                    return;
+                }
+                if (_deckNameConflictResolver) {
+                    // Prior prompt still open — cancel the older waiter
+                    try { _deckNameConflictResolver('cancel'); } catch (e) { /* ignore */ }
+                }
+                _deckNameConflictResolver = resolve;
+                msg.textContent = '"' + deckName + '" is already in your library. Replace the old deck, or cancel this import?';
+                modal.style.display = 'flex';
             });
         }
 
@@ -16772,7 +16974,8 @@
                 const ab = isLoaded
                     ? '<button class="msp-btn msp-deck-btn" title="Remove from deck" style="border-color:#FF9800;color:#FF9800;" onclick="event.stopPropagation();mspAction(' + unit.id + ',\'remove-added\')">' + svgRemove + '</button>'
                     : '<button class="msp-btn msp-deck-btn" title="Add to deck" style="border-color:#2196F3;color:#2196F3;" onclick="event.stopPropagation();mspAction(' + unit.id + ',\'add\')">' + svgAdd + '</button>';
-                const dateLine = unit.createdAt
+                // Date only in Edit mode (same as Deck Library Organize in gear modal)
+                const dateLine = (_mspEditMode && unit.createdAt)
                     ? '<div class="msp-unit-count">' + new Date(unit.createdAt).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' }) + '</div>'
                     : '';
                 return '<div class="msp-unit-row' + lc + '" id="msp-row-' + unit.id + '" draggable="true" data-unit-id="' + unit.id + '"' +
@@ -18362,11 +18565,17 @@
             }));
         }
 
-        // Import a single File object → { id, name, cardCount, createdAt } or null
-        async function importOneUnitFile(file, existingUnits) {
+        // Import a single File object → { id, name, cardCount, createdAt, replaced? } or null
+        // opts.replaceUnit: existing unit row to overwrite in place (same id / folders)
+        async function importOneUnitFile(file, existingUnits, opts) {
+            opts = opts || {};
             const name = file.name.replace(/\.json$/i, '');
-            const nameDup = (existingUnits || []).some(function(u) { return u.name === name; });
-            if (nameDup) throw new Error('duplicate');
+            const replaceUnit = opts.replaceUnit || null;
+
+            if (!replaceUnit) {
+                const nameDup = (existingUnits || []).some(function(u) { return u.name === name; });
+                if (nameDup) throw new Error('duplicate');
+            }
 
             const text = await file.text();
             const jsonData = JSON.parse(text);
@@ -18387,10 +18596,53 @@
                 return card;
             }));
 
+            const fileData = JSON.stringify(normalizedData);
+
+            if (replaceUnit && replaceUnit.id != null) {
+                const updated = Object.assign({}, replaceUnit, {
+                    name: replaceUnit.name || name,
+                    sourceType: 'file',
+                    fileData: fileData,
+                    updatedAt: Date.now()
+                });
+                await putUnitToDB(updated);
+                // Refresh live study deck if this unit is currently loaded
+                try {
+                    if (typeof currentLoadedUnitId !== 'undefined'
+                        && currentLoadedUnitId != null
+                        && Number(currentLoadedUnitId) === Number(replaceUnit.id)
+                        && normalizedData.cards && normalizedData.cards.length) {
+                        const incoming = normalizedData.cards;
+                        cards = incoming.slice(0, 30);
+                        currentIndex = 0;
+                        isFlipped = false;
+                        if (typeof resetAllGameSessions === 'function') resetAllGameSessions();
+                        if (typeof saveCards === 'function') saveCards();
+                        if (typeof renderDisplay === 'function') renderDisplay();
+                    }
+                } catch (liveErr) {
+                    console.warn('Could not refresh loaded deck after replace', liveErr);
+                }
+                const idx = (existingUnits || []).findIndex(function(u) {
+                    return Number(u.id) === Number(replaceUnit.id);
+                });
+                if (idx >= 0) {
+                    existingUnits[idx].name = updated.name;
+                    existingUnits[idx].fileData = fileData;
+                }
+                return {
+                    id: replaceUnit.id,
+                    name: updated.name,
+                    cardCount: normalizedData.cards.length,
+                    createdAt: updated.createdAt || Date.now(),
+                    replaced: true
+                };
+            }
+
             const unit = {
                 name: name,
                 sourceType: 'file',
-                fileData: JSON.stringify(normalizedData),
+                fileData: fileData,
                 createdAt: Date.now()
             };
 
@@ -18423,46 +18675,57 @@
 
             try {
                 const existingUnits = await loadUnitsFromDB();
-                const alreadyLoaded = [];
-                const newFiles = [];
-                files.forEach(function(file) {
-                    const name = file.name.replace(/\.json$/i, '');
-                    const isDup = (existingUnits || []).some(function(u) { return u.name === name; });
-                    if (isDup) alreadyLoaded.push(file);
-                    else newFiles.push(file);
-                });
+                const cancelled = [];
+                const toProcess = []; // { file, replaceUnit? }
 
-                if (!newFiles.length) {
-                    showToast(alreadyLoaded.length === 1
-                        ? "This deck's already loaded"
-                        : "These decks are already loaded", 2500);
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const name = file.name.replace(/\.json$/i, '');
+                    const existing = (existingUnits || []).find(function(u) { return u.name === name; });
+                    if (existing) {
+                        const choice = await promptReplaceOrCancelDeck(name);
+                        if (choice === 'replace') {
+                            toProcess.push({ file: file, replaceUnit: existing });
+                        } else {
+                            cancelled.push(file);
+                        }
+                    } else {
+                        toProcess.push({ file: file, replaceUnit: null });
+                    }
+                }
+
+                if (!toProcess.length) {
+                    showToast(cancelled.length === 1
+                        ? 'Import cancelled'
+                        : 'Imports cancelled', 2200);
                     if (_ucmSessionImports.length) renderImportSessionList();
                     else resetImportFlow();
                     return;
                 }
 
-                showToast(newFiles.length > 1 ? '⏳ Processing ' + newFiles.length + ' files…' : '⏳ Processing…', 1500);
+                showToast(toProcess.length > 1 ? '⏳ Processing ' + toProcess.length + ' files…' : '⏳ Processing…', 1500);
 
                 const results = [];
                 const errors = [];
 
-                for (let i = 0; i < newFiles.length; i++) {
+                for (let i = 0; i < toProcess.length; i++) {
+                    const item = toProcess[i];
                     try {
-                        const r = await importOneUnitFile(newFiles[i], existingUnits);
+                        const r = await importOneUnitFile(item.file, existingUnits, {
+                            replaceUnit: item.replaceUnit || null
+                        });
                         if (r) results.push(r);
                     } catch (err) {
                         const msg = (err && err.message) ? err.message : 'error';
-                        if (msg === 'duplicate') alreadyLoaded.push(newFiles[i]);
-                        else errors.push(newFiles[i].name);
-                        console.error('Import failed for', newFiles[i].name, err);
+                        if (msg === 'duplicate') cancelled.push(item.file);
+                        else errors.push(item.file.name);
+                        console.error('Import failed for', item.file.name, err);
                     }
                 }
 
                 if (!results.length) {
-                    if (alreadyLoaded.length && !errors.length) {
-                        showToast(alreadyLoaded.length === 1
-                            ? "This deck's already loaded"
-                            : "These decks are already loaded", 2500);
+                    if (cancelled.length && !errors.length) {
+                        showToast('Import cancelled', 2200);
                     } else {
                         showToast(errors.length ? '⚠️ No decks imported' : '⚠️ Invalid JSON file', 3000);
                     }
@@ -18473,12 +18736,17 @@
 
                 // Each file as its own card; stay on list (no blank import page mid-session)
                 results.forEach(function(r) {
-                    _ucmSessionImports.push({
+                    const existingIdx = _ucmSessionImports.findIndex(function(x) {
+                        return Number(x.id) === Number(r.id);
+                    });
+                    const row = {
                         id: r.id,
                         name: r.name,
                         cardCount: r.cardCount,
                         createdAt: r.createdAt
-                    });
+                    };
+                    if (existingIdx >= 0) _ucmSessionImports[existingIdx] = row;
+                    else _ucmSessionImports.push(row);
                 });
                 const primary = results[results.length - 1];
                 _ucmPendingUnit = { id: primary.id, name: primary.name };
@@ -18494,12 +18762,21 @@
 
                 syncUnitsEverywhere();
                 await loadUnitsList();
+                if (document.getElementById('manageSidePanel')
+                    && document.getElementById('manageSidePanel').classList.contains('open')) {
+                    loadUnitsFromDB().then(function(units) { renderMspList(units); });
+                }
                 flashUcmRowsByIds(_ucmFlashIds);
 
-                var toastMsg = '✅ ' + results.length + ' file' + (results.length !== 1 ? 's' : '') + ' added';
-                if (alreadyLoaded.length) toastMsg += alreadyLoaded.length === 1
-                    ? " (1 already loaded)"
-                    : ' (' + alreadyLoaded.length + ' already loaded)';
+                const replacedN = results.filter(function(r) { return r.replaced; }).length;
+                const addedN = results.length - replacedN;
+                var toastParts = [];
+                if (addedN) toastParts.push(addedN + ' added');
+                if (replacedN) toastParts.push(replacedN + ' replaced');
+                var toastMsg = '✅ ' + toastParts.join(', ');
+                if (cancelled.length) toastMsg += cancelled.length === 1
+                    ? ' (1 cancelled)'
+                    : ' (' + cancelled.length + ' cancelled)';
                 else if (errors.length) toastMsg += ' (' + errors.length + ' skipped)';
                 showToast(toastMsg, 2200);
 
@@ -19834,11 +20111,98 @@
             track.setAttribute('aria-valuenow', String(cardTextScaleIndex));
         }
 
-        function setCardTextScaleIndex(nextIndex) {
+        function getWordSizeGhostText() {
+            const card = (typeof cards !== 'undefined' && cards && cards[currentIndex]) ? cards[currentIndex] : null;
+            const raw = card && card.backText != null ? String(card.backText) : '';
+            const text = raw.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+            return text || 'Aa';
+        }
+
+        /** Overlay the card rect and fit the ghost word with the same algorithm as the card back. */
+        function showWordSizeGhost(/* index */) {
+            const el = document.getElementById('wordSizeGhost');
+            const card = document.querySelector('.card');
+            if (!el || !card) return;
+
+            const back = card.querySelector('.card-back');
+            const liveText = document.querySelector('.card > .card-back .card-text-auto-scale');
+            const text = getWordSizeGhostText();
+
+            el.innerHTML = '';
+            const inner = document.createElement('div');
+            inner.className = 'card-text card-text-auto-scale';
+            if (typeof highlightVowels === 'function') inner.innerHTML = highlightVowels(text);
+            else inner.textContent = text;
+            el.appendChild(inner);
+
+            const r = card.getBoundingClientRect();
+            let padTop = 20, padRight = 20, padBottom = 20, padLeft = 20;
+            if (back) {
+                const pcs = window.getComputedStyle(back);
+                padTop = parseFloat(pcs.paddingTop) || padTop;
+                padRight = parseFloat(pcs.paddingRight) || padRight;
+                padBottom = parseFloat(pcs.paddingBottom) || padBottom;
+                padLeft = parseFloat(pcs.paddingLeft) || padLeft;
+            }
+            el.style.left = r.left + 'px';
+            el.style.top = r.top + 'px';
+            el.style.width = r.width + 'px';
+            el.style.height = r.height + 'px';
+            el.style.padding = padTop + 'px ' + padRight + 'px ' + padBottom + 'px ' + padLeft + 'px';
+            el.style.maxWidth = 'none';
+            el.style.transform = 'none';
+            el.style.overflow = 'hidden';
+
+            // Prefer the live fitted size from the real back word (already clamped to the card)
+            if (liveText && liveText.style.fontSize) {
+                inner.style.fontSize = liveText.style.fontSize;
+                inner.style.whiteSpace = liveText.style.whiteSpace || '';
+                inner.style.wordBreak = liveText.style.wordBreak || '';
+                inner.style.overflowWrap = liveText.style.overflowWrap || '';
+            } else if (typeof _fitOneBackText === 'function') {
+                // Fit against this ghost box — same rules as card-back, so it cannot outgrow the card
+                _fitOneBackText(inner, el, null);
+            }
+
+            // Hard clamp: never wider/taller than the padded card area
+            const maxW = Math.max(8, el.clientWidth);
+            const maxH = Math.max(8, el.clientHeight);
+            if (inner.scrollWidth > maxW + 1 || inner.scrollHeight > maxH + 1) {
+                if (typeof _fitOneBackText === 'function') _fitOneBackText(inner, el, null);
+            }
+
+            el.classList.add('visible');
+            el.setAttribute('aria-hidden', 'false');
+            if (el._hideTimer) {
+                clearTimeout(el._hideTimer);
+                el._hideTimer = null;
+            }
+        }
+
+        function hideWordSizeGhost(delayMs) {
+            const el = document.getElementById('wordSizeGhost');
+            if (!el) return;
+            if (el._hideTimer) clearTimeout(el._hideTimer);
+            const wait = (delayMs == null) ? 280 : delayMs;
+            el._hideTimer = setTimeout(function () {
+                el.classList.remove('visible');
+                el.setAttribute('aria-hidden', 'true');
+                el._hideTimer = null;
+            }, Math.max(0, wait));
+        }
+
+        function setCardTextScaleIndex(nextIndex, opts) {
             const max = TEXT_SCALES.length - 1;
             nextIndex = Math.max(0, Math.min(max, nextIndex | 0));
+            const showGhost = !opts || opts.ghost !== false;
             if (nextIndex === cardTextScaleIndex) {
                 syncWordSizeSlider();
+                if (showGhost) {
+                    requestAnimationFrame(function () {
+                        if (typeof scaleTextToFit === 'function') scaleTextToFit();
+                        showWordSizeGhost(nextIndex);
+                    });
+                }
                 return;
             }
             const prev = cardTextScaleIndex;
@@ -19847,9 +20211,8 @@
             delete cachedBackTextSizes[currentIndex];
             requestAnimationFrame(() => {
                 scaleTextToFit();
-                if (nextIndex <= prev) return;
-                requestAnimationFrame(() => {
-                    const textEl = document.querySelector('.card-text-auto-scale');
+                if (nextIndex > prev) {
+                    const textEl = document.querySelector('.card > .card-back .card-text-auto-scale');
                     const container = textEl && textEl.closest('.card-back');
                     if (textEl && container) {
                         const overflowsWidth  = textEl.scrollWidth  > container.offsetWidth  - 10;
@@ -19859,10 +20222,13 @@
                             delete cachedBackTextSizes[currentIndex];
                             scaleTextToFit();
                             syncWordSizeSlider();
+                            if (showGhost) showWordSizeGhost(prev);
                             showToast('⚠️ Text too large to fit the card', 2500);
+                            return;
                         }
                     }
-                });
+                }
+                if (showGhost) showWordSizeGhost(nextIndex);
             });
         }
 
@@ -19897,7 +20263,11 @@
                 e.preventDefault();
                 setCardTextScaleIndex(wordSizeIndexFromClientX(pointerX(e)));
             }
-            function onUp() { dragging = false; }
+            function onUp() {
+                if (!dragging) return;
+                dragging = false;
+                hideWordSizeGhost(450);
+            }
             track.addEventListener('mousedown', onDown);
             window.addEventListener('mousemove', onMove);
             window.addEventListener('mouseup', onUp);
@@ -23658,9 +24028,9 @@
                     </div>
                     <span style="height:1px; width:18px; background:#e0e0e0;"></span>
                     <button onclick="startNewGuessGame()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Shuffle Cards">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
-                            <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/><path d="M15.6 2.6l3.6 3.2-4.2.8"/>
+                            <path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/><path d="M8.4 21.4l-3.6-3.2 4.2-.8"/>
                         </svg>
                     </button>
                     <button onclick="openGuessGameHelp()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" title="How to Play">❓</button>
@@ -24100,9 +24470,9 @@
                     </div>
                     <span style="height:1px; width:18px; background:#e0e0e0;"></span>
                     <button onclick="startNewBombGame()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Shuffle Cards">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
-                            <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/><path d="M15.6 2.6l3.6 3.2-4.2.8"/>
+                            <path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/><path d="M8.4 21.4l-3.6-3.2 4.2-.8"/>
                         </svg>
                     </button>
                     <button onclick="openBombGameHelp()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" title="How to Play">❓</button>
@@ -24229,9 +24599,9 @@
                     </div>
                     <span style="height:1px; width:18px; background:#e0e0e0;"></span>
                     <button onclick="startNewBombGame()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Shuffle Cards">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
-                            <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/><path d="M15.6 2.6l3.6 3.2-4.2.8"/>
+                            <path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/><path d="M8.4 21.4l-3.6-3.2 4.2-.8"/>
                         </svg>
                     </button>
                     <button onclick="openBombGameHelp()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" title="How to Play">❓</button>
@@ -25901,9 +26271,9 @@
                     </div>
                     <span style="height:1px; width:18px; background:#e0e0e0;"></span>
                     <button onclick="startNewGuessGame()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;" title="Shuffle Cards">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
-                            <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4.2 11.2A8.6 8.6 0 0 1 18.6 5.4"/><path d="M15.6 2.6l3.6 3.2-4.2.8"/>
+                            <path d="M19.8 12.8A8.6 8.6 0 0 1 5.4 18.6"/><path d="M8.4 21.4l-3.6-3.2 4.2-.8"/>
                         </svg>
                     </button>
                     <button onclick="openGuessGameHelp()" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;" title="How to Play">❓</button>
