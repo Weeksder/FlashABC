@@ -4823,13 +4823,14 @@
             cursor: pointer;
             z-index: 6;
         }
+        /* Reorder mode: purple rail so a finger can scroll without grabbing tiles */
         #previewOverlayModal.reorder-mode-on #previewOverlayScroll {
-            width: 12px !important;
-            min-width: 12px !important;
-            max-width: 12px !important;
-            flex-basis: 12px !important;
+            width: 24px !important;
+            min-width: 24px !important;
+            max-width: 24px !important;
+            flex-basis: 24px !important;
             background: #ece8f8;
-            border-left-color: #d4c8f0;
+            border-left: 2px solid #c4b5fd;
         }
         #previewOverlayScrollThumb {
             position: absolute;
@@ -4844,7 +4845,53 @@
             cursor: grab;
         }
         #previewOverlayModal.reorder-mode-on #previewOverlayScrollThumb {
-            background: #6d28d9;
+            left: 4px;
+            right: 4px;
+            min-height: 44px;
+            border-radius: 8px;
+            background: #7c3aed;
+            box-shadow: 0 2px 8px rgba(109, 40, 217, 0.35);
+        }
+        /* Create modal: same wide scroll rail while Reorder & Remove is on */
+        #createModal .preview-grid-with-rail {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            width: 100%;
+            overflow: hidden;
+        }
+        #createModal #imagePreviewScroll {
+            display: none;
+            flex: 0 0 24px;
+            width: 24px;
+            min-width: 24px;
+            position: relative;
+            background: #ece8f8;
+            border-left: 2px solid #c4b5fd;
+            touch-action: none;
+            cursor: pointer;
+            z-index: 6;
+        }
+        #createModal.reorder-mode-on #imagePreviewScroll.is-visible {
+            display: block;
+        }
+        #createModal #imagePreviewScrollThumb {
+            position: absolute;
+            left: 4px;
+            right: 4px;
+            top: 0;
+            min-height: 44px;
+            border-radius: 8px;
+            background: #7c3aed;
+            box-shadow: 0 2px 8px rgba(109, 40, 217, 0.35);
+            touch-action: none;
+            cursor: grab;
+        }
+        #createModal.reorder-mode-on #imagePreviewGrid {
+            flex: 1 1 auto;
+            min-width: 0;
         }
         #previewOverlayGrid .session-preview-item {
             display: flex;
@@ -7003,7 +7050,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1414-msp-date-edit-only">
+    <meta name="flashabc-build" content="1417-weather-sample-deck">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -8276,7 +8323,7 @@
             </div>
             <div id="previewOverlayBody">
                 <div id="previewOverlayGrid" style="flex:1; overflow-y:auto; padding:14px; -webkit-overflow-scrolling:touch; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; min-height:0; align-content:start;"></div>
-                <div id="previewOverlayScroll" title="Scroll" style="width:10px;">
+                <div id="previewOverlayScroll" title="Drag to scroll" style="width:10px;">
                     <div id="previewOverlayScrollThumb"></div>
                 </div>
             </div>
@@ -8289,18 +8336,23 @@
     <!-- Sample Deck Modal -->
     <div id="sampleDeckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center; padding:20px;">
         <div style="background:white; border-radius:16px; width:100%; max-width:560px; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
-            <div style="background:#35654D; padding:14px 18px; border-radius:16px 16px 0 0; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+            <div style="background:#35654D; padding:14px 18px; border-radius:16px 16px 0 0; display:flex; flex-direction:column; gap:10px; flex-shrink:0;">
                 <span style="color:white; font-weight:700; font-size:17px;">Sample Deck</span>
-                <div style="display:flex; gap:6px;">
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
                     <button id="sampleTabFruits" onclick="switchSampleTab('fruits')"
-                        style="padding:5px 14px; border-radius:20px; border:2px solid white; background:white;
+                        style="padding:5px 12px; border-radius:20px; border:2px solid white; background:white;
                                color:#35654D; font-weight:700; font-size:13px; cursor:pointer;">
                         🍎 Fruits
                     </button>
                     <button id="sampleTabAnimals" onclick="switchSampleTab('animals')"
-                        style="padding:5px 14px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
+                        style="padding:5px 12px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
                                color:rgba(255,255,255,0.8); font-weight:700; font-size:13px; cursor:pointer;">
                         🐾 Animals
+                    </button>
+                    <button id="sampleTabWeather" onclick="switchSampleTab('weather')"
+                        style="padding:5px 12px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
+                               color:rgba(255,255,255,0.8); font-weight:700; font-size:13px; cursor:pointer;">
+                        ☀️ Weather
                     </button>
                 </div>
             </div>
@@ -12049,6 +12101,10 @@
                 if (createModal) createModal.classList.add('reorder-mode-on');
                 selectedImageIndex = null;
                 renderImagePreviews();
+                if (typeof setupCreatePreviewScroll === 'function') {
+                    setTimeout(setupCreatePreviewScroll, 60);
+                    setTimeout(setupCreatePreviewScroll, 350);
+                }
             }
             if (typeof updateCreateWizardUI === 'function') {
                 // Refresh hint text only (avoid thrashing modes)
@@ -12628,7 +12684,10 @@
                 previewHTML += '</div>';
             }
 
+            previewHTML += '<div class="preview-grid-with-rail">';
             previewHTML += '<div id="imagePreviewGrid" class="responsive-grid"></div>';
+            previewHTML += '<div id="imagePreviewScroll" title="Drag to scroll"><div id="imagePreviewScrollThumb"></div></div>';
+            previewHTML += '</div>';
             previewHTML += '</div>';
 
             document.getElementById('frontPreview').innerHTML = previewHTML;
@@ -12636,6 +12695,10 @@
             // Check scroll hint after placeholders exist, then again after images paint
             setTimeout(setupScrollIndicator, 100);
             setTimeout(setupScrollIndicator, 600);
+            if (typeof setupCreatePreviewScroll === 'function') {
+                setTimeout(setupCreatePreviewScroll, 80);
+                setTimeout(setupCreatePreviewScroll, 400);
+            }
 
             // Extract and display all filenames
             const fileNames = [];
@@ -15382,19 +15445,24 @@
             setupPreviewOverlayScroll();
         }
 
-        function setupPreviewOverlayScroll() {
-            const grid = document.getElementById('previewOverlayGrid');
-            const rail = document.getElementById('previewOverlayScroll');
-            const thumb = document.getElementById('previewOverlayScrollThumb');
+        function bindPreviewScrollRail(grid, rail, thumb, opts) {
+            opts = opts || {};
             if (!grid || !rail || !thumb) return;
 
             function syncThumb() {
                 const view = grid.clientHeight;
                 const full = grid.scrollHeight;
                 const overflow = full > view + 6;
-                rail.style.display = overflow ? 'block' : 'none';
+                const show = overflow && (opts.alwaysShowWhenOverflow !== false);
+                if (opts.visibilityClass) {
+                    rail.classList.toggle(opts.visibilityClass, !!show);
+                    if (!opts.keepDisplay) rail.style.display = show ? 'block' : 'none';
+                } else {
+                    rail.style.display = show ? 'block' : 'none';
+                }
                 if (!overflow) return;
-                const thumbH = Math.max(40, Math.round(view * (view / full)));
+                const minThumb = opts.minThumb || 40;
+                const thumbH = Math.max(minThumb, Math.round(view * (view / full)));
                 const maxTop = Math.max(0, view - thumbH);
                 const maxScroll = Math.max(1, full - view);
                 const top = (grid.scrollTop / maxScroll) * maxTop;
@@ -15439,7 +15507,7 @@
                 dragging = true;
                 startY = e.clientY;
                 startScroll = grid.scrollTop;
-                const onThumb = !!(e.target && e.target.closest && e.target.closest('#previewOverlayScrollThumb'));
+                const onThumb = !!(e.target && e.target.closest && e.target.closest('#' + thumb.id));
                 if (!onThumb) scrollFromPointer(e.clientY, false);
                 try { rail.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
                 function onMove(ev) {
@@ -15457,6 +15525,33 @@
                 rail.addEventListener('pointerup', onUp);
                 rail.addEventListener('pointercancel', onUp);
             });
+        }
+
+        function setupPreviewOverlayScroll() {
+            bindPreviewScrollRail(
+                document.getElementById('previewOverlayGrid'),
+                document.getElementById('previewOverlayScroll'),
+                document.getElementById('previewOverlayScrollThumb'),
+                { minThumb: 48 }
+            );
+        }
+
+        function setupCreatePreviewScroll() {
+            const createModal = document.getElementById('createModal');
+            const rail = document.getElementById('imagePreviewScroll');
+            if (!createModal || !rail) return;
+            // Only useful while Reorder & Remove is on (tiles capture touch)
+            if (!createModal.classList.contains('reorder-mode-on')) {
+                rail.classList.remove('is-visible');
+                rail.style.display = 'none';
+                return;
+            }
+            bindPreviewScrollRail(
+                document.getElementById('imagePreviewGrid'),
+                rail,
+                document.getElementById('imagePreviewScrollThumb'),
+                { minThumb: 48, visibilityClass: 'is-visible', keepDisplay: true }
+            );
         }
 
         function toggleSessionPreviewArrange(event) {
@@ -15545,22 +15640,26 @@
         let _sampleTab = 'fruits';
         const SAMPLE_DECK_URLS = {
             fruits:  'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Fruits_Sample_Set.json',
-            animals: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Animals_Sample_Set.json'
+            animals: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Animals_Sample_Set.json',
+            weather: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/weather.json'
+        };
+        const SAMPLE_TAB_BTN_IDS = {
+            fruits: 'sampleTabFruits',
+            animals: 'sampleTabAnimals',
+            weather: 'sampleTabWeather'
         };
 
         function switchSampleTab(tab) {
             _sampleTab = tab;
-            const btnFruits  = document.getElementById('sampleTabFruits');
-            const btnAnimals = document.getElementById('sampleTabAnimals');
-            if (btnFruits && btnAnimals) {
-                [['fruits', btnFruits], ['animals', btnAnimals]].forEach(([key, btn]) => {
-                    if (key === tab) {
-                        btn.style.background = 'white'; btn.style.color = '#35654D'; btn.style.borderColor = 'white';
-                    } else {
-                        btn.style.background = 'transparent'; btn.style.color = 'rgba(255,255,255,0.8)'; btn.style.borderColor = 'rgba(255,255,255,0.5)';
-                    }
-                });
-            }
+            Object.keys(SAMPLE_TAB_BTN_IDS).forEach(function(key) {
+                const btn = document.getElementById(SAMPLE_TAB_BTN_IDS[key]);
+                if (!btn) return;
+                if (key === tab) {
+                    btn.style.background = 'white'; btn.style.color = '#35654D'; btn.style.borderColor = 'white';
+                } else {
+                    btn.style.background = 'transparent'; btn.style.color = 'rgba(255,255,255,0.8)'; btn.style.borderColor = 'rgba(255,255,255,0.5)';
+                }
+            });
             loadSampleTab(tab);
         }
 
@@ -15614,7 +15713,7 @@
 
         function isDefaultSampleDeckName(name) {
             const n = String(name || '').toLowerCase().replace(/\.json$/i, '').trim();
-            return n === 'fruits_sample_set' || n === 'animals_sample_set';
+            return n === 'fruits_sample_set' || n === 'animals_sample_set' || n === 'weather_sample_set' || n === 'weather';
         }
 
         function createFromSampleDeck() {
