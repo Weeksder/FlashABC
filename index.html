@@ -5921,6 +5921,115 @@
             max-width: 100%;
             max-height: 100%;
         }
+        #cropOverlay .crop-toolbar {
+            display: grid;
+            grid-template-columns: 40px 1fr 40px;
+            align-items: center;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            flex-shrink: 0;
+            gap: 12px;
+        }
+        #cropOverlay .crop-bottombar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 72px;
+            padding: 14px 16px;
+            background: #1a1a1a;
+            flex-shrink: 0;
+        }
+        #cropOverlay .crop-toolbar .crop-cancel-btn { justify-self: start; }
+        #cropOverlay .crop-toolbar .crop-reset-btn { justify-self: center; }
+        #cropOverlay .crop-toolbar .crop-top-right { justify-self: end; display: flex; align-items: center; gap: 8px; }
+        #cropOverlay .crop-title {
+            color: #fff;
+            font-size: 17px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+        #cropOverlay .crop-icon-btn {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            flex-shrink: 0;
+        }
+        #cropOverlay .crop-icon-btn svg {
+            display: block;
+            pointer-events: none;
+            width: 18px;
+            height: 18px;
+        }
+        #cropOverlay .crop-cancel-btn {
+            border: 0.5px solid rgba(255, 255, 255, 0.7);
+            background:
+                linear-gradient(155deg,
+                    rgba(255, 255, 255, 0.34) 0%,
+                    rgba(255, 255, 255, 0.12) 48%,
+                    rgba(255, 255, 255, 0.22) 100%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            backdrop-filter: blur(20px) saturate(160%);
+            box-shadow:
+                0 4px 14px rgba(0, 0, 0, 0.28),
+                inset 0 1px 0 rgba(255, 255, 255, 0.45);
+            color: #fff;
+        }
+        #cropOverlay .crop-done-btn {
+            border: 0.5px solid rgba(255, 255, 255, 0.28);
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.4);
+            box-shadow: none;
+        }
+        #cropOverlay.crop-dirty .crop-done-btn {
+            border: 0.5px solid rgba(255, 255, 255, 0.55);
+            background:
+                linear-gradient(155deg, #FFE566 0%, #FFD600 48%, #FFC400 100%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
+            backdrop-filter: blur(16px) saturate(140%);
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.32),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            color: #111;
+        }
+        #cropOverlay .crop-revert-btn {
+            border: none;
+            background: #e53935;
+            box-shadow: 0 4px 14px rgba(229, 57, 53, 0.45);
+            color: #fff;
+        }
+        #cropOverlay .crop-reset-btn {
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.5);
+            border: none;
+            border-radius: 10px;
+            padding: 9px 16px;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: none;
+        }
+        #cropOverlay.crop-dirty .crop-reset-btn {
+            background: #FFD600;
+            color: #111;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+        }
+        #cropOverlay .crop-icon-btn:active,
+        #cropOverlay .crop-reset-btn:active {
+            transform: scale(0.94);
+            opacity: 0.92;
+        }
 
         /* Preview overlay grid — responsive columns */
         #previewOverlayGrid {
@@ -7050,7 +7159,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1417-weather-sample-deck">
+    <meta name="flashabc-build" content="1420-crop-slot-swap">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -8336,23 +8445,18 @@
     <!-- Sample Deck Modal -->
     <div id="sampleDeckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center; padding:20px;">
         <div style="background:white; border-radius:16px; width:100%; max-width:560px; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
-            <div style="background:#35654D; padding:14px 18px; border-radius:16px 16px 0 0; display:flex; flex-direction:column; gap:10px; flex-shrink:0;">
+            <div style="background:#35654D; padding:14px 18px; border-radius:16px 16px 0 0; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
                 <span style="color:white; font-weight:700; font-size:17px;">Sample Deck</span>
-                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <div style="display:flex; gap:6px;">
                     <button id="sampleTabFruits" onclick="switchSampleTab('fruits')"
-                        style="padding:5px 12px; border-radius:20px; border:2px solid white; background:white;
+                        style="padding:5px 14px; border-radius:20px; border:2px solid white; background:white;
                                color:#35654D; font-weight:700; font-size:13px; cursor:pointer;">
                         🍎 Fruits
                     </button>
                     <button id="sampleTabAnimals" onclick="switchSampleTab('animals')"
-                        style="padding:5px 12px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
+                        style="padding:5px 14px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
                                color:rgba(255,255,255,0.8); font-weight:700; font-size:13px; cursor:pointer;">
                         🐾 Animals
-                    </button>
-                    <button id="sampleTabWeather" onclick="switchSampleTab('weather')"
-                        style="padding:5px 12px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
-                               color:rgba(255,255,255,0.8); font-weight:700; font-size:13px; cursor:pointer;">
-                        ☀️ Weather
                     </button>
                 </div>
             </div>
@@ -15640,26 +15744,22 @@
         let _sampleTab = 'fruits';
         const SAMPLE_DECK_URLS = {
             fruits:  'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Fruits_Sample_Set.json',
-            animals: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Animals_Sample_Set.json',
-            weather: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/weather.json'
-        };
-        const SAMPLE_TAB_BTN_IDS = {
-            fruits: 'sampleTabFruits',
-            animals: 'sampleTabAnimals',
-            weather: 'sampleTabWeather'
+            animals: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Animals_Sample_Set.json'
         };
 
         function switchSampleTab(tab) {
             _sampleTab = tab;
-            Object.keys(SAMPLE_TAB_BTN_IDS).forEach(function(key) {
-                const btn = document.getElementById(SAMPLE_TAB_BTN_IDS[key]);
-                if (!btn) return;
-                if (key === tab) {
-                    btn.style.background = 'white'; btn.style.color = '#35654D'; btn.style.borderColor = 'white';
-                } else {
-                    btn.style.background = 'transparent'; btn.style.color = 'rgba(255,255,255,0.8)'; btn.style.borderColor = 'rgba(255,255,255,0.5)';
-                }
-            });
+            const btnFruits  = document.getElementById('sampleTabFruits');
+            const btnAnimals = document.getElementById('sampleTabAnimals');
+            if (btnFruits && btnAnimals) {
+                [['fruits', btnFruits], ['animals', btnAnimals]].forEach(([key, btn]) => {
+                    if (key === tab) {
+                        btn.style.background = 'white'; btn.style.color = '#35654D'; btn.style.borderColor = 'white';
+                    } else {
+                        btn.style.background = 'transparent'; btn.style.color = 'rgba(255,255,255,0.8)'; btn.style.borderColor = 'rgba(255,255,255,0.5)';
+                    }
+                });
+            }
             loadSampleTab(tab);
         }
 
@@ -15713,7 +15813,7 @@
 
         function isDefaultSampleDeckName(name) {
             const n = String(name || '').toLowerCase().replace(/\.json$/i, '').trim();
-            return n === 'fruits_sample_set' || n === 'animals_sample_set' || n === 'weather_sample_set' || n === 'weather';
+            return n === 'fruits_sample_set' || n === 'animals_sample_set';
         }
 
         function createFromSampleDeck() {
@@ -21423,13 +21523,15 @@
             offsetX: 0, offsetY: 0,
             scale: 1,
             crop: { x: 0, y: 0, w: 0, h: 0 },
+            baseCrop: { x: 0, y: 0, w: 0, h: 0 },
             dragging: false,
             resizing: null,
             lastX: 0, lastY: 0,
             cardIndex: -1
         };
 
-        const HANDLE_SIZE = 22;
+        const HANDLE_SIZE = 28;
+        const CROP_HANDLE_ORANGE = '#ff9500';
 
         function openCropTool() {
             closeSettingsMenu();
@@ -21447,13 +21549,10 @@
 
             const overlay = document.getElementById('cropOverlay');
             overlay.style.display = 'flex';
+            overlay.classList.remove('crop-dirty');
             document.body.style.overflow = 'hidden';
 
-            // Show revert button only if image has previously been cropped (original differs from current)
-            const revertBtn = document.getElementById('revertCropBtn');
-            if (revertBtn) {
-                revertBtn.style.display = (card.originalFrontImage && card.originalFrontImage !== card.frontImage) ? 'block' : 'none';
-            }
+            syncCropRevertButton(card);
 
             const img = new Image();
             img.onload = () => {
@@ -21488,7 +21587,33 @@
 
             // Default crop = full image
             cropState.crop = { x: cropState.offsetX, y: cropState.offsetY, w: dw, h: dh };
+            cropState.baseCrop = { x: cropState.crop.x, y: cropState.crop.y, w: cropState.crop.w, h: cropState.crop.h };
             drawCrop();
+            syncCropActionState();
+        }
+
+        function cropRectChanged() {
+            const c = cropState.crop;
+            const b = cropState.baseCrop;
+            if (!c || !b) return false;
+            return Math.abs(c.x - b.x) > 0.5 || Math.abs(c.y - b.y) > 0.5 ||
+                   Math.abs(c.w - b.w) > 0.5 || Math.abs(c.h - b.h) > 0.5;
+        }
+
+        function syncCropActionState() {
+            const overlay = document.getElementById('cropOverlay');
+            if (overlay) overlay.classList.toggle('crop-dirty', cropRectChanged());
+            syncCropRevertButton();
+        }
+
+        function syncCropRevertButton(card) {
+            const revertBtn = document.getElementById('revertCropBtn');
+            const doneBtn = document.getElementById('applyCropBtn');
+            const c = card || cards[cropState.cardIndex];
+            const previouslyCropped = !!(c && c.originalFrontImage && c.originalFrontImage !== c.frontImage);
+            const showRevert = previouslyCropped && !cropRectChanged();
+            if (revertBtn) revertBtn.style.display = showRevert ? 'flex' : 'none';
+            if (doneBtn) doneBtn.style.display = showRevert ? 'none' : 'flex';
         }
 
         function drawCrop() {
@@ -21514,8 +21639,8 @@
             ctx.restore();
 
             // Crop border
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+            ctx.lineWidth = 1.5;
             ctx.strokeRect(s.crop.x, s.crop.y, s.crop.w, s.crop.h);
 
             // Rule-of-thirds grid
@@ -21532,15 +21657,45 @@
                 ctx.stroke();
             }
 
-            // Corner handles
-            const hs = HANDLE_SIZE / 2;
-            const corners = getCropCorners();
-            corners.forEach(({ x, y }) => {
-                ctx.fillStyle = 'white';
+            drawCropSizeHandles(ctx, s.crop);
+        }
+
+        function drawCropSizeHandles(ctx, c) {
+            const thick = 6;
+            const arm = Math.min(28, Math.max(14, Math.min(c.w, c.h) * 0.22));
+            const mid = Math.min(26, Math.max(12, Math.min(c.w, c.h) * 0.2));
+            ctx.save();
+            ctx.strokeStyle = CROP_HANDLE_ORANGE;
+            ctx.lineWidth = thick;
+            ctx.lineCap = 'square';
+            ctx.lineJoin = 'miter';
+
+            function corner(x, y, dx, dy) {
                 ctx.beginPath();
-                ctx.arc(x, y, hs, 0, Math.PI * 2);
-                ctx.fill();
-            });
+                ctx.moveTo(x + dx * arm, y);
+                ctx.lineTo(x, y);
+                ctx.lineTo(x, y + dy * arm);
+                ctx.stroke();
+            }
+            corner(c.x, c.y, 1, 1);
+            corner(c.x + c.w, c.y, -1, 1);
+            corner(c.x, c.y + c.h, 1, -1);
+            corner(c.x + c.w, c.y + c.h, -1, -1);
+
+            ctx.lineCap = 'butt';
+            function bar(x1, y1, x2, y2) {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+            const mx = c.x + c.w / 2;
+            const my = c.y + c.h / 2;
+            bar(mx - mid / 2, c.y, mx + mid / 2, c.y);
+            bar(mx - mid / 2, c.y + c.h, mx + mid / 2, c.y + c.h);
+            bar(c.x, my - mid / 2, c.x, my + mid / 2);
+            bar(c.x + c.w, my - mid / 2, c.x + c.w, my + mid / 2);
+            ctx.restore();
         }
 
         function getCropCorners() {
@@ -21634,6 +21789,7 @@
                 s.crop = { x: cx, y: cy, w: right - cx, h: bottom - cy };
             }
             drawCrop();
+            syncCropActionState();
         }
 
         function cropPointerUp(e) {
@@ -21642,6 +21798,7 @@
         }
 
         function applyCrop() {
+            if (!cropRectChanged()) return;
             const s = cropState;
             const canvas = document.createElement('canvas');
             // Convert display coords back to natural image coords
@@ -21671,24 +21828,40 @@
         }
 
         function resetCrop() {
+            if (!cropRectChanged()) return;
             const s = cropState;
             s.crop = { x: s.offsetX, y: s.offsetY, w: s.displayW, h: s.displayH };
             drawCrop();
+            syncCropActionState();
         }
 
         function revertToOriginal() {
             const card = cards[cropState.cardIndex];
             if (!card?.originalFrontImage) { showToast('⚠️ No original to revert to', 2000); return; }
             card.frontImage = card.originalFrontImage;
-            delete card.originalFrontImage;
             saveCards();
-            renderDisplay();
-            closeCropTool();
-            showToast('↩️ Reverted to original!', 2000);
+            if (typeof renderDisplay === 'function') renderDisplay();
+            const overlay = document.getElementById('cropOverlay');
+            if (overlay) overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            hideCardOverlays();
+            syncCropRevertButton(card);
+            const img = new Image();
+            img.onload = () => {
+                cropState.img = img;
+                cropState.imgNaturalW = img.naturalWidth;
+                cropState.imgNaturalH = img.naturalHeight;
+                requestAnimationFrame(initCropCanvas);
+            };
+            img.src = gifSrc(card.originalFrontImage);
         }
 
         function closeCropTool() {
-            document.getElementById('cropOverlay').style.display = 'none';
+            const overlay = document.getElementById('cropOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+                overlay.classList.remove('crop-dirty');
+            }
             document.body.style.overflow = '';
             cropState.img = null;
             showCardOverlays();
@@ -22062,23 +22235,26 @@
     <!-- Crop Image Overlay -->
     <div id="cropOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:3000; flex-direction:column;">
         <!-- Toolbar -->
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#1a1a1a; flex-shrink:0;">
-            <button onclick="closeCropTool()" style="background:none; border:none; color:white; font-size:16px; font-weight:600; cursor:pointer; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.12);">Cancel</button>
-            <span style="color:white; font-size:17px; font-weight:700; letter-spacing:0.3px;">Crop</span>
-            <button onclick="resetCrop()" style="background:none; border:none; color:#f0a500; font-size:15px; font-weight:600; cursor:pointer; padding:8px 12px; border-radius:8px; background:rgba(240,165,0,0.15);">Reset</button>
+        <div class="crop-toolbar">
+            <button type="button" class="crop-icon-btn crop-cancel-btn" onclick="closeCropTool()" title="Cancel" aria-label="Cancel">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <button type="button" class="crop-reset-btn" onclick="resetCrop()">Reset</button>
+            <div class="crop-top-right">
+                <button type="button" id="revertCropBtn" class="crop-icon-btn crop-revert-btn" onclick="revertToOriginal()" style="display:none;" title="Revert to original" aria-label="Revert to original">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                </button>
+                <button type="button" id="applyCropBtn" class="crop-icon-btn crop-done-btn" onclick="applyCrop()" title="Done" aria-label="Done">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </button>
+            </div>
         </div>
         <!-- Canvas area -->
         <div id="cropCanvasWrap" style="flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;">
             <canvas id="cropCanvas" style="display:block; cursor:crosshair; touch-action:none; max-width:100%; max-height:100%;"></canvas>
         </div>
-        <!-- Bottom bar -->
-        <div style="display:flex; justify-content:center; align-items:center; gap:12px; padding:16px; background:#1a1a1a; flex-shrink:0;">
-            <button id="revertCropBtn" onclick="revertToOriginal()" style="display:none; background:rgba(255,255,255,0.12); color:white; border:none; border-radius:12px; padding:14px 24px; font-size:15px; font-weight:600; cursor:pointer;">
-                ↩️ Revert to Original
-            </button>
-            <button onclick="applyCrop()" style="background:#35654D; color:white; border:none; border-radius:12px; padding:14px 48px; font-size:17px; font-weight:700; cursor:pointer; letter-spacing:0.3px;">
-                ✓ Done
-            </button>
+        <div class="crop-bottombar">
+            <span class="crop-title">Crop</span>
         </div>
     </div>
 
