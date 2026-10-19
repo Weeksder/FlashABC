@@ -2115,21 +2115,30 @@
             letter-spacing: 0.14em;
             line-height: 0.9;
         }
-        .letter-layout-preview--solo {
+        .letter-layout-preview--image {
             align-items: stretch;
-            justify-content: center;
+            justify-content: stretch;
+            padding: 0;
         }
-        .letter-layout-preview--solo .llp-solo {
+        .letter-layout-preview--image .llp-photo-fill {
+            width: 100%;
+            height: 100%;
+            display: block;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+        .card-front.show-image-active {
+            padding: 8px;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .card-front.show-image-active .card-image {
+            width: 100%;
+            height: 100%;
             flex: 1 1 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--spell-letter-font, Fredoka, Arial, sans-serif);
-            font-weight: 400;
-            font-size: 3.2rem;
-            color: #111;
-            letter-spacing: 0.16em;
-            line-height: 0.9;
+            min-height: 0;
+            margin: 0;
+            object-fit: contain;
         }
         @media (max-width: 420px) {
             .letter-layout-grid { gap: 6px; }
@@ -5617,17 +5626,20 @@
         #showCharBtn .settings-off-mark,
         #showTextBtn .settings-off-mark {
             display: none;
-            margin-left: auto;
+            position: absolute;
+            top: 5px;
+            right: 7px;
+            margin: 0;
             color: #e53935;
             font-weight: 900;
-            font-size: 1.75rem;
+            font-size: 1.35rem;
             line-height: 1;
             flex-shrink: 0;
         }
         #showCharBtn.settings-row-off .settings-off-mark,
         #showTextBtn.settings-row-off .settings-off-mark,
         #showTextBtn.settings-caption-blocked .settings-off-mark {
-            display: inline;
+            display: block;
         }
 
         #settingsBackdrop {
@@ -5713,6 +5725,45 @@
             flex-direction: column;
             gap: 8px;
             min-width: 200px;
+        }
+        .settings-lc-row {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .settings-lc-tile {
+            position: relative;
+            flex: 1 1 0;
+            aspect-ratio: 1 / 1;
+            min-width: 0;
+            padding: 10px 6px 8px;
+            border: none;
+            border-radius: 14px;
+            background: white;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.35);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .settings-lc-tile svg {
+            width: 62%;
+            height: auto;
+            max-height: 64%;
+            flex: 0 1 auto;
+        }
+        .settings-lc-label {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: 0.01em;
         }
         #letterLayoutBtn.settings-layout-float {
             width: 100%;
@@ -5805,6 +5856,17 @@
             #letterLayoutBtn.settings-layout-float svg {
                 width: 22px;
                 height: 22px;
+            }
+            .settings-lc-tile svg {
+                width: 66%;
+                max-height: 68%;
+            }
+            .settings-lc-label {
+                font-size: 14px;
+            }
+            #showCharBtn .settings-off-mark,
+            #showTextBtn .settings-off-mark {
+                font-size: 1.5rem;
             }
             #settingsMenu .settings-menu-main button:not(.resize-btn) {
                 font-size: 18px !important;
@@ -7159,7 +7221,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1421-weather-sample-deck">
+    <meta name="flashabc-build" content="1426-lc-square-tiles">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -7535,6 +7597,23 @@
             </button>
             <div id="settingsMenu" style="display:none; position:absolute; bottom:60px; left:0;">
                 <div class="settings-menu-stack">
+                <div class="settings-lc-row">
+                    <button type="button" id="showCharBtn" class="settings-lc-tile" onclick="event.stopPropagation(); toggleCharOnCard()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleCharOnCard()" aria-label="Letters">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="2"/>
+                            <text x="12" y="16.2" text-anchor="middle" font-family="serif" font-size="11" font-weight="700" fill="#35654D" stroke="none">Aa</text>
+                        </svg>
+                        <span class="settings-lc-label settings-row-label">Letters</span>
+                        <span class="settings-off-mark" aria-hidden="true">✕</span>
+                    </button>
+                    <button type="button" id="showTextBtn" class="settings-lc-tile" onclick="event.stopPropagation(); toggleTextOnFront()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleTextOnFront()" aria-label="Caption">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M8 18h.01M12 18h.01M16 18h.01"/>
+                        </svg>
+                        <span class="settings-lc-label settings-caption-label">Caption</span>
+                        <span class="settings-off-mark" aria-hidden="true">✕</span>
+                    </button>
+                </div>
                 <button id="letterLayoutBtn" class="settings-layout-float" onclick="event.stopPropagation(); openLetterLayoutPicker()" ontouchend="event.stopPropagation(); event.preventDefault(); openLetterLayoutPicker()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="18" rx="1"/>
@@ -7560,23 +7639,6 @@
                         <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
                     </svg>
                     Preview Cards
-                </button>
-                <button id="showCharBtn" onclick="event.stopPropagation(); toggleCharOnCard()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleCharOnCard()"
-                    style="width:100%; padding:13px 16px; border:none; background:white; text-align:left; font-size:15px; font-weight:600; color:#333; cursor:pointer; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f0f0f0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="2"/>
-                        <text x="3.5" y="13.5" font-family="serif" font-size="10" font-weight="700" fill="#35654D" stroke="none">Aa</text>
-                    </svg>
-                    <span class="settings-row-label">Letters</span>
-                    <span class="settings-off-mark" aria-hidden="true">✕</span>
-                </button>
-                <button id="showTextBtn" onclick="event.stopPropagation(); toggleTextOnFront()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleTextOnFront()"
-                    style="width:100%; padding:13px 16px; border:none; background:white; text-align:left; font-size:15px; font-weight:600; color:#333; cursor:pointer; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f0f0f0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M8 18h.01M12 18h.01M16 18h.01"/>
-                    </svg>
-                    <span class="settings-caption-label">Caption</span>
-                    <span class="settings-off-mark" aria-hidden="true">✕</span>
                 </button>
                 <button id="swipeDirBtn" onclick="event.stopPropagation(); toggleSwipeDirection()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleSwipeDirection()"
                     style="width:100%; padding:13px 16px; border:none; background:white; text-align:left; font-size:15px; font-weight:600; color:#333; cursor:pointer; display:flex; align-items:center; gap:10px;">
@@ -7646,7 +7708,7 @@
         <div id="cardOverlayNav" style="display:none;"></div>
     </div>
 
-    <!-- Letter layout picker: 1 corner / 2 middle / 3 large / 4 letter only -->
+    <!-- Letter layout picker: 1 corner / 2 middle / 3 large / 4 image only -->
     <div id="letterLayoutModal" class="letter-layout-modal" role="dialog" aria-modal="true" aria-labelledby="letterLayoutTitle" onclick="if(event.target===this)closeLetterLayoutPicker()">
         <div class="letter-layout-card" onclick="event.stopPropagation()">
             <div class="letter-layout-head">
@@ -7680,9 +7742,14 @@
                         <span class="llp-giant">I i</span>
                     </div>
                 </button>
-                <button type="button" class="letter-layout-option" data-layout="solo" onclick="selectLetterLayout('solo')" aria-label="Layout 4, letter only">
-                    <div class="letter-layout-preview letter-layout-preview--solo">
-                        <span class="llp-solo">I i</span>
+                <button type="button" class="letter-layout-option" data-layout="image" onclick="selectLetterLayout('image')" aria-label="Layout 4, image only">
+                    <div class="letter-layout-preview letter-layout-preview--image">
+                        <svg class="llp-photo-fill" viewBox="0 0 48 48" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+                            <rect width="48" height="48" fill="#d9ecf7"/>
+                            <circle cx="36" cy="12" r="5" fill="#ffd54a"/>
+                            <path fill="#7cb342" d="M0 32l10-8 8 6 9-12 21 16v14H0z"/>
+                            <path fill="#558b2f" d="M0 40l14-9 8 5 10-8 16 12v8H0z"/>
+                        </svg>
                     </div>
                 </button>
             </div>
@@ -8912,8 +8979,8 @@
                 '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>' + shackle + '</svg>';
         }
         let showTextOnFront = true; // Caption on for a new session
-        // Letters display: 'off' | 'corner' | 'banner' (middle) | 'giant' (large) | 'solo' (letter only)
-        // New session always opens on layout 1 (corner). Bottom layout was removed.
+        // Letters display: 'off' | 'corner' | 'banner' (middle) | 'giant' (large) | 'image' (picture only)
+        // New session always opens on layout 1 (corner). Bottom and solo layouts were removed.
         let preferredLetterLayout = 'corner';
         let charDisplayMode = 'corner';
         try {
@@ -8921,7 +8988,10 @@
             if (savedPref === 'bottom') {
                 preferredLetterLayout = 'corner';
                 localStorage.setItem('flashabc_char_layout_pref', 'corner');
-            } else if (savedPref === 'corner' || savedPref === 'banner' || savedPref === 'giant' || savedPref === 'solo') {
+            } else if (savedPref === 'solo' || savedPref === 'image') {
+                preferredLetterLayout = 'corner';
+                localStorage.setItem('flashabc_char_layout_pref', 'corner');
+            } else if (savedPref === 'corner' || savedPref === 'banner' || savedPref === 'giant') {
                 preferredLetterLayout = savedPref;
             }
             charDisplayMode = 'corner';
@@ -9026,7 +9096,7 @@
         }
 
         function showFrontCaption(backText) {
-            return !!(showTextOnFront && backText && charDisplayMode !== 'giant' && charDisplayMode !== 'solo');
+            return !!(showTextOnFront && backText && charDisplayMode !== 'giant' && charDisplayMode !== 'image');
         }
 
         function hideCardOverlays() {
@@ -20520,7 +20590,7 @@
         function updateCaptionButton() {
             const btn = document.getElementById('showTextBtn');
             if (!btn) return;
-            const blocked = charDisplayMode === 'giant' || charDisplayMode === 'solo';
+            const blocked = charDisplayMode === 'giant' || charDisplayMode === 'image';
             btn.classList.toggle('settings-caption-blocked', blocked);
             const on = !blocked && showTextOnFront;
             setLayoutCaptionRow(btn, on);
@@ -20529,7 +20599,7 @@
         }
 
         function toggleTextOnFront() {
-            if (charDisplayMode === 'giant' || charDisplayMode === 'solo') {
+            if (charDisplayMode === 'giant' || charDisplayMode === 'image') {
                 if (typeof showToast === 'function') showToast('Switch layout to turn Caption on', 2000);
                 return;
             }
@@ -20537,7 +20607,6 @@
             resetFrontTextCache(); // recompute so every card shares one caption size
             Object.keys(cachedBackTextSizes).forEach(k => delete cachedBackTextSizes[k]);
             updateCaptionButton();
-            closeSettingsMenu();
             renderDisplay();
         }
 
@@ -20574,11 +20643,7 @@
             if (charDisplayMode === 'corner') {
                 return '<span class="card-char-label">' + upper + lower + '</span>';
             }
-            if (charDisplayMode === 'solo') {
-                const glyph = letterCaseMode === 'lower' ? lower : upper;
-                return '<div class="card-letter-banner">' +
-                    '<span class="card-letter-banner-text">' + glyph + '</span></div>';
-            }
+            if (charDisplayMode === 'image') return '';
             if (charDisplayMode === 'banner' || charDisplayMode === 'giant') {
                 // Same markup; CSS order places it top / bottom / large-center
                 return '<div class="card-letter-banner">' +
@@ -20588,11 +20653,12 @@
         }
 
         function charFrontClass(backText) {
-            if (!backText || charDisplayMode === 'off') return '';
+            if (charDisplayMode === 'off') return '';
+            if (charDisplayMode === 'image') return ' show-image-active';
+            if (!backText) return '';
             if (charDisplayMode === 'corner') return ' show-char-active';
             if (charDisplayMode === 'banner') return ' show-banner-active';
             if (charDisplayMode === 'giant') return ' show-giant-active';
-            if (charDisplayMode === 'solo') return ' show-solo-active';
             return '';
         }
 
@@ -20601,7 +20667,7 @@
          * Corner, bottom, and Off keep the original mid mic.
          */
         function lettersModeMovesMic() {
-            return charDisplayMode === 'banner' || charDisplayMode === 'giant' || charDisplayMode === 'solo';
+            return charDisplayMode === 'banner' || charDisplayMode === 'giant';
         }
 
         function scaleGiantLetters() {
@@ -20794,7 +20860,7 @@
         function updateCharToggleButton() {
             const btn = document.getElementById('showCharBtn');
             if (!btn) return;
-            const on = charDisplayMode !== 'off';
+            const on = charDisplayMode !== 'off' && charDisplayMode !== 'image';
             setLayoutCaptionRow(btn, on);
             const svgRect = btn.querySelector('rect');
             if (svgRect) svgRect.setAttribute('stroke', on ? '#35654D' : '#6b4e1a');
@@ -20815,14 +20881,17 @@
         function applyCharDisplayMode(mode, opts) {
             opts = opts || {};
             if (mode === 'bottom') mode = 'corner';
-            const valid = { off: 1, corner: 1, banner: 1, giant: 1, solo: 1 };
+            if (mode === 'solo') mode = 'image';
+            const valid = { off: 1, corner: 1, banner: 1, giant: 1, image: 1 };
             if (!valid[mode]) return;
             charDisplayMode = mode;
-            showCharOnCard = mode !== 'off';
-            if (mode !== 'off') {
+            showCharOnCard = mode !== 'off' && mode !== 'image';
+            if (mode === 'corner' || mode === 'banner' || mode === 'giant') {
                 preferredLetterLayout = mode;
                 showTextOnFront = true;
                 try { localStorage.setItem('flashabc_char_layout_pref', preferredLetterLayout); } catch (e) {}
+            } else if (mode === 'image') {
+                showTextOnFront = false;
             }
             try { localStorage.setItem('flashabc_char_mode', charDisplayMode); } catch (e) {}
             if (typeof resetFrontTextCache === 'function') resetFrontTextCache();
@@ -20834,19 +20903,18 @@
 
         /** Letters = on/off using the saved preferred layout (use Layout to pick style). */
         function toggleCharOnCard() {
-            if (charDisplayMode === 'off') {
-                applyCharDisplayMode(preferredLetterLayout || 'corner');
+            if (charDisplayMode === 'off' || charDisplayMode === 'image') {
+                const next = (preferredLetterLayout === 'banner' || preferredLetterLayout === 'giant')
+                    ? preferredLetterLayout : 'corner';
+                applyCharDisplayMode(next);
                 if (typeof showToast === 'function') {
-                    const label = preferredLetterLayout === 'banner' ? 'middle'
-                        : preferredLetterLayout === 'giant' ? 'large'
-                        : preferredLetterLayout === 'solo' ? 'letter' : 'corner';
+                    const label = next === 'banner' ? 'middle' : next === 'giant' ? 'large' : 'corner';
                     showToast('Letters: ' + label, 1600);
                 }
             } else {
                 applyCharDisplayMode('off');
                 if (typeof showToast === 'function') showToast('Letters off', 1600);
             }
-            closeSettingsMenu();
         }
 
         function refreshLetterLayoutPickerUI() {
@@ -20859,7 +20927,7 @@
 
             const vow = (typeof highlightVowels === 'function') ? highlightVowels : function (t) { return t; };
             grid.querySelectorAll('.llp-corner').forEach(function(el) { el.innerHTML = vow('Ii'); });
-            grid.querySelectorAll('.llp-banner, .llp-giant, .llp-solo').forEach(function(el) {
+            grid.querySelectorAll('.llp-banner, .llp-giant').forEach(function(el) {
                 el.innerHTML = vow('I') + ' ' + vow('i');
             });
             grid.querySelectorAll('.llp-caption').forEach(function(cap) {
@@ -20881,10 +20949,10 @@
         }
 
         function selectLetterLayout(layout) {
-            if (layout !== 'corner' && layout !== 'banner' && layout !== 'giant' && layout !== 'solo') return;
+            if (layout !== 'corner' && layout !== 'banner' && layout !== 'giant' && layout !== 'image') return;
             applyCharDisplayMode(layout);
             closeLetterLayoutPicker();
-            const label = layout === 'banner' ? 'middle' : layout === 'giant' ? 'large' : layout === 'solo' ? 'letter' : layout;
+            const label = layout === 'banner' ? 'middle' : layout === 'giant' ? 'large' : layout === 'image' ? 'image' : layout;
             if (typeof showToast === 'function') showToast('Layout: ' + label, 1600);
         }
 
