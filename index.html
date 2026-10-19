@@ -7159,7 +7159,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1420-crop-slot-swap">
+    <meta name="flashabc-build" content="1421-weather-sample-deck">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -8445,18 +8445,23 @@
     <!-- Sample Deck Modal -->
     <div id="sampleDeckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center; padding:20px;">
         <div style="background:white; border-radius:16px; width:100%; max-width:560px; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
-            <div style="background:#35654D; padding:14px 18px; border-radius:16px 16px 0 0; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+            <div style="background:#35654D; padding:14px 18px; border-radius:16px 16px 0 0; display:flex; flex-direction:column; gap:10px; flex-shrink:0;">
                 <span style="color:white; font-weight:700; font-size:17px;">Sample Deck</span>
-                <div style="display:flex; gap:6px;">
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
                     <button id="sampleTabFruits" onclick="switchSampleTab('fruits')"
-                        style="padding:5px 14px; border-radius:20px; border:2px solid white; background:white;
+                        style="padding:5px 12px; border-radius:20px; border:2px solid white; background:white;
                                color:#35654D; font-weight:700; font-size:13px; cursor:pointer;">
                         🍎 Fruits
                     </button>
                     <button id="sampleTabAnimals" onclick="switchSampleTab('animals')"
-                        style="padding:5px 14px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
+                        style="padding:5px 12px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
                                color:rgba(255,255,255,0.8); font-weight:700; font-size:13px; cursor:pointer;">
                         🐾 Animals
+                    </button>
+                    <button id="sampleTabWeather" onclick="switchSampleTab('weather')"
+                        style="padding:5px 12px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
+                               color:rgba(255,255,255,0.8); font-weight:700; font-size:13px; cursor:pointer;">
+                        ☀️ Weather
                     </button>
                 </div>
             </div>
@@ -15744,22 +15749,29 @@
         let _sampleTab = 'fruits';
         const SAMPLE_DECK_URLS = {
             fruits:  'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Fruits_Sample_Set.json',
-            animals: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Animals_Sample_Set.json'
+            animals: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Animals_Sample_Set.json',
+            weather: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Weather_Sample_Set.json'
+        };
+        const SAMPLE_DECK_URL_FALLBACKS = {
+            weather: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/weather.json'
+        };
+        const SAMPLE_TAB_BTN_IDS = {
+            fruits: 'sampleTabFruits',
+            animals: 'sampleTabAnimals',
+            weather: 'sampleTabWeather'
         };
 
         function switchSampleTab(tab) {
             _sampleTab = tab;
-            const btnFruits  = document.getElementById('sampleTabFruits');
-            const btnAnimals = document.getElementById('sampleTabAnimals');
-            if (btnFruits && btnAnimals) {
-                [['fruits', btnFruits], ['animals', btnAnimals]].forEach(([key, btn]) => {
-                    if (key === tab) {
-                        btn.style.background = 'white'; btn.style.color = '#35654D'; btn.style.borderColor = 'white';
-                    } else {
-                        btn.style.background = 'transparent'; btn.style.color = 'rgba(255,255,255,0.8)'; btn.style.borderColor = 'rgba(255,255,255,0.5)';
-                    }
-                });
-            }
+            Object.keys(SAMPLE_TAB_BTN_IDS).forEach(function(key) {
+                const btn = document.getElementById(SAMPLE_TAB_BTN_IDS[key]);
+                if (!btn) return;
+                if (key === tab) {
+                    btn.style.background = 'white'; btn.style.color = '#35654D'; btn.style.borderColor = 'white';
+                } else {
+                    btn.style.background = 'transparent'; btn.style.color = 'rgba(255,255,255,0.8)'; btn.style.borderColor = 'rgba(255,255,255,0.5)';
+                }
+            });
             loadSampleTab(tab);
         }
 
@@ -15770,11 +15782,23 @@
             createBtn.disabled = true;
             grid.style.display = 'grid';
 
-            const url = SAMPLE_DECK_URLS[tab];
+            const urls = [SAMPLE_DECK_URLS[tab], SAMPLE_DECK_URL_FALLBACKS[tab]].filter(Boolean);
             grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#666;">Loading sample cards...</div>';
             try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Failed to fetch sample deck');
+                let response = null;
+                let lastErr = null;
+                for (const url of urls) {
+                    try {
+                        response = await fetch(url);
+                        if (response.ok) break;
+                        lastErr = new Error('Failed to fetch sample deck');
+                        response = null;
+                    } catch (fetchErr) {
+                        lastErr = fetchErr;
+                        response = null;
+                    }
+                }
+                if (!response || !response.ok) throw lastErr || new Error('Failed to fetch sample deck');
                 const data = await response.json();
                 if (!data.cards || !Array.isArray(data.cards)) throw new Error('Invalid sample deck format');
                 sampleDeckData = data;
@@ -15813,7 +15837,7 @@
 
         function isDefaultSampleDeckName(name) {
             const n = String(name || '').toLowerCase().replace(/\.json$/i, '').trim();
-            return n === 'fruits_sample_set' || n === 'animals_sample_set';
+            return n === 'fruits_sample_set' || n === 'animals_sample_set' || n === 'weather_sample_set' || n === 'weather';
         }
 
         function createFromSampleDeck() {
