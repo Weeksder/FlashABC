@@ -958,6 +958,26 @@
         /* Same face as Help / Add / Shuffle — Manage & More had extra white */
         #topControls .btn {
             background: #fff;
+            transition: background 0.15s;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            #topControls > .btn:not(:disabled):hover,
+            #topControls > .dropdown > .btn:not(:disabled):hover {
+                background: #e4e6eb;
+            }
+        }
+        #toolbarHelpBtn {
+            font-weight: 400;
+        }
+        #toolbarHelpBtn .toolbar-help-mark {
+            display: block;
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            font-size: 30px;
+            font-weight: 400;
+            color: inherit;
         }
 
         .top-bar {
@@ -1231,22 +1251,30 @@
             justify-content: center;
             margin: 0;
             padding: 8px;
-            background: #fff;
-            border: 1px solid #35654D;
+            background: transparent;
+            border: none;
             border-radius: 12px;
             cursor: pointer;
             min-height: 148px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            box-shadow: none;
+            transition: background 0.15s;
             touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
         }
         .save-icon-btn:active {
             transform: scale(0.97);
-            background: #f0f9f4;
+            background: #e4e6eb;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .save-icon-btn:hover {
+                background: #e4e6eb;
+            }
         }
         #saveJSONBtn img,
-        #saveZIPBtn img {
+        #saveZIPBtn img,
+        #loadJSONBtn img,
+        #loadZIPBtn img {
             width: 140px;
             height: 140px;
             object-fit: contain;
@@ -1269,6 +1297,42 @@
             color: #1a1a1a;
             line-height: 30px;
         }
+        .load-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .load-title-folder,
+        .save-title-icon {
+            display: inline-flex;
+            flex-shrink: 0;
+            line-height: 0;
+        }
+        .load-title-folder { color: #35654D; }
+        .save-title-icon { color: #2196F3; }
+        .load-title-folder svg,
+        .save-title-icon svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
+        .load-format-hint {
+            display: none;
+            margin: 0 0 10px;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.35;
+        }
+        #loadOptionsModal.is-digital .load-format-hint { display: block; }
+
+        #singleRenameSaveBtn,
+        #multiRenameSaveBtn {
+            display: none;
+        }
+        #singleRenameSaveBtn.is-visible,
+        #multiRenameSaveBtn.is-visible {
+            display: flex;
+        }
         .save-modal-header-actions {
             display: flex;
             align-items: center;
@@ -1276,12 +1340,14 @@
             flex-shrink: 0;
             height: 30px;
         }
-        .save-modal-close {
+        .save-modal-close,
+        .save-help-btn {
             background: none;
             border: none;
             cursor: pointer;
             color: #aaa;
             font-size: 1.3rem;
+            font-weight: 400;
             line-height: 1;
             padding: 0;
             width: 30px;
@@ -1289,22 +1355,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        .save-help-btn {
-            background: none;
-            border: 2px solid #aaa;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #666;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             flex-shrink: 0;
             box-sizing: border-box;
+            border-radius: 0;
         }
         .save-name-block {
             margin-top: 10px;
@@ -1366,13 +1419,44 @@
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
+            transition: background 0.15s;
         }
+        @media (hover: hover) and (pointer: fine) {
+            #saveNameToggleBtn:hover {
+                background: #e4e6eb;
+            }
+        }
+        .save-status-msg {
+            display: none;
+            margin: 12px 0 0;
+            padding: 10px 12px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #2d6a4f;
+            background: #eaf6ef;
+            border-radius: 10px;
+        }
+        .save-status-msg.is-visible { display: block; }
         #saveOptionsModal #saveOverExistingBtn {
             padding: 12px !important;
             margin-top: 10px !important;
         }
         #saveOptionsModal #saveOverExistingBtn strong {
             font-size: 1rem !important;
+        }
+        #loadOptionsModal .modal-content {
+            padding: 12px 14px 14px;
+            max-width: 360px;
+            width: 92vw;
+        }
+        #unitConfigModal .modal-content {
+            padding: 12px 16px 14px;
+        }
+        .load-modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
         }
 
         @media (min-width: 501px) and (min-height: 501px) {
@@ -1390,7 +1474,9 @@
                 min-height: 220px;
             }
             #saveJSONBtn img,
-            #saveZIPBtn img {
+            #saveZIPBtn img,
+            #loadJSONBtn img,
+            #loadZIPBtn img {
                 width: 200px;
                 height: 200px;
             }
@@ -1402,15 +1488,20 @@
                 font-size: 20px;
                 line-height: 36px;
             }
+            .load-title-folder svg,
+            .save-title-icon svg {
+                width: 26px;
+                height: 26px;
+            }
+            .load-format-hint {
+                font-size: 1rem;
+                margin: 0 0 12px;
+            }
             .save-modal-header-actions {
                 height: 36px;
                 gap: 6px;
             }
-            .save-help-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 1rem;
-            }
+            .save-help-btn,
             .save-modal-close {
                 width: 36px;
                 height: 36px;
@@ -1444,6 +1535,11 @@
             }
             #saveOptionsModal #saveOverExistingBtn strong {
                 font-size: 1.1rem !important;
+            }
+            #loadOptionsModal .modal-content {
+                padding: 20px 22px 22px;
+                max-width: 540px;
+                width: 88vw;
             }
         }
 
@@ -3639,6 +3735,12 @@
             background: #f0f9f4;
             box-shadow: 0 2px 8px rgba(53,101,77,0.15);
         }
+        @media (hover: hover) and (pointer: fine) {
+            .empty-action-btn:hover {
+                background: #e4e6eb;
+                box-shadow: 0 2px 8px rgba(53,101,77,0.15);
+            }
+        }
 
         .empty-action-btn svg {
             color: #35654D;
@@ -5770,10 +5872,10 @@
 
         /* Load modal buttons — stack gracefully on small screens */
         @media (max-width: 400px) {
-            #loadOptionsModal .modal-content > div:last-child {
+            #loadOptionsModal .load-modal-actions {
                 flex-wrap: wrap;
             }
-            #loadOptionsModal .modal-content > div:last-child button {
+            #loadOptionsModal .load-modal-actions button {
                 min-width: 40%;
                 flex: 1 1 40%;
             }
@@ -6035,12 +6137,28 @@
             height: auto;
             max-height: 64%;
             flex: 0 1 auto;
+            overflow: visible;
+        }
+        .settings-lc-tile svg rect,
+        .settings-lc-tile svg line,
+        .settings-lc-tile svg path:not(.settings-caption-dots) {
+            vector-effect: non-scaling-stroke;
+            stroke-width: 1.75;
+        }
+        .settings-lc-tile svg .settings-caption-dots {
+            vector-effect: none;
+            stroke-width: 2;
         }
         .settings-lc-label {
-            font-size: 12px;
+            font-size: 15px;
             font-weight: 600;
             line-height: 1.1;
             letter-spacing: 0.01em;
+            font-family: inherit;
+        }
+        .settings-lc-tile text {
+            font-family: inherit;
+            font-weight: 600;
         }
         #letterLayoutBtn.settings-layout-float {
             width: 100%;
@@ -6114,6 +6232,14 @@
             border-bottom-color: transparent !important;
             box-sizing: border-box;
         }
+        @media (hover: hover) and (pointer: fine) {
+            .settings-lc-tile:hover,
+            #letterLayoutBtn.settings-layout-float:hover,
+            #settingsMenu .settings-menu-main button:not(.resize-btn):hover,
+            #settingsMenu .settings-cc-btn:hover {
+                background: #e4e6eb !important;
+            }
+        }
 
         /* Gear menu: 1.2× type/icons, no wrapping — tablet & PC only (not iPhone) */
         @media (min-width: 700px) and (min-height: 520px) {
@@ -6139,7 +6265,7 @@
                 max-height: 68%;
             }
             .settings-lc-label {
-                font-size: 14px;
+                font-size: 18px;
             }
             #showCharBtn .settings-off-mark,
             #showTextBtn .settings-off-mark {
@@ -6608,8 +6734,22 @@
             white-space: nowrap;
             flex-shrink: 0;
             touch-action: manipulation;
+            transition: background 0.15s, color 0.15s, transform 0.1s;
         }
         #manageSidePanel .msp-tool-btn:active { transform: scale(0.96); }
+        @media (hover: hover) and (pointer: fine) {
+            #manageSidePanel #mspManageBtn:hover,
+            #manageSidePanel #mspCloseAllBtn:hover,
+            #manageSidePanel #mspSortBtn:hover,
+            #manageSidePanel #mspEditBtn:hover,
+            #manageSidePanel #mspUndoBtn:hover {
+                background: #f0f9f4;
+            }
+            #manageSidePanel #mspEditBtn.is-active:hover {
+                background: #2d5542;
+                color: #fff;
+            }
+        }
         #manageSidePanel #mspManageBtn {
             width: 32px;
             min-width: 32px;
@@ -6764,16 +6904,23 @@
             align-items: center;
             gap: 8px;
             padding: 12px 14px;
-            border-bottom: 1px solid #f0f0f0;
+            margin: 4px 8px;
+            border-radius: 8px;
+            border-bottom: 1px solid transparent;
+            cursor: pointer;
+            box-sizing: border-box;
+            width: auto;
+            transition: background 0.15s;
         }
         .msp-unit-row.loaded {
             background: #f5ead0;
-            margin: 4px 8px;
-            border-radius: 8px;
             border-left: none;
             border-bottom-color: transparent;
-            width: auto;
-            box-sizing: border-box;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .msp-unit-row:not(.loaded):hover {
+                background: #e4e6eb;
+            }
         }
         .msp-unit-info { flex: 1; min-width: 0; }
         .msp-unit-name {
@@ -7498,7 +7645,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1440-phone-card-height">
+    <meta name="flashabc-build" content="1455-caption-dots-stroke">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -7687,11 +7834,7 @@
             <div class="controls" id="topControls">
             <!-- Toolbar Help Button -->
             <button class="btn" onclick="openHelpMenu()" id="toolbarHelpBtn" data-tip="Help" style="color:#35654D;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
+                <span class="toolbar-help-mark">?</span>
             </button>
             <button class="btn" id="addBtn" onclick="openCreateModal()" data-tip="Add" style="color: #35654D; display:none;">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -7743,7 +7886,7 @@
             </button>
             <button class="btn" id="loadBtn" onclick="openLoadOptions()" data-tip="Load" style="color: #35654D; display:none;">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    <path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>
                 </svg>
                 <span style="font-size: 10px; font-weight: 500;">Load</span>
             </button>
@@ -7779,7 +7922,7 @@
                 </button>
                 <div class="dropdown-content" id="moreDropdownContent" style="z-index:1100;">
                     <button onclick="openLoadOptions(); closeMoreDropdown();" ontouchend="handleMenuItemTouch(event, openLoadOptions)" style="display:flex;align-items:center;gap:10px;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>
                         Load
                     </button>
                     <button onclick="openSaveOptions(); closeMoreDropdown();" ontouchend="handleMenuItemTouch(event, openSaveOptions)" style="display:flex;align-items:center;gap:10px;">
@@ -7878,14 +8021,14 @@
                     <button type="button" id="showCharBtn" class="settings-lc-tile" onclick="event.stopPropagation(); toggleCharOnCard()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleCharOnCard()" aria-label="Letters">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="20" rx="2"/>
-                            <text x="12" y="16.2" text-anchor="middle" font-family="serif" font-size="11" font-weight="700" fill="#35654D" stroke="none">Aa</text>
+                            <text x="12" y="16.2" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif" font-size="11" font-weight="600" fill="#35654D" stroke="none">Aa</text>
                         </svg>
                         <span class="settings-lc-label settings-row-label">Letters</span>
                         <span class="settings-off-mark" aria-hidden="true">✕</span>
                     </button>
                     <button type="button" id="showTextBtn" class="settings-lc-tile" onclick="event.stopPropagation(); toggleTextOnFront()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleTextOnFront()" aria-label="Caption">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M8 18h.01M12 18h.01M16 18h.01"/>
+                            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="15" x2="21" y2="15"/><path class="settings-caption-dots" d="M8 18h.01M12 18h.01M16 18h.01"/>
                         </svg>
                         <span class="settings-lc-label settings-caption-label">Caption</span>
                         <span class="settings-off-mark" aria-hidden="true">✕</span>
@@ -8216,7 +8359,7 @@
                 <span><strong>Rename</strong> — Edit the word on the current card.</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line><rect x="2" y="6" width="20" height="12" rx="2"></rect></svg>
                 <span><strong>Games</strong> — Open the game menu to play with your cards.</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>
                 <span><strong>Load</strong> — Load a saved JSON deck file.</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                 <span><strong>Manage</strong> — Open your saved deck library to quickly load or switch decks.</span>
@@ -8565,7 +8708,16 @@
     <div class="modal" id="saveOptionsModal">
         <div class="modal-content">
             <div class="save-modal-header">
-                <div class="save-modal-title">💾 Save this deck</div>
+                <div class="save-modal-title load-modal-title">
+                    <span class="save-title-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                    </span>
+                    Save this deck
+                </div>
                 <div class="save-modal-header-actions">
                     <button type="button" class="save-help-btn" onclick="document.getElementById('saveHelpPopup').style.display='flex'" aria-label="About save options">?</button>
                     <button type="button" class="save-modal-close" onclick="closeSaveOptions()" aria-label="Close">✕</button>
@@ -8589,22 +8741,18 @@
                         </svg>
                     </span>
                     <textarea id="saveFileName" class="save-name-default" rows="1" aria-label="File name"
-                        onclick="event.stopPropagation()"
-                        onkeydown="if(event.key==='Enter')event.preventDefault()"
-                        oninput="syncSaveNameTone(); autosizeSaveNameField(); updateSaveNameToggleBtn()"></textarea>
+                        onclick="event.stopPropagation(); focusSaveNameField(this)"
+                        onfocus="focusSaveNameField(this)"
+                        onkeydown="onSaveNameKeydown(event)"
+                        oninput="onSaveNameInput(event)"></textarea>
                 </div>
                 <div id="saveAsExistingRow">
                     <button type="button" id="saveNameToggleBtn" onclick="toggleSaveNameSource()">
                         Use existing name
                     </button>
                 </div>
+                <div id="saveStatusMsg" class="save-status-msg" role="status">File saved</div>
             </div>
-
-            <button type="button" id="saveOverExistingBtn" onclick="showAppOnlyFeaturePrompt()"
-                style="display:none; padding: 20px; text-align: left; white-space: normal; line-height: 1.5;
-                margin-top: 15px; background: #f5f5f5; border: 2px dashed #bbb; border-radius: 10px; cursor: pointer; width: 100%; opacity: 0.6;">
-                <strong style="font-size: 1.2rem; display: block; color: #888;">🔒 Save Over Existing File</strong>
-            </button>
 
         </div>
     </div>
@@ -8635,7 +8783,7 @@
 
             <div id="saveOverExistingHelp">
                 <strong style="font-size:0.95rem;color:#888;">🔒 Save Over Existing File</strong>
-                <p style="margin:5px 0 0;font-size:0.85rem;color:#888;">Directly overwrite your file — no rename, no extra steps</p>
+                <p style="margin:5px 0 0;font-size:0.85rem;color:#888;">Saving over an existing file isn't possible because of browser limits on tablets and phones. The browser can't replace a file you already saved.</p>
                 <p style="margin:3px 0 0;font-size:0.8rem;color:#aaa;">This feature is only available on the app.</p>
             </div>
         </div>
@@ -8717,18 +8865,34 @@
 
     <!-- Load Options Modal -->
     <div class="modal" id="loadOptionsModal">
-        <div class="modal-content" style="max-width: 500px; position:relative;">
-            <button onclick="closeLoadOptions()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;">✕</button>
-            <h2>📂 Load Flashcard Session</h2>
-            <p style="margin-bottom: 20px; color: #666;">Select a saved flashcard file (.json or .zip)</p>
+        <div class="modal-content">
+            <div class="save-modal-header">
+                <div class="save-modal-title load-modal-title">
+                    <span class="load-title-folder" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                    </span>
+                    Load Deck
+                </div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeLoadOptions()" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <p class="load-format-hint">JSON or ZIP files only</p>
+            <input type="file" id="loadJsonFileInput" accept=".json,application/json" data-kind="json" style="display: none;" onchange="handleFileLoad(event)">
+            <input type="file" id="loadZipFileInput" accept=".zip,application/zip,application/x-zip-compressed" data-kind="zip" style="display: none;" onchange="handleFileLoad(event)">
 
-            <input type="file" id="loadFileInput" accept=".json,.zip" style="display: none;" onchange="handleFileLoad(event)">
+            <div class="save-icon-row">
+                <button type="button" class="save-icon-btn" id="loadJSONBtn" onclick="pickLoadFile('json')" aria-label="Load JSON" title="Load JSON">
+                    <img alt="JSON">
+                </button>
+                <button type="button" class="save-icon-btn" id="loadZIPBtn" onclick="pickLoadFile('zip')" aria-label="Load ZIP" title="Load ZIP">
+                    <img alt="ZIP">
+                </button>
+            </div>
 
-            <button class="btn btn-primary" onclick="document.getElementById('loadFileInput').click()" style="width: 100%; padding: 15px; margin-bottom: 15px;">
-                📁 Choose File
-            </button>
-
-            <div id="loadFileInfo" style="display: none; background: #f0f4ff; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+            <div id="loadFileInfo" style="display: none; background: #f0f4ff; padding: 15px; border-radius: 8px; margin-top: 12px; margin-bottom: 12px;">
                 <p style="margin-bottom: 10px;"><strong>Selected File:</strong> <span id="loadFileName"></span></p>
                 <p style="margin-bottom: 10px;"><strong>Cards Found:</strong> <span id="loadFileCards"></span></p>
             </div>
@@ -8736,13 +8900,10 @@
             <!-- Option B expand panel kept but unused since Option A selected -->
             <div id="previewExpandPanel" style="display:none;"></div>
 
-            <!-- Bottom action row: +Add | Cancel | Load | Replace | Preview -->
-            <div style="display:flex; gap:8px; margin-top:4px;">
+            <!-- Bottom action row: +Add | Replace | Preview -->
+            <div class="load-modal-actions">
                 <button class="btn btn-success" id="addToExistingBtn" onclick="loadSession('add')" style="flex:1; display:none; transition: flex 0.25s ease;">
                     ➕ Add
-                </button>
-                <button class="btn btn-secondary" onclick="closeLoadOptions()" style="flex:1; transition: flex 0.25s ease;">
-                    Cancel
                 </button>
                 <button class="btn btn-success" id="loadDirectBtn" onclick="loadSession('replace')" style="flex:1; display:none; transition: flex 0.25s ease;">
                     ➕ Add
@@ -8814,13 +8975,12 @@
     <!-- Unit Configuration Modal — 3-tab flow: Import → Organize → Folders -->
     <div class="modal" id="unitConfigModal">
         <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto; position:relative;">
-            <button onclick="closeUnitConfigModal()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;z-index:2;">✕</button>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-right:28px;">
-                <h2 style="margin:0;">📚 Deck Library</h2>
-                <button onclick="toggleUnitConfigHelp()" title="Help"
-                    style="flex-shrink:0;background:none;border:2px solid #35654D;border-radius:50%;
-                           width:28px;height:28px;font-size:0.85rem;font-weight:700;color:#35654D;cursor:pointer;
-                           display:flex;align-items:center;justify-content:center;line-height:1;padding:0;">?</button>
+            <div class="save-modal-header">
+                <div class="save-modal-title">📚 Deck Library</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-help-btn" onclick="toggleUnitConfigHelp()" title="Help" aria-label="Help">?</button>
+                    <button type="button" class="save-modal-close" onclick="closeUnitConfigModal()" aria-label="Close">✕</button>
+                </div>
             </div>
 
             <!-- Help Panel -->
@@ -9022,20 +9182,17 @@
     <!-- Single Card Rename Modal -->
     <div class="modal" id="singleRenameModal">
         <div class="modal-content" style="max-width:420px; padding:0; overflow:hidden; border-radius:20px; position:relative;">
-            <button onclick="closeSingleRenameModal()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;z-index:2;">✕</button>
-            <!-- Title -->
+            <button type="button" onclick="closeSingleRenameModal()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;z-index:2;" aria-label="Close">✕</button>
             <div style="padding:14px 18px 8px; background:#f9f9f9;">
                 <span style="font-weight:700; font-size:17px; color:#1a1a1a;">✏️ Rename</span>
             </div>
-            <!-- Card image -->
             <div style="padding:0 20px 10px; background:#f9f9f9;">
-                <img id="singleRenameImage" src="" style="width:100%; height:240px; object-fit:contain; border-radius:14px; background:#fff; border:1px solid #eee;">
+                <img id="singleRenameImage" src="" alt="" style="width:100%; height:240px; object-fit:contain; border-radius:14px; background:#fff; border:1px solid #eee;">
             </div>
-            <!-- Tappable name field -->
             <div style="padding:10px 20px 24px; background:#f9f9f9;">
                 <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:10px;">
                     <div style="font-size:13px; color:#aaa;">Tap name to edit</div>
-                    <button id="caseToggleBtn"
+                    <button id="caseToggleBtn" type="button"
                         onclick="toggleRenameCase()"
                         style="font-size:13px; padding:5px 14px; border-radius:20px; border:1px solid #ccc;
                                background:white; color:#555; cursor:pointer; font-weight:600; white-space:nowrap;">
@@ -9045,7 +9202,8 @@
                 <input id="singleRenameInput" autocapitalize="none" autocorrect="off"
                     type="text"
                     readonly
-                    onkeydown="singleRenameUserEdited = true;"
+                    oninput="onSingleRenameInput()"
+                    onkeydown="onSingleRenameInput()"
                     onclick="this.removeAttribute('readonly'); this.select();"
                     ontouchend="event.preventDefault(); this.removeAttribute('readonly'); this.focus(); this.select();"
                     style="width:100%; box-sizing:border-box; text-align:center; font-size:1.7rem; font-weight:600; color:#1a1a1a;
@@ -9053,15 +9211,13 @@
                            padding:8px 4px; border-radius:0; cursor:pointer; -webkit-user-select:text; user-select:text;"
                     placeholder="Card name...">
             </div>
-            <!-- Footer -->
             <div style="padding:10px 16px; border-top:1px solid #eee; display:flex; gap:8px; align-items:stretch;">
-                <button id="renameMultiBtn" onclick="closeSingleRenameModal(); openMultiRenameModal();"
+                <button type="button" id="renameMultiBtn" onclick="closeSingleRenameModal(true); openMultiRenameModal();"
                     style="flex:1; padding:7px 4px; border-radius:10px; border:none; background:#f5a623; color:white;
                            cursor:pointer; font-weight:700; font-size:0.85rem; line-height:1.3; text-align:center;">
                     Rename<br>Multiple
                 </button>
-                <button onclick="closeSingleRenameModal()" class="btn btn-secondary" style="flex:1; padding:8px 6px; justify-content:center; font-size:0.85rem;">Cancel</button>
-                <button onclick="saveSingleRename()" class="btn btn-success" style="flex:1; padding:8px 6px; justify-content:center; font-size:0.85rem;">✅ Save</button>
+                <button type="button" id="singleRenameSaveBtn" class="btn btn-success" onclick="saveSingleRename()" style="flex:1; padding:8px 6px; justify-content:center; font-size:0.85rem;">✅ Save</button>
             </div>
         </div>
     </div>
@@ -9069,33 +9225,28 @@
     <!-- Multi Card Rename Modal -->
     <div class="modal" id="multiRenameModal">
         <div class="modal-content" style="max-width:560px; width:95vw; max-height:88vh; padding:0; overflow:hidden; border-radius:20px; display:flex; flex-direction:column; position:relative;">
-            <button onclick="closeMultiRenameModal()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;z-index:2;">✕</button>
-            <!-- Title -->
+            <button type="button" onclick="closeMultiRenameModal()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;z-index:2;" aria-label="Close">✕</button>
             <div style="padding:14px 18px 8px; background:#f9f9f9; flex-shrink:0;">
                 <span style="font-weight:700; font-size:17px; color:#1a1a1a;">✏️ Rename</span>
             </div>
-            <!-- Scrollable grid -->
             <div id="multiRenameGrid" style="flex:1; overflow-y:auto; padding:14px; -webkit-overflow-scrolling:touch;
                 display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
             </div>
-            <!-- Tap hint + case toggle above footer -->
             <div style="padding:8px 16px 0; border-top:1px solid #eee; flex-shrink:0; display:flex; align-items:center; justify-content:center; gap:12px;">
                 <div style="font-size:13px; color:#aaa;">Tap name to edit</div>
-                <button id="caseToggleBtnMulti" onclick="toggleRenameCase()"
+                <button id="caseToggleBtnMulti" type="button" onclick="toggleRenameCase()"
                     style="font-size:13px; padding:5px 14px; border-radius:20px; border:1px solid #ccc;
                            background:white; color:#555; cursor:pointer; font-weight:600; white-space:nowrap;">
                     Sentence case
                 </button>
             </div>
-            <!-- Footer -->
             <div style="padding:8px 16px 10px; flex-shrink:0; display:flex; gap:8px; align-items:stretch;">
-                <button onclick="closeMultiRenameModal(); openRenameModal();"
+                <button type="button" onclick="closeMultiRenameModal(true); openRenameModal();"
                     style="flex:1; padding:7px 4px; border-radius:10px; border:none; background:#35654D; color:white;
                            cursor:pointer; font-weight:700; font-size:0.85rem; line-height:1.3; text-align:center;">
                     Rename<br>Single
                 </button>
-                <button onclick="closeMultiRenameModal()" class="btn btn-secondary" style="flex:1; padding:8px 6px; justify-content:center; font-size:0.85rem;">Cancel</button>
-                <button onclick="saveMultiRename()" class="btn btn-success" style="flex:1; padding:8px 6px; justify-content:center; font-size:0.85rem;">✅ Save All</button>
+                <button type="button" id="multiRenameSaveBtn" class="btn btn-success" onclick="saveMultiRename()" style="flex:1; padding:8px 6px; justify-content:center; font-size:0.85rem;">✅ Save All</button>
             </div>
         </div>
     </div>
@@ -11024,12 +11175,10 @@
             }
         });
 
-        // Force reload on browser back/forward navigation (prevents cached version)
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-                window.location.reload();
-            }
-        });
+        // pageshow: do not force-reload. iOS share/download cancel can persist
+        // this page; a reload would wipe the live deck (loadCards clears it).
+
+        var _skipUnloadPrompt = false;
 
         // Confirm before closing tab (prevents accidental data loss)
         window.addEventListener('beforeunload', function(event) {
@@ -11040,6 +11189,7 @@
             } catch (e) {}
             // Prompt if deck cards exist, or manage/library work is in progress
             var manageWork = manageOpen && (typeof ucmHasManageWork === 'function' ? ucmHasManageWork() : false);
+            if (typeof _skipUnloadPrompt !== 'undefined' && _skipUnloadPrompt) return;
             if (cards.length > 0 || manageWork) {
                 event.preventDefault();
                 const confirmationMessage = manageWork
@@ -12662,10 +12812,42 @@
         let singleRenameUserEdited = false;
         const CASE_MODES = ['Sentence', 'Capitalize', 'UPPER', 'lower'];
         let singleRenameCaseIndex = 0;
+        let _renameNameSnapshot = [];
+        let _multiRenameDirty = false;
+        let _renameSessionOpen = false;
+
+        function captureRenameSnapshot() {
+            _renameNameSnapshot = cards.map(function(c) { return c.backText || ''; });
+        }
+
+        function restoreRenameSnapshot() {
+            if (!_renameNameSnapshot || !_renameNameSnapshot.length) return;
+            cards.forEach(function(card, i) {
+                if (i < _renameNameSnapshot.length) card.backText = _renameNameSnapshot[i];
+            });
+        }
+
+        function endRenameSession(committed) {
+            if (!committed) restoreRenameSnapshot();
+            _renameSessionOpen = false;
+            _multiRenameDirty = false;
+            singleRenameUserEdited = false;
+            document.body.style.overflow = '';
+        }
+
+        function updateRenameSaveBtns() {
+            var input = document.getElementById('singleRenameInput');
+            var singleDirty = !!(input && input.value.trim() !== (singleRenameOriginal || '').trim());
+            var sBtn = document.getElementById('singleRenameSaveBtn');
+            var mBtn = document.getElementById('multiRenameSaveBtn');
+            if (sBtn) sBtn.classList.toggle('is-visible', singleDirty);
+            if (mBtn) mBtn.classList.toggle('is-visible', _multiRenameDirty);
+        }
 
         function openRenameModal() {
             if (cards.length === 0) return;
             window.speechSynthesis.cancel();
+            closeMultiRenameModal(true);
 
             const currentCard = cards[currentIndex];
             document.getElementById('singleRenameImage').src = gifSrc(currentCard.frontImage);
@@ -12674,14 +12856,67 @@
             input.value = name;
             input.setAttribute('readonly', true);
 
-            // Reset state
             singleRenameOriginal = name;
             singleRenameUserEdited = false;
             singleRenameCaseIndex = 0;
             updateCaseToggleBtn();
+            updateRenameSaveBtns();
+            if (!_renameSessionOpen) {
+                captureRenameSnapshot();
+                _renameSessionOpen = true;
+            }
 
             document.body.style.overflow = 'hidden';
             document.getElementById('singleRenameModal').classList.add('active');
+        }
+
+        function onSingleRenameInput() {
+            singleRenameUserEdited = true;
+            updateRenameSaveBtns();
+        }
+
+        function closeSingleRenameModal(switching) {
+            var modal = document.getElementById('singleRenameModal');
+            if (modal) modal.classList.remove('active');
+            if (!switching) endRenameSession(false);
+        }
+
+        function closeRenameModal() {
+            var single = document.getElementById('singleRenameModal');
+            var multi = document.getElementById('multiRenameModal');
+            if (single) single.classList.remove('active');
+            if (_activeMultiCard !== null) collapseMultiCard(_activeMultiCard);
+            if (multi) multi.classList.remove('active');
+            endRenameSession(false);
+        }
+
+        function saveSingleRename() {
+            const newName = document.getElementById('singleRenameInput').value.trim();
+            cards[currentIndex].backText = newName;
+            delete cachedBackTextSizes[currentIndex];
+            if (_renameNameSnapshot && _renameNameSnapshot.length > currentIndex) {
+                _renameNameSnapshot[currentIndex] = newName;
+            }
+            saveCards();
+            var modal = document.getElementById('singleRenameModal');
+            if (modal) modal.classList.remove('active');
+            endRenameSession(true);
+            renderDisplay();
+        }
+
+        function openMultiRenameModal() {
+            if (cards.length === 0) return;
+            closeSingleRenameModal(true);
+            _activeMultiCard = null;
+            const grid = document.getElementById('multiRenameGrid');
+            grid.innerHTML = cards.map((card, i) => _buildMultiCard(card, i, false)).join('');
+            if (!_renameSessionOpen) {
+                captureRenameSnapshot();
+                _renameSessionOpen = true;
+            }
+            updateRenameSaveBtns();
+            document.body.style.overflow = 'hidden';
+            document.getElementById('multiRenameModal').classList.add('active');
         }
 
         function updateCaseToggleBtn() {
@@ -12694,7 +12929,6 @@
         }
 
         function toggleRenameCase() {
-            // Advance to next mode
             singleRenameCaseIndex = (singleRenameCaseIndex + 1) % CASE_MODES.length;
             const mode = CASE_MODES[singleRenameCaseIndex];
 
@@ -12720,39 +12954,17 @@
                     const grid = document.getElementById('multiRenameGrid');
                     grid.innerHTML = cards.map((card, i) => _buildMultiCard(card, i, false)).join('');
                 }
+                markMultiRenameDirty();
             } else {
-                // Single rename — only apply if not manually edited
                 const input = document.getElementById('singleRenameInput');
-                if (input && !singleRenameUserEdited && input.value) {
+                if (input && input.value) {
                     input.value = applyCase(input.value);
+                    singleRenameUserEdited = true;
+                    updateRenameSaveBtns();
                 }
             }
 
             updateCaseToggleBtn();
-        }
-
-        function closeSingleRenameModal() {
-            document.getElementById('singleRenameModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function saveSingleRename() {
-            const newName = document.getElementById('singleRenameInput').value.trim();
-            cards[currentIndex].backText = newName;
-            delete cachedBackTextSizes[currentIndex];
-            saveCards();
-            closeSingleRenameModal();
-            renderDisplay();
-            showToast('✅ Card renamed!', 2000);
-        }
-
-        function openMultiRenameModal() {
-            if (cards.length === 0) return;
-            _activeMultiCard = null;
-            const grid = document.getElementById('multiRenameGrid');
-            grid.innerHTML = cards.map((card, i) => _buildMultiCard(card, i, false)).join('');
-            document.body.style.overflow = 'hidden';
-            document.getElementById('multiRenameModal').classList.add('active');
         }
 
         let _activeMultiCard = null;
@@ -12769,6 +12981,7 @@
                         style="width:100%;box-sizing:border-box;text-align:center;font-size:1.05rem;font-weight:600;
                                color:#1a1a1a;border:none;border-bottom:2px solid #35654D;background:transparent;
                                outline:none;padding:8px 4px;-webkit-user-select:text;user-select:text;"
+                        oninput="markMultiRenameDirty()"
                         onkeydown="if(event.key==='Enter'){event.preventDefault();collapseMultiCard(${i});}"
                         onblur="collapseMultiCard(${i});">
                 </div>`;
@@ -12808,11 +13021,18 @@
             setTimeout(scrollToCenter, 350);
         }
 
+        function markMultiRenameDirty() {
+            _multiRenameDirty = true;
+            updateRenameSaveBtns();
+        }
+
         function collapseMultiCard(i) {
             if (_activeMultiCard === i) _activeMultiCard = null;
             const input = document.getElementById('mc-input-' + i);
             if (input) {
-                cards[i].backText = input.value.trim();
+                const next = input.value.trim();
+                if (next !== (cards[i].backText || '')) markMultiRenameDirty();
+                cards[i].backText = next;
                 delete cachedBackTextSizes[i];
             }
             const cell = document.getElementById('mc-' + i);
@@ -12824,17 +13044,21 @@
             }, 50);
         }
 
-        function closeMultiRenameModal() {
-            document.getElementById('multiRenameModal').classList.remove('active');
-            document.body.style.overflow = '';
+        function closeMultiRenameModal(switching) {
+            if (_activeMultiCard !== null) collapseMultiCard(_activeMultiCard);
+            var modal = document.getElementById('multiRenameModal');
+            if (modal) modal.classList.remove('active');
+            if (!switching) endRenameSession(false);
         }
 
         function saveMultiRename() {
             if (_activeMultiCard !== null) collapseMultiCard(_activeMultiCard);
+            _renameNameSnapshot = cards.map(function(c) { return c.backText || ''; });
             saveCards();
-            closeMultiRenameModal();
+            var modal = document.getElementById('multiRenameModal');
+            if (modal) modal.classList.remove('active');
+            endRenameSession(true);
             renderDisplay();
-            showToast('✅ All cards renamed!', 2000);
         }
 
         function closeCreateModal() {
@@ -15567,12 +15791,55 @@
             input.style.height = Math.max(40, input.scrollHeight) + 'px';
         }
 
+        function isSaveNameDefaultValue(input) {
+            if (!input) return false;
+            const def = input.getAttribute('data-default-name') || defaultSaveDeckName();
+            return input.value.trim() === def;
+        }
+
+        function focusSaveNameField(input) {
+            if (!input) return;
+            if (isSaveNameDefaultValue(input)) {
+                try { input.select(); } catch (e) {}
+            }
+        }
+
+        function onSaveNameKeydown(event) {
+            if (event.key === 'Enter') event.preventDefault();
+            const input = event.target;
+            if (!isSaveNameDefaultValue(input)) return;
+            const printable = event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey;
+            if (printable || event.key === 'Backspace' || event.key === 'Delete') {
+                input.value = '';
+                input.classList.remove('save-name-default');
+                if (event.key === 'Backspace' || event.key === 'Delete') event.preventDefault();
+            }
+        }
+
+        function onSaveNameInput(event) {
+            syncSaveNameTone();
+            autosizeSaveNameField();
+            updateSaveNameToggleBtn();
+        }
+
         function syncSaveNameTone() {
             const input = document.getElementById('saveFileName');
             if (!input) return;
             const def = input.getAttribute('data-default-name') || defaultSaveDeckName();
             const isDefault = !input.value.trim() || input.value.trim() === def;
             input.classList.toggle('save-name-default', isDefault);
+        }
+
+        function showSaveWindowStatus(text) {
+            const el = document.getElementById('saveStatusMsg');
+            if (!el) return;
+            el.textContent = text || 'File saved';
+            el.classList.add('is-visible');
+        }
+
+        function hideSaveWindowStatus() {
+            const el = document.getElementById('saveStatusMsg');
+            if (el) el.classList.remove('is-visible');
         }
 
         function getSaveFileBaseName() {
@@ -15617,6 +15884,7 @@
         function openSaveOptions() {
             document.body.style.overflow = 'hidden';
             document.getElementById('saveOptionsModal').classList.add('active');
+            hideSaveWindowStatus();
             const dateStamp = defaultSaveDeckName();
             const nameInput = document.getElementById('saveFileName');
             if (nameInput) {
@@ -15630,8 +15898,6 @@
             const existingRow = document.getElementById('saveAsExistingRow');
             if (existingRow) existingRow.style.display = 'flex';
             const digital = typeof isDigitalDeviceLayout === 'function' && isDigitalDeviceLayout();
-            const saveOverBtn = document.getElementById('saveOverExistingBtn');
-            if (saveOverBtn) saveOverBtn.style.display = digital ? 'block' : 'none';
             const saveOverHelp = document.getElementById('saveOverExistingHelp');
             if (saveOverHelp) saveOverHelp.style.display = digital ? 'block' : 'none';
         }
@@ -15672,6 +15938,38 @@
         function closeSaveOptions() {
             document.body.style.overflow = '';
             document.getElementById('saveOptionsModal').classList.remove('active');
+            hideSaveWindowStatus();
+        }
+
+        async function exportBlobToUser(blob, filename, mimeType) {
+            const type = mimeType || blob.type || 'application/octet-stream';
+            const apple = (typeof isIPad === 'function' && isIPad()) || /iPhone|iPod/i.test(navigator.userAgent || '');
+            _skipUnloadPrompt = true;
+            try {
+                if (apple && typeof File === 'function' && navigator.canShare) {
+                    try {
+                        const file = new File([blob], filename, { type: type });
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({ files: [file], title: filename });
+                            return true;
+                        }
+                    } catch (err) {
+                        if (err && err.name === 'AbortError') return false;
+                    }
+                }
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.rel = 'noopener';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+                return true;
+            } finally {
+                setTimeout(function() { _skipUnloadPrompt = false; }, 2000);
+            }
         }
 
         async function saveAsJSON() {
@@ -15690,24 +15988,11 @@
                     cards: exportCards
                 };
 
-                // Convert to JSON string with formatting
                 const jsonString = JSON.stringify(saveData, null, 2);
-
                 const filename = getSaveFileBaseName() + '.json';
-
-                // Create blob and download
                 const blob = new Blob([jsonString], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                closeSaveOptions();
-                showToast('✅ Saved as JSON!', 2000);
+                const ok = await exportBlobToUser(blob, filename, 'application/json');
+                if (ok) showSaveWindowStatus('File saved');
             } catch (error) {
                 console.error('Error in saveAsJSON:', error);
                 showToast('⚠️ Error saving file: ' + error.message, 3000);
@@ -15828,19 +16113,12 @@
                 }
             });
 
-            // Generate ZIP and download
             zip.generateAsync({ type: 'blob' }).then(function(blob) {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = getSaveFileBaseName() + '.zip';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                closeSaveOptions();
-                showToast('✅ Saved as ZIP!', 2000);
+                return exportBlobToUser(blob, getSaveFileBaseName() + '.zip', 'application/zip');
+            }).then(function(ok) {
+                if (ok) showSaveWindowStatus('File saved');
+            }).catch(function(err) {
+                showToast('⚠️ Error saving ZIP: ' + (err && err.message ? err.message : err), 3000);
             });
         }
 
@@ -15852,9 +16130,15 @@
         function openLoadOptions() {
             if (typeof noteSwipeHintUserEngaged === 'function') noteSwipeHintUserEngaged();
             document.body.style.overflow = 'hidden';
-            document.getElementById('loadOptionsModal').classList.add('active');
+            var loadModal = document.getElementById('loadOptionsModal');
+            loadModal.classList.add('active');
+            loadModal.classList.toggle('is-digital', typeof isDigitalDeviceLayout === 'function' && isDigitalDeviceLayout());
+            if (typeof copyLoadFormatIcons === 'function') copyLoadFormatIcons();
             // Reset file input and info
-            document.getElementById('loadFileInput').value = '';
+            var jsonIn = document.getElementById('loadJsonFileInput');
+            var zipIn = document.getElementById('loadZipFileInput');
+            if (jsonIn) jsonIn.value = '';
+            if (zipIn) zipIn.value = '';
             document.getElementById('loadFileInfo').style.display = 'none';
             document.getElementById('previewBtn').style.display = 'none';
             document.getElementById('previewExpandPanel').style.display = 'none';
@@ -16297,12 +16581,57 @@
 
         // ==================== END SAMPLE DECK ====================
 
+        function copyLoadFormatIcons() {
+            var pairs = [['#saveJSONBtn img', '#loadJSONBtn img'], ['#saveZIPBtn img', '#loadZIPBtn img']];
+            pairs.forEach(function(p) {
+                var src = document.querySelector(p[0]);
+                var dest = document.querySelector(p[1]);
+                if (src && dest && src.getAttribute('src')) dest.src = src.src;
+            });
+        }
+        document.addEventListener('DOMContentLoaded', copyLoadFormatIcons);
+
+        async function pickLoadFile(kind) {
+            kind = kind === 'zip' ? 'zip' : 'json';
+            if (window.showOpenFilePicker) {
+                try {
+                    const types = kind === 'zip'
+                        ? [{ description: 'ZIP package', accept: { 'application/zip': ['.zip'] } }]
+                        : [{ description: 'JSON deck', accept: { 'application/json': ['.json'] } }];
+                    const handles = await window.showOpenFilePicker({
+                        multiple: false,
+                        excludeAcceptAllOption: true,
+                        types: types
+                    });
+                    if (!handles || !handles.length) return;
+                    const file = await handles[0].getFile();
+                    handleLoadedFile(file, kind);
+                    return;
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return;
+                }
+            }
+            const input = document.getElementById(kind === 'zip' ? 'loadZipFileInput' : 'loadJsonFileInput');
+            if (input) input.click();
+        }
+
         function handleFileLoad(event) {
-            const file = event.target.files[0];
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const kind = event.target.getAttribute('data-kind') || '';
+            event.target.value = '';
+            handleLoadedFile(file, kind);
+        }
+
+        function handleLoadedFile(file, expectedKind) {
             if (!file) return;
 
             const fileName = file.name;
             const fileExt = fileName.split('.').pop().toLowerCase();
+            if (expectedKind && fileExt !== expectedKind) {
+                showToast(expectedKind === 'zip' ? '⚠️ This button loads .zip files' : '⚠️ This button loads .json files', 3000);
+                return;
+            }
 
             if (fileExt === 'json') {
                 // Handle JSON file
@@ -16332,12 +16661,12 @@
                         const addBtn = document.getElementById('addToExistingBtn');
 
                         if (cards.length === 0) {
-                            // No existing cards — show Load, Cancel, Preview only
+                            // No existing cards — show Add and Preview
                             replaceBtn.style.display = 'none';
                             addBtn.style.display = 'none';
                             document.getElementById('loadDirectBtn').style.display = '';
                         } else {
-                            // Cards exist — show Add, Cancel, Replace, Preview
+                            // Cards exist — show Add, Replace, Preview
                             document.getElementById('loadDirectBtn').style.display = 'none';
                             replaceBtn.style.display = '';
                             // Disable "Add" if would exceed 30 cards
@@ -17616,7 +17945,7 @@
                 return (b.createdAt || 0) - (a.createdAt || 0); // date: newest first
             });
             const svgAdd    = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
-            const svgLoad   = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>';
+            const svgLoad   = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>';
             const svgTrash  = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>';
             const svgRemove = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
             const svgHandle = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>';
@@ -20252,7 +20581,7 @@
                                 </button>
                                 <button class="empty-action-btn" onclick="openLoadOptions()">
                                     <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                        <path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>
                                     </svg>
                                     <span>Load</span>
                                 </button>
