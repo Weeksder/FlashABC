@@ -1250,13 +1250,25 @@
         }
 
         .btn-secondary {
-            background: #ff6b6b;
-            color: white;
+            background: #e4e6eb;
+            color: #555;
+            border: 1px solid #ccc;
+            box-shadow: none;
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            background: #35654D;
             color: white;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .btn-secondary:hover { background: #d5d8de; }
+            .btn-success:hover { background: #2d5542; }
+            .btn-danger:hover { background: #fa5252; }
         }
 
         #saveOptionsModal .modal-content {
@@ -1311,6 +1323,7 @@
             gap: 8px;
             margin: 0 0 10px;
             min-height: 30px;
+            text-align: left;
         }
         .save-modal-title {
             margin: 0;
@@ -1437,12 +1450,9 @@
         .rename-switch-btn {
             border: none;
         }
-        #renameMultiBtn {
-            background: #f5a623;
-            color: white;
-        }
+        #renameMultiBtn,
         #renameSingleBtn {
-            background: #35654D;
+            background: #f5a623;
             color: white;
         }
         .rename-case-btn {
@@ -1455,10 +1465,10 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            background: #40c057;
+            background: #35654D;
             color: #fff;
             border: none;
-            box-shadow: 0 2px 8px rgba(64,192,87,0.35);
+            box-shadow: 0 2px 8px rgba(53,101,77,0.28);
         }
         .rename-done-btn svg {
             width: 18px;
@@ -4141,6 +4151,48 @@
         #newFolderModal {
             z-index: 20020;
         }
+        #confirmModal .modal-content,
+        #newFolderModal .modal-content,
+        #renameUnitModal .modal-content,
+        #matchGameHelpModal .modal-content,
+        #findLetterHelpModal .modal-content,
+        #matchExtraWordsModal .modal-content {
+            padding: 12px 14px 14px;
+            max-width: 400px;
+            border-radius: 20px;
+        }
+        #guessGameHelpModal .modal-content,
+        #bombGameHelpModal .modal-content {
+            padding: 12px 14px 14px;
+            max-width: 400px;
+            border-radius: 20px;
+            background: #fff;
+            color: #333;
+        }
+        #helpMenuModal .modal-content {
+            padding: 12px 14px 14px;
+            border-radius: 20px;
+        }
+        .dialog-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 12px 14px 14px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.28);
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .help-popup-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 12px 14px 14px;
+            max-width: 400px;
+            width: 88%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            position: relative;
+            box-sizing: border-box;
+        }
 
         .modal-content h2 {
             margin-bottom: 25px;
@@ -4515,6 +4567,19 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: #35654D #eef1f4;
+        }
+        #renameNamesList::-webkit-scrollbar {
+            width: 8px;
+        }
+        #renameNamesList::-webkit-scrollbar-track {
+            background: #eef1f4;
+            border-radius: 6px;
+        }
+        #renameNamesList::-webkit-scrollbar-thumb {
+            background: #35654D;
+            border-radius: 6px;
         }
         #renameNamesHeader {
             padding: 10px 14px 8px;
@@ -4908,6 +4973,19 @@
             /* Prevent flex from treating grid as a shrink-to-zero block */
             flex-shrink: 1;
             overscroll-behavior: contain;
+            scrollbar-width: thin;
+            scrollbar-color: #35654D #eef1f4;
+        }
+        #createModal #imagePreviewGrid::-webkit-scrollbar {
+            width: 8px;
+        }
+        #createModal #imagePreviewGrid::-webkit-scrollbar-track {
+            background: #eef1f4;
+            border-radius: 6px;
+        }
+        #createModal #imagePreviewGrid::-webkit-scrollbar-thumb {
+            background: #35654D;
+            border-radius: 6px;
         }
         /* Card Name: takes remaining space and grows */
         #createModal .card-name-group {
@@ -5089,8 +5167,14 @@
             margin: 0 0 16px;
             min-height: 36px;
         }
-        .game-menu-titlebar h2 {
+        .game-menu-titlebar h2,
+        .game-menu-titlebar .save-modal-title {
             margin: 0;
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 30px;
+            text-align: center;
         }
         .game-menu-close {
             position: absolute;
@@ -5100,11 +5184,17 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #e53935;
-            padding: 4px;
+            color: #aaa;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            font-size: 1.3rem;
+            font-weight: 400;
+            line-height: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-sizing: border-box;
         }
         @media (min-width: 700px) {
             #gameMenuModal .modal-content {
@@ -5145,23 +5235,24 @@
                 box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
                 position: relative;
             }
-            #gameMenuModal .game-menu-titlebar h2 {
+            #gameMenuModal .game-menu-titlebar h2,
+            #gameMenuModal .game-menu-titlebar .save-modal-title {
                 color: #35654D;
                 font-size: clamp(1.45rem, 2.6vw, 1.85rem) !important;
                 margin: 0;
                 line-height: 1;
                 text-shadow: none;
+                flex: 0 0 auto;
             }
             #gameMenuModal .game-menu-close {
                 position: static;
                 transform: none;
-                color: #e53935;
-                padding: 6px;
+                color: #aaa;
+                padding: 0;
                 margin: 0;
-            }
-            #gameMenuModal .game-menu-close svg {
-                width: 22px;
-                height: 22px;
+                width: 36px;
+                height: 36px;
+                font-size: 1.55rem;
             }
             #gameMenuMinCardsBanner {
                 margin-bottom: 16px !important;
@@ -5644,10 +5735,20 @@
             align-items: stretch;
         }
         #previewOverlayGrid {
-            scrollbar-width: none;
+            scrollbar-width: thin;
+            scrollbar-color: #35654D #eef1f4;
         }
         #previewOverlayGrid::-webkit-scrollbar {
-            display: none;
+            width: 8px;
+            display: block;
+        }
+        #previewOverlayGrid::-webkit-scrollbar-track {
+            background: #eef1f4;
+            border-radius: 6px;
+        }
+        #previewOverlayGrid::-webkit-scrollbar-thumb {
+            background: #35654D;
+            border-radius: 6px;
         }
         #previewOverlayScroll {
             display: none;
@@ -5691,6 +5792,12 @@
             background: #7c3aed;
             box-shadow: 0 2px 8px rgba(109, 40, 217, 0.35);
         }
+        #previewOverlayModal.reorder-mode-on #previewOverlayGrid {
+            scrollbar-width: none;
+        }
+        #previewOverlayModal.reorder-mode-on #previewOverlayGrid::-webkit-scrollbar {
+            display: none;
+        }
         /* Create modal: same wide scroll rail while Reorder & Remove is on */
         #createModal .preview-grid-with-rail {
             flex: 1 1 auto;
@@ -5731,6 +5838,10 @@
         #createModal.reorder-mode-on #imagePreviewGrid {
             flex: 1 1 auto;
             min-width: 0;
+            scrollbar-width: none;
+        }
+        #createModal.reorder-mode-on #imagePreviewGrid::-webkit-scrollbar {
+            display: none;
         }
         #previewOverlayGrid .session-preview-item,
         #sampleDeckGrid .session-preview-item {
@@ -7357,6 +7468,19 @@
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #35654D #eef1f4;
+        }
+        .msp-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .msp-list::-webkit-scrollbar-track {
+            background: #eef1f4;
+            border-radius: 6px;
+        }
+        .msp-list::-webkit-scrollbar-thumb {
+            background: #35654D;
+            border-radius: 6px;
         }
         .msp-list::after {
             content: '';
@@ -7368,8 +7492,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 5px 10px;
-            margin: 1px 8px;
+            padding: 10px 12px;
+            margin: 0 8px 8px;
             border-radius: 8px;
             border-bottom: 1px solid #e6e6e6;
             cursor: pointer;
@@ -7389,8 +7513,8 @@
         }
         .msp-unit-info { flex: 1; min-width: 0; }
         .msp-unit-name {
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: #222;
             white-space: normal;
             word-break: break-word;
@@ -7544,14 +7668,24 @@
             transform: scale(0.98);
             background: #ffd54f;
         }
+        #unitConfigModal .ucm-units-scroll,
+        #unitConfigModal .ucm-folders-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #35654D #eef1f4;
+        }
         #unitConfigModal .ucm-units-scroll::-webkit-scrollbar,
         #unitConfigModal .ucm-folders-scroll::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+        }
+        #unitConfigModal .ucm-units-scroll::-webkit-scrollbar-track,
+        #unitConfigModal .ucm-folders-scroll::-webkit-scrollbar-track {
+            background: #eef1f4;
+            border-radius: 6px;
         }
         #unitConfigModal .ucm-units-scroll::-webkit-scrollbar-thumb,
         #unitConfigModal .ucm-folders-scroll::-webkit-scrollbar-thumb {
-            background: rgba(53, 101, 77, 0.35);
-            border-radius: 4px;
+            background: #35654D;
+            border-radius: 6px;
         }
         #unitConfigModal #libraryMoreFade,
         #unitConfigModal #libraryMoreLabel {
@@ -8110,7 +8244,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1466-library-units-rename-equal-btns">
+    <meta name="flashabc-build" content="1468-rename-single-multiple-orange">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -8650,7 +8784,7 @@
     <div id="manageSidePanel">
         <div id="mspResizeHandle"></div>
         <div class="msp-header">
-            <span class="msp-title">📚 Deck Library</span>
+            <span class="msp-title">Deck Library</span>
             <button class="msp-close" onclick="closeManageSidePanel()" aria-label="Close">✕</button>
         </div>
         <div class="msp-toolbar">
@@ -8779,11 +8913,16 @@
     <!-- Confirmation Modal -->
     <div class="modal" id="confirmModal">
         <div class="modal-content" style="max-width: 400px; text-align: center;">
-            <h2 style="margin-bottom: 20px;">⚠️ Clear All Cards</h2>
-            <p id="confirmMessage" style="font-size: 1.1rem; margin-bottom: 30px; color: #333;"></p>
-            <div style="display: flex; gap: 15px; justify-content: center;">
-                <button class="btn btn-secondary" onclick="closeConfirmModal()" style="padding: 12px 24px;">Cancel</button>
-                <button class="btn btn-warning" onclick="executeClearAll()" style="padding: 12px 24px;">⚠️ Clear All</button>
+            <div class="save-modal-header">
+                <div class="save-modal-title">Clear All Cards</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeConfirmModal()" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <p id="confirmMessage" style="font-size: 1rem; margin: 0 0 18px; color: #444; line-height: 1.45;"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn btn-secondary" onclick="closeConfirmModal()" style="flex:1;padding:12px;justify-content:center;">Cancel</button>
+                <button class="btn btn-danger" onclick="executeClearAll()" style="flex:1;padding:12px;justify-content:center;">Clear All</button>
             </div>
         </div>
     </div>
@@ -8792,28 +8931,33 @@
     <div id="deckNameConflictModal" onclick="if(event.target===this) resolveDeckNameConflict('cancel')"
          style="display:none;position:fixed;inset:0;z-index:26000;background:rgba(0,0,0,0.55);
                 align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
-        <div role="dialog" aria-modal="true" aria-labelledby="deckNameConflictTitle"
-             style="background:white;border-radius:16px;max-width:420px;width:100%;padding:24px 22px 20px;
-                    box-shadow:0 12px 40px rgba(0,0,0,0.28);text-align:center;box-sizing:border-box;"
+        <div class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="deckNameConflictTitle"
              onclick="event.stopPropagation()">
-            <h2 id="deckNameConflictTitle" style="margin:0 0 12px;color:#35654D;font-size:1.2rem;">Deck already exists</h2>
-            <p id="deckNameConflictMessage" style="margin:0 0 22px;color:#444;font-size:1rem;line-height:1.45;"></p>
-            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <div class="save-modal-header">
+                <div class="save-modal-title" id="deckNameConflictTitle">Deck already exists</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="resolveDeckNameConflict('cancel')" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <p id="deckNameConflictMessage" style="margin:0 0 18px;color:#444;font-size:1rem;line-height:1.45;"></p>
+            <div style="display:flex;gap:10px;justify-content:center;">
                 <button type="button" class="btn btn-secondary" onclick="resolveDeckNameConflict('cancel')"
-                        style="padding:12px 22px;min-width:120px;">Cancel</button>
+                        style="flex:1;padding:12px;justify-content:center;">Cancel</button>
                 <button type="button" class="btn btn-success" onclick="resolveDeckNameConflict('replace')"
-                        style="padding:12px 22px;min-width:120px;background:#35654D;color:#fff;">Replace</button>
+                        style="flex:1;padding:12px;justify-content:center;">Replace</button>
             </div>
         </div>
     </div>
 
     <!-- Help Menu Modal -->
     <div class="modal" id="helpMenuModal">
-        <div class="modal-content" style="width:fit-content;max-width:90vw;position:relative;padding:20px 20px 20px;">
-            <button onclick="closeHelpMenu()" style="position:absolute;top:12px;right:12px;background:none;border:none;cursor:pointer;color:#aaa;padding:4px;display:flex;align-items:center;justify-content:center;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-            <div style="font-weight:700;color:#35654D;margin-bottom:10px;font-size:0.95rem;">Toolbar Buttons</div>
+        <div class="modal-content" style="width:fit-content;max-width:90vw;position:relative;">
+            <div class="save-modal-header">
+                <div class="save-modal-title">Toolbar Buttons</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeHelpMenu()" aria-label="Close">✕</button>
+                </div>
+            </div>
             <div style="display:grid;grid-template-columns:24px 1fr;gap:8px 12px;align-items:center;font-size:0.83rem;color:#444;line-height:1.7;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
                 <span><strong>Add</strong> — Create a new flashcard with an image and word.</span>
@@ -8842,10 +8986,8 @@
     <div class="modal" id="gameMenuModal" onclick="onGameMenuDismiss(event)">
         <div class="modal-content" style="max-width:380px;width:auto;min-width:min(280px,92vw);position:relative;padding:18px 16px 16px;overflow-x:visible;">
             <div class="game-menu-titlebar">
-                <h2 style="font-size:1.55rem;font-weight:700;color:#35654D;margin:0;text-align:center;">Games</h2>
-                <button type="button" class="game-menu-close" onclick="closeGameMenu()" title="Close" aria-label="Close">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
+                <div class="save-modal-title">Games</div>
+                <button type="button" class="save-modal-close game-menu-close" onclick="closeGameMenu()" title="Close" aria-label="Close">✕</button>
             </div>
             <!-- Visible on Edge/iPad when toast/alert fail — needs 4+ cards -->
             <div id="gameMenuMinCardsBanner" style="display:none;margin:0 4px 12px;padding:12px 14px;background:#ffebee;border:2px solid #e53935;border-radius:10px;color:#b71c1c;font-size:0.95rem;font-weight:700;text-align:center;line-height:1.35;">
@@ -8930,15 +9072,20 @@
 
     <!-- Help Modal for Guess Game -->
     <div class="modal" id="guessGameHelpModal">
-        <div class="modal-content" style="max-width: 500px; background: linear-gradient(135deg, #35654D 0%, #2d5542 100%); color: white;">
-            <h2 style="color: white;">📖 How to Play</h2>
-            <div style="text-align: left; line-height: 1.8; font-size: 1.1rem;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="save-modal-header">
+                <div class="save-modal-title">Guess the Word</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeGuessGameHelp()" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <div style="text-align: left; line-height: 1.7; font-size: 1rem; color:#444;">
                 <p style="margin-bottom: 10px;"><strong>1.</strong> Player 1 guesses card #1 out loud</p>
                 <p style="margin-bottom: 10px;"><strong>2.</strong> Flip the card to check</p>
-                <p style="margin-bottom: 10px;"><strong>3.</strong> <span style="color: #51cf66; font-weight: bold;">Correct?</span> Keep going! <span style="color: #ff6b6b; font-weight: bold;">Wrong?</span> Next player starts over</p>
-                <p style="margin-bottom: 20px;"><strong>4.</strong> Complete all 9 cards to win!</p>
+                <p style="margin-bottom: 10px;"><strong>3.</strong> <span style="color: #35654D; font-weight: bold;">Correct?</span> Keep going! <span style="color: #ff6b6b; font-weight: bold;">Wrong?</span> Next player starts over</p>
+                <p style="margin-bottom: 16px;"><strong>4.</strong> Complete all 9 cards to win!</p>
             </div>
-            <button class="btn btn-primary" onclick="closeGuessGameHelp()" style="width: 100%; padding: 15px; justify-content: center; background: white; color: #35654D;">
+            <button class="btn btn-success" onclick="closeGuessGameHelp()" style="width: 100%; padding: 12px; justify-content: center;">
                 Got it!
             </button>
         </div>
@@ -8979,15 +9126,20 @@
 
     <!-- Help Modal for Bomb Game -->
     <div class="modal" id="bombGameHelpModal">
-        <div class="modal-content" style="max-width: 500px; background: linear-gradient(135deg, #35654D 0%, #2d5542 100%); color: white;">
-            <h2 style="color: white;">📖 How to Play</h2>
-            <div style="text-align: left; line-height: 1.8; font-size: 1.1rem;">
-                <p style="margin-bottom: 10px;"><strong>1.</strong> Some cards are bombs! 💣</p>
-                <p style="margin-bottom: 10px;"><strong>2.</strong> Click a card to reveal it</p>
-                <p style="margin-bottom: 10px;"><strong>3.</strong> <span style="color: #51cf66; font-weight: bold;">Safe card?</span> Say the card's name, and keep going!</p>
-                <p style="margin-bottom: 20px;"><strong>4.</strong> <span style="color: #ff6b6b; font-weight: bold;">Hit a bomb?</span> The next player comes up and try!</p>
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="save-modal-header">
+                <div class="save-modal-title">Bomb</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeBombGameHelp()" aria-label="Close">✕</button>
+                </div>
             </div>
-            <button class="btn btn-primary" onclick="closeBombGameHelp()" style="width: 100%; padding: 15px; justify-content: center; background: white; color: #35654D;">
+            <div style="text-align: left; line-height: 1.7; font-size: 1rem; color:#444;">
+                <p style="margin-bottom: 10px;"><strong>1.</strong> Some cards are bombs!</p>
+                <p style="margin-bottom: 10px;"><strong>2.</strong> Click a card to reveal it</p>
+                <p style="margin-bottom: 10px;"><strong>3.</strong> <span style="color: #35654D; font-weight: bold;">Safe card?</span> Say the card's name, and keep going!</p>
+                <p style="margin-bottom: 16px;"><strong>4.</strong> <span style="color: #ff6b6b; font-weight: bold;">Hit a bomb?</span> The next player comes up and try!</p>
+            </div>
+            <button class="btn btn-success" onclick="closeBombGameHelp()" style="width: 100%; padding: 12px; justify-content: center;">
                 Got it!
             </button>
         </div>
@@ -9076,12 +9228,17 @@
     <!-- Match Game Help Modal -->
     <div class="modal" id="matchGameHelpModal">
         <div class="modal-content" style="max-width:400px;">
-            <h2>🖼️ Match the Picture</h2>
-            <p style="margin-bottom:15px;color:#666;">A picture is shown — tap the word that matches it.</p>
-            <ul style="text-align:left;color:#555;margin-bottom:20px;padding-left:20px;line-height:2;">
-                <li>✅ Correct — moves to next picture</li>
-                <li>❌ Wrong — try again</li>
-                <li>👆 Swipe left / right on the picture to skip ahead or go back</li>
+            <div class="save-modal-header">
+                <div class="save-modal-title">Match the Picture</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="document.getElementById('matchGameHelpModal').classList.remove('active')" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <p style="margin:0 0 12px;color:#666;">A picture is shown — tap the word that matches it.</p>
+            <ul style="text-align:left;color:#555;margin:0 0 16px;padding-left:20px;line-height:1.8;">
+                <li>Correct — moves to next picture</li>
+                <li>Wrong — try again</li>
+                <li>Swipe left / right on the picture to skip ahead or go back</li>
                 <li>One question per card in your deck</li>
             </ul>
             <button class="btn btn-success" onclick="document.getElementById('matchGameHelpModal').classList.remove('active')" style="width:100%;padding:12px;justify-content:center;">Got it!</button>
@@ -9134,9 +9291,14 @@
     </div>
     <div class="modal" id="findLetterHelpModal">
         <div class="modal-content" style="max-width:400px;">
-            <h2>🔤 Find the Letter</h2>
-            <p style="margin-bottom:15px;color:#666;">Look at the letter at the top. Tap every bubble that matches it.</p>
-            <ul style="text-align:left;color:#555;margin-bottom:20px;padding-left:20px;line-height:2;">
+            <div class="save-modal-header">
+                <div class="save-modal-title">Find the Letter</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="document.getElementById('findLetterHelpModal').classList.remove('active')" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <p style="margin:0 0 12px;color:#666;">Look at the letter at the top. Tap every bubble that matches it.</p>
+            <ul style="text-align:left;color:#555;margin:0 0 16px;padding-left:20px;line-height:1.8;">
                 <li>The big letter itself (A or a)</li>
                 <li>A picture whose word starts with that letter</li>
                 <li>Correct tap — a gold star flies into your bank</li>
@@ -9146,9 +9308,14 @@
         </div>
     </div>
     <div id="gameEndConfirm" onclick="hideContinueGameConfirm()" style="display:none;position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
-        <div onclick="event.stopPropagation()" ontouchend="event.stopPropagation()" style="background:white;border-radius:20px;padding:28px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
-            <h2 style="margin:0 0 22px;color:#35654D;font-size:1.45rem;">Do you want to continue previous game?</h2>
-            <div style="display:flex;gap:12px;justify-content:center;">
+        <div class="dialog-card" onclick="event.stopPropagation()" ontouchend="event.stopPropagation()">
+            <div class="save-modal-header">
+                <div class="save-modal-title">Continue game?</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="hideContinueGameConfirm()" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;">
                 <button type="button" class="btn btn-secondary" onclick="event.stopPropagation(); declineContinueGame()" style="flex:1;padding:12px;justify-content:center;">No</button>
                 <button type="button" class="btn btn-success" onclick="event.stopPropagation(); confirmContinueGame()" style="flex:1;padding:12px;justify-content:center;">Yes</button>
             </div>
@@ -9157,9 +9324,14 @@
 
     <!-- Match Game Extra Words Modal -->
     <div class="modal" id="matchExtraWordsModal">
-        <div class="modal-content" style="max-width:420px;">
-            <h2>➕ Extra Answer Words</h2>
-            <p style="color:#666;margin-bottom:10px;">Add extra words to make the choices harder. One word per line.</p>
+        <div class="modal-content" style="max-width:400px;">
+            <div class="save-modal-header">
+                <div class="save-modal-title">Extra Answer Words</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="cancelMatchExtraWords()" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <p style="color:#666;margin:0 0 10px;">Add extra words to make the choices harder. One word per line.</p>
             <button type="button" class="btn" onclick="fillMatchSimilarWords()" style="width:100%;padding:10px 12px;justify-content:center;margin-bottom:10px;background:#f0f9f4;border:1.5px solid #35654D;color:#35654D;font-weight:700;">
                 Scramble similar words
             </button>
@@ -9228,14 +9400,13 @@
     <!-- Save Help Popup -->
     <div id="saveHelpPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
          background:rgba(0,0,0,0.55);z-index:30001;align-items:center;justify-content:center;">
-        <div style="background:white;border-radius:16px;padding:24px 24px 20px;max-width:400px;width:88%;
-                    box-shadow:0 20px 60px rgba(0,0,0,0.35);position:relative;">
-            <button onclick="document.getElementById('saveHelpPopup').style.display='none'"
-                style="position:absolute;top:10px;right:12px;background:none;border:none;
-                       cursor:pointer;font-size:1.5rem;line-height:1;color:#888;padding:4px;">
-                ×
-            </button>
-            <h3 style="margin:0 0 18px;font-size:1.05rem;color:#333;">About Save Options</h3>
+        <div class="help-popup-card">
+            <div class="save-modal-header">
+                <div class="save-modal-title">About Save Options</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="document.getElementById('saveHelpPopup').style.display='none'" aria-label="Close">✕</button>
+                </div>
+            </div>
 
             <div style="margin-bottom:16px;">
                 <strong style="font-size:0.95rem;color:#35654D;">📄 Quick Save (JSON)</strong>
@@ -9260,14 +9431,13 @@
     <!-- Create New Cards Help Popup -->
     <div id="createHelpPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
          background:rgba(0,0,0,0.55);z-index:30001;align-items:center;justify-content:center;">
-        <div style="background:white;border-radius:16px;padding:24px 24px 20px;max-width:400px;width:88%;
-                    box-shadow:0 20px 60px rgba(0,0,0,0.35);position:relative;">
-            <button type="button" onclick="document.getElementById('createHelpPopup').style.display='none'"
-                style="position:absolute;top:10px;right:12px;background:none;border:none;
-                       cursor:pointer;font-size:1.5rem;line-height:1;color:#888;padding:4px;">
-                ×
-            </button>
-            <h3 style="margin:0 0 18px;font-size:1.05rem;color:#333;">About Create New Cards</h3>
+        <div class="help-popup-card">
+            <div class="save-modal-header">
+                <div class="save-modal-title">About Create New Cards</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="document.getElementById('createHelpPopup').style.display='none'" aria-label="Close">✕</button>
+                </div>
+            </div>
             <div style="margin-bottom:16px;">
                 <strong style="font-size:0.95rem;color:#35654D;">Card names = Image filenames</strong>
                 <p style="margin:5px 0 0;font-size:0.85rem;color:#555;">Each card is named from the image file you add.</p>
@@ -9468,7 +9638,7 @@
     <div class="modal" id="unitConfigModal">
         <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto; position:relative;">
             <div class="save-modal-header">
-                <div class="save-modal-title">📚 Deck Library</div>
+                <div class="save-modal-title">Deck Library</div>
                 <div class="save-modal-header-actions">
                     <button type="button" class="save-help-btn" onclick="toggleUnitConfigHelp()" title="Help" aria-label="Help">?</button>
                     <button type="button" class="save-modal-close" onclick="closeUnitConfigModal()" aria-label="Close">✕</button>
@@ -9638,16 +9808,19 @@
     <!-- New Folder name dialog (shown only when + Folder is tapped) -->
     <div class="modal" id="newFolderModal">
         <div class="modal-content" style="max-width:400px;position:relative;">
-            <button type="button" onclick="closeNewFolderModal()"
-                style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;">✕</button>
-            <h2 style="margin:0 0 14px;font-size:1.15rem;">New folder</h2>
+            <div class="save-modal-header">
+                <div class="save-modal-title">New folder</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeNewFolderModal()" aria-label="Close">✕</button>
+                </div>
+            </div>
             <input type="text" id="newGroupName" placeholder="Folder name"
                 style="width:100%;padding:12px;border:1.5px solid #ddd;border-radius:8px;font-size:16px;box-sizing:border-box;"
                 inputmode="text" enterkeyhint="done" autocomplete="off"
                 onkeydown="if(event.key==='Enter'){event.preventDefault();confirmNewFolder();}">
             <div style="display:flex;gap:10px;margin-top:16px;">
-                <button type="button" class="btn btn-secondary" onclick="closeNewFolderModal()" style="flex:1;padding:12px;">Cancel</button>
-                <button type="button" class="btn btn-success" onclick="confirmNewFolder()" style="flex:1;padding:12px;">Create</button>
+                <button type="button" class="btn btn-secondary" onclick="closeNewFolderModal()" style="flex:1;padding:12px;justify-content:center;">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="confirmNewFolder()" style="flex:1;padding:12px;justify-content:center;">Create</button>
             </div>
         </div>
     </div>
@@ -9655,17 +9828,22 @@
     <!-- Rename Unit Modal -->
     <div class="modal" id="renameUnitModal">
         <div class="modal-content" style="max-width: 400px;">
-            <h2>✏️ Rename Unit</h2>
-            <div class="form-group" style="margin: 20px 0;">
+            <div class="save-modal-header">
+                <div class="save-modal-title">Rename Unit</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeRenameUnitModal()" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <div class="form-group" style="margin: 0 0 16px;">
                 <label style="display: block; margin-bottom: 10px; font-weight: 600; font-size: 16px;">New Unit Name:</label>
                 <input type="text" id="renameUnitInput" placeholder="Enter new name..." style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box;" autofocus>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-secondary" onclick="closeRenameUnitModal()" style="flex: 1; padding: 12px;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary" onclick="closeRenameUnitModal()" style="flex: 1; padding: 12px; justify-content:center;">
                     Cancel
                 </button>
-                <button class="btn btn-success" onclick="confirmRenameUnit()" style="flex: 1; padding: 12px;">
-                    ✅ Rename
+                <button class="btn btn-success" onclick="confirmRenameUnit()" style="flex: 1; padding: 12px; justify-content:center;">
+                    Rename
                 </button>
             </div>
         </div>
@@ -9701,7 +9879,7 @@
             </div>
             <div class="rename-footer-bar">
                 <button type="button" id="caseToggleBtn" class="rename-case-btn" onclick="toggleRenameCase()">Sentence case</button>
-                <button type="button" id="renameMultiBtn" class="rename-switch-btn" onclick="closeSingleRenameModal(true); openMultiRenameModal();">Rename Multiple</button>
+                <button type="button" id="renameMultiBtn" class="rename-switch-btn" onclick="closeSingleRenameModal(true); openMultiRenameModal();">Multiple</button>
                 <button type="button" id="singleRenameSaveBtn" class="rename-done-btn" onclick="saveSingleRename()" disabled title="Done" aria-label="Done">
                     Done
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -9731,7 +9909,7 @@
             <div id="multiRenameGrid"></div>
             <div class="rename-footer-bar" style="flex-shrink:0; padding-top:8px;">
                 <button type="button" id="caseToggleBtnMulti" class="rename-case-btn" onclick="toggleRenameCase()">Sentence case</button>
-                <button type="button" id="renameSingleBtn" class="rename-switch-btn" onclick="closeMultiRenameModal(true); openRenameModal();">Rename Single</button>
+                <button type="button" id="renameSingleBtn" class="rename-switch-btn" onclick="closeMultiRenameModal(true); openRenameModal();">Single</button>
                 <button type="button" id="multiRenameSaveBtn" class="rename-done-btn" onclick="saveMultiRename()" disabled title="Done" aria-label="Done">
                     Done
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -16908,11 +17086,18 @@
         }
 
         function setupPreviewOverlayScroll() {
+            const modal = document.getElementById('previewOverlayModal');
+            const rail = document.getElementById('previewOverlayScroll');
+            if (!modal || !rail) return;
+            if (!modal.classList.contains('reorder-mode-on')) {
+                rail.style.display = 'none';
+                return;
+            }
             bindPreviewScrollRail(
                 document.getElementById('previewOverlayGrid'),
-                document.getElementById('previewOverlayScroll'),
+                rail,
                 document.getElementById('previewOverlayScrollThumb'),
-                { minThumb: 48 }
+                { minThumb: 48, keepDisplay: true }
             );
         }
 
