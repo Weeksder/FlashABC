@@ -93,6 +93,28 @@
             font-weight: var(--spell-letter-weight, 400) !important;
         }
 
+        /* UI chrome — menus, buttons, warnings. Card names stay on --spell-letter-font. */
+        :root {
+            --ui-font: "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        html, body {
+            font-family: var(--ui-font);
+        }
+        button, input, textarea, select,
+        .btn, .toast-notification, .toast-button {
+            font-family: var(--ui-font);
+        }
+        .rename-name-field,
+        .multi-rename-name,
+        .multi-rename-input,
+        .rename-name-input,
+        #backText,
+        #renameEditor,
+        .session-preview-label {
+            font-family: var(--spell-letter-font, 'Fredoka', Arial, sans-serif) !important;
+            font-weight: var(--spell-letter-weight, 400) !important;
+        }
+
         /* Spell Me: per-button frosted glass + answer-slot states */
         #spellingGameModal #spellingBtnPanel {
             background: transparent !important;
@@ -853,7 +875,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--ui-font);
             background-color: #35654D;
             background-image: -webkit-linear-gradient(135deg, #35654D 0%, #2d5542 100%);
             background-image: -moz-linear-gradient(135deg, #35654D 0%, #2d5542 100%);
@@ -976,8 +998,9 @@
             line-height: 36px;
             text-align: center;
             font-size: 30px;
-            font-weight: 400;
+            font-weight: 700;
             color: inherit;
+            -webkit-text-stroke: 0.45px currentColor;
         }
 
         .top-bar {
@@ -1132,6 +1155,7 @@
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
+            font-family: var(--ui-font);
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
@@ -1327,11 +1351,234 @@
 
         #singleRenameSaveBtn,
         #multiRenameSaveBtn {
-            display: none;
+            display: inline-flex;
         }
-        #singleRenameSaveBtn.is-visible,
-        #multiRenameSaveBtn.is-visible {
+        .rename-footer-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: stretch;
+            gap: 10px;
+            padding: 10px 0 0;
+            border-top: 1px solid #eee;
+        }
+        .rename-footer-bar > button {
+            width: 100%;
+            min-width: 0;
+            justify-content: center;
+        }
+        @media (max-width: 420px) {
+            .rename-footer-bar {
+                gap: 6px;
+            }
+            .rename-footer-bar > button {
+                font-size: 0.92rem;
+                padding: 9px 6px;
+            }
+        }
+        .rename-window-title {
             display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 17px;
+            color: #1a1a1a;
+        }
+        .rename-window-title svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+            color: #ffa726;
+        }
+        .rename-name-field {
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.95rem;
+            font-weight: 600;
+            font-family: inherit;
+            color: #1a1a1a;
+            border: none;
+            background: #e4e6eb;
+            border-radius: 12px;
+            outline: none;
+            padding: 10px 14px;
+            resize: none;
+            overflow: hidden;
+            line-height: 1.3;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-height: calc(1.3em + 20px);
+            max-height: calc(1.3em * 2 + 20px);
+            field-sizing: content;
+            cursor: pointer;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        .rename-switch-btn,
+        .rename-done-btn,
+        .rename-case-btn,
+        #saveNameToggleBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            width: auto;
+            padding: 10px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.08rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            text-align: center;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        .rename-switch-btn {
+            border: none;
+        }
+        #renameMultiBtn {
+            background: #f5a623;
+            color: white;
+        }
+        #renameSingleBtn {
+            background: #35654D;
+            color: white;
+        }
+        .rename-case-btn {
+            background: #fff;
+            color: #555;
+            border: 1px solid #ccc;
+        }
+        .rename-done-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #40c057;
+            color: #fff;
+            border: none;
+            box-shadow: 0 2px 8px rgba(64,192,87,0.35);
+        }
+        .rename-done-btn svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .rename-done-btn:disabled {
+            background: #d5d8de;
+            color: #9aa0a6;
+            box-shadow: none;
+            cursor: default;
+            opacity: 1;
+        }
+        #multiRenameGrid {
+            flex: 1 1 auto;
+            min-height: 0;
+            max-height: calc(88vh - 150px);
+            overflow-y: auto;
+            padding: 4px 4px 0 0;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            scrollbar-width: thin;
+            scrollbar-color: #35654D #eef1f4;
+            scrollbar-gutter: stable;
+        }
+        #multiRenameGrid::-webkit-scrollbar {
+            width: 8px;
+        }
+        #multiRenameGrid::-webkit-scrollbar-track {
+            background: #eef1f4;
+            border-radius: 6px;
+        }
+        #multiRenameGrid::-webkit-scrollbar-thumb {
+            background: #35654D;
+            border-radius: 6px;
+        }
+        #multiRenameModal .rename-name-row {
+            gap: 10px;
+            padding: 3px 4px;
+            border-bottom: 1px solid #f0f0f0;
+            flex-shrink: 0;
+        }
+        #multiRenameModal .rename-thumb {
+            width: 62px;
+            height: 62px;
+            border-radius: 9px;
+            border: 1px solid #eee;
+            object-fit: cover;
+        }
+        #multiRenameModal .rename-index-badge {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #888;
+            min-width: 2.1em;
+        }
+        #multiRenameModal .rename-name-input {
+            font-size: 1.45rem;
+            font-weight: 600;
+            background: #e4e6eb;
+            padding: 8px 12px;
+            border-radius: 10px;
+            min-height: 48px;
+            height: 48px;
+            line-height: 1.25;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+        #multiRenameModal .rename-name-input:focus {
+            background: #fff;
+            box-shadow: 0 0 0 2px rgba(53,101,77,0.22);
+            text-overflow: clip;
+            overflow-x: auto;
+        }
+        .multi-rename-name {
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            background: #e4e6eb;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 8px;
+            cursor: pointer;
+            color: #1a1a1a;
+            line-height: 1.2;
+            white-space: normal;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            word-break: break-word;
+            min-height: 1.2em;
+        }
+        .multi-rename-input {
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 600;
+            font-family: inherit;
+            color: #1a1a1a;
+            border: none;
+            background: #e4e6eb;
+            border-radius: 8px;
+            outline: none;
+            padding: 8px 8px;
+            resize: none;
+            overflow: hidden;
+            line-height: 1.25;
+            word-break: break-word;
+            min-height: calc(1.25em + 16px);
+            max-height: calc(1.25em * 2 + 16px);
+            field-sizing: content;
         }
         .save-modal-header-actions {
             display: flex;
@@ -1411,14 +1658,9 @@
             justify-content: center;
         }
         #saveNameToggleBtn {
-            padding: 9px 20px;
             background: white;
             color: #35654D;
             border: 1.5px solid #35654D;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
             transition: background 0.15s;
         }
         @media (hover: hover) and (pointer: fine) {
@@ -1441,9 +1683,12 @@
         #saveOptionsModal #saveOverExistingBtn {
             padding: 12px !important;
             margin-top: 10px !important;
+            font-size: 1.08rem !important;
+            font-weight: 700 !important;
         }
         #saveOptionsModal #saveOverExistingBtn strong {
-            font-size: 1rem !important;
+            font-size: 1.08rem !important;
+            font-weight: 700 !important;
         }
         #loadOptionsModal .modal-content {
             padding: 12px 14px 14px;
@@ -1489,7 +1734,9 @@
                 line-height: 36px;
             }
             .load-title-folder svg,
-            .save-title-icon svg {
+            .save-title-icon svg,
+            .preview-title-icon svg,
+            .rename-window-title svg {
                 width: 26px;
                 height: 26px;
             }
@@ -1502,10 +1749,31 @@
                 gap: 6px;
             }
             .save-help-btn,
-            .save-modal-close {
+            .save-modal-close,
+            #createModal .create-modal-close,
+            .msp-close {
                 width: 36px;
                 height: 36px;
                 font-size: 1.55rem;
+            }
+            .msp-title,
+            #createModal .create-modal-header h2,
+            #createModal .create-modal-header .save-modal-title,
+            .letter-layout-head h3 {
+                font-size: 20px;
+                line-height: 36px;
+            }
+            #createModal .create-modal-header-row,
+            .letter-layout-head {
+                min-height: 36px;
+            }
+            #manageSidePanel .msp-tool-btn {
+                height: 36px;
+                min-height: 36px;
+            }
+            #manageSidePanel #mspManageBtn {
+                width: 36px;
+                min-width: 36px;
             }
             .save-name-block {
                 margin-top: 14px;
@@ -1526,8 +1794,8 @@
                 border-radius: 20px;
             }
             #saveNameToggleBtn {
-                padding: 12px 26px;
-                font-size: 0.95rem;
+                padding: 12px 20px;
+                font-size: 1.15rem;
             }
             #saveOptionsModal #saveOverExistingBtn {
                 padding: 16px !important;
@@ -1540,6 +1808,25 @@
                 padding: 20px 22px 22px;
                 max-width: 540px;
                 width: 88vw;
+            }
+            #multiRenameModal .rename-thumb {
+                width: 70px;
+                height: 70px;
+            }
+            #multiRenameModal .rename-index-badge {
+                font-size: 1.35rem;
+            }
+            #multiRenameModal .rename-name-input {
+                font-size: 1.6rem;
+                min-height: 56px;
+                height: 56px;
+            }
+            .rename-switch-btn,
+            .rename-done-btn,
+            .rename-case-btn,
+            #saveNameToggleBtn {
+                font-size: 1.15rem;
+                padding: 11px 16px;
             }
         }
 
@@ -1634,9 +1921,6 @@
                 max-width: 85%;
                 margin-left: auto;
                 margin-right: auto;
-            }
-            #multiRenameGrid {
-                grid-template-columns: repeat(4, 1fr) !important;
             }
         }
 
@@ -2305,24 +2589,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 4px;
+            gap: 8px;
+            margin: 0 0 10px;
+            min-height: 30px;
         }
         .letter-layout-head h3 {
             margin: 0;
-            font-size: 1.1rem;
+            flex: 1;
+            min-width: 0;
+            font-size: 17px;
             font-weight: 700;
             color: #1a1a1a;
-        }
-        .letter-layout-close {
-            border: none;
-            background: #f0f0f0;
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            color: #333;
+            line-height: 30px;
         }
         .letter-layout-grid {
             display: grid;
@@ -3888,6 +4166,7 @@
             cursor: pointer;
             transition: all 0.3s;
             background: #f8f9fa;
+            isolation: isolate;
         }
 
         .upload-area:hover {
@@ -3917,6 +4196,48 @@
             width: 80px;
             height: 80px;
             object-fit: contain;
+        }
+        .create-select-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+            position: relative;
+            z-index: 4;
+            line-height: 0;
+            flex-shrink: 0;
+        }
+        .create-select-logo img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            pointer-events: none;
+            display: block;
+            background: transparent;
+        }
+        .create-select-logo:hover img,
+        .create-select-logo:focus img {
+            transform: scale(1.04);
+        }
+        .create-select-logo:focus {
+            outline: none;
+        }
+        .create-empty-copy {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.15rem;
+            line-height: 1.4;
+            color: #1a1a1a;
+            position: relative;
+            z-index: 1;
+        }
+        #createModal .upload-area:not(.has-image) #frontPreview {
+            align-items: center;
+            justify-content: center;
         }
 
         /* iPad-specific paste button area */
@@ -3977,11 +4298,12 @@
             transition: height 0.2s ease, max-height 0.2s ease, width 0.2s ease;
         }
         #createModal.create-compact .create-modal-header {
-            padding: 12px 40px 8px 14px;
+            padding: 12px 14px 8px;
         }
-        #createModal.create-compact .create-modal-header h2 {
-            margin-bottom: 6px;
-            font-size: 1.1rem;
+        #createModal.create-compact .create-modal-header h2,
+        #createModal.create-compact .create-modal-header .save-modal-title {
+            margin-bottom: 0;
+            font-weight: 700;
         }
         #createModal.create-compact .wizard-step-hint {
             margin-top: 4px;
@@ -4021,11 +4343,11 @@
             overflow: visible;
         }
         #createModal.create-compact .image-upload-group .upload-area {
-            padding: 18px 14px;
+            padding: 22px 14px 18px;
         }
-        #createModal.create-compact .upload-icon img {
-            width: 64px !important;
-            height: 64px !important;
+        #createModal.create-compact .create-select-logo img {
+            width: 180px !important;
+            height: 180px !important;
         }
         #createModal.create-compact .create-modal-footer {
             padding: 8px 12px 12px;
@@ -4310,17 +4632,29 @@
         }
         #createModal .create-modal-header {
             flex-shrink: 0;
-            padding: 12px 44px 10px 16px;
+            padding: 12px 14px 10px;
             border-bottom: 1px solid #eee;
             background: #fff;
             border-radius: 20px 20px 0 0;
             position: relative;
         }
-        #createModal .create-modal-header h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.15rem;
-            line-height: 1.3;
-            color: #333;
+        #createModal .create-modal-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            min-height: 30px;
+            margin: 0 0 10px;
+        }
+        #createModal .create-modal-header h2,
+        #createModal .create-modal-header .save-modal-title {
+            margin: 0;
+            flex: 1;
+            min-width: 0;
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 30px;
+            color: #1a1a1a;
         }
         /* Wizard step indicator */
         #createModal .wizard-steps {
@@ -4399,6 +4733,9 @@
             font-weight: 500;
             text-align: center;
         }
+        #createModal .wizard-step-hint:empty {
+            display: none;
+        }
         /* Wizard step panels: 1 = Add & Arrange (images), 2 = Names */
         #createModal.wizard-step-1 .card-name-group {
             display: none !important;
@@ -4429,8 +4766,9 @@
             align-items: stretch;
         }
         #createModal .wizard-footer-nav .btn {
-            flex: 1 1 auto;
-            min-width: 88px;
+            flex: 0 0 auto;
+            min-width: 120px;
+            justify-content: center;
         }
         /* Back: violet — not gray (Cancel), not green (Next/Finish) */
         #createModal #wizardBackBtn {
@@ -4459,28 +4797,35 @@
         #createModal #wizardCreateBtn:hover {
             background: #2d5542;
         }
-        /* Cancel always far left; then Back; then Next/Finish */
-        #createModal.wizard-step-1 #wizardCancelBtn { order: 1; }
-        #createModal.wizard-step-1 #wizardBackBtn { order: 2; }
-        #createModal.wizard-step-1 #wizardNextBtn { order: 3; }
-        #createModal.wizard-step-2 #wizardCancelBtn { order: 1; }
-        #createModal.wizard-step-2 #wizardBackBtn { order: 2; }
-        #createModal.wizard-step-2 #wizardCreateBtn { order: 3; }
+        /* Back then Next/Finish, centered */
+        #createModal.wizard-step-1 #wizardBackBtn { order: 1; }
+        #createModal.wizard-step-1 #wizardNextBtn { order: 2; }
+        #createModal.wizard-step-2 #wizardBackBtn { order: 1; }
+        #createModal.wizard-step-2 #wizardCreateBtn { order: 2; }
         #createModal #wizardNextBtn:disabled {
             opacity: 0.45;
             cursor: not-allowed;
         }
         #createModal .create-modal-close {
-            position: absolute;
-            top: 10px;
-            right: 12px;
+            position: static;
+            top: auto;
+            right: auto;
             background: none;
             border: none;
-            font-size: 1.3rem;
             cursor: pointer;
             color: #aaa;
+            font-size: 1.3rem;
+            font-weight: 400;
             line-height: 1;
-            padding: 4px 8px;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            border-radius: 0;
             z-index: 2;
         }
         #createModal .create-modal-close:hover {
@@ -4493,7 +4838,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            padding: 12px 16px;
+            padding: 12px 14px;
             background: #fff;
         }
         #createModal .create-modal-body .form-group {
@@ -4594,7 +4939,7 @@
         #createModal .create-modal-footer {
             flex-shrink: 0;
             margin-top: 0;
-            padding: 10px 12px 14px;
+            padding: 10px 14px 14px;
             border-top: 1px solid #e5e5e5;
             background: #fafafa;
             box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.06);
@@ -4606,11 +4951,12 @@
             align-items: stretch;
         }
         #createModal .create-modal-footer button {
-            flex: 1 1 auto;
-            min-width: 88px;
+            flex: 0 0 auto;
+            min-width: 120px;
             white-space: nowrap;
-            padding: 10px 12px;
+            padding: 10px 16px;
             font-size: 0.9rem;
+            justify-content: center;
         }
         @media (max-width: 420px) {
             #createModal .create-modal-footer button {
@@ -4929,6 +5275,7 @@
             border-radius: 10px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
             z-index: 2147483000; /* above Edge / modal chrome on tablet */
+            font-family: var(--ui-font);
             font-size: 0.95rem;
             font-weight: 600;
             text-align: center;
@@ -4951,6 +5298,7 @@
             color: #ff6b6b;
             border: none;
             border-radius: 8px;
+            font-family: var(--ui-font);
             font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
@@ -5177,12 +5525,115 @@
             display: flex;
         }
 
+        .preview-overlay-card {
+            background: white;
+            border-radius: 16px;
+            width: 92vw;
+            max-width: 560px;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            padding: 12px 14px 14px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        #sampleDeckModal .preview-overlay-card {
+            height: min(82vh, 640px);
+            min-height: min(82vh, 640px);
+            max-height: 88vh;
+        }
+        #sampleDeckGrid .preview-image-container img {
+            border: 1px solid #eee;
+            box-sizing: border-box;
+        }
+        #sampleDeckGrid.is-loading {
+            pointer-events: none;
+        }
+        .preview-title-icon {
+            display: inline-flex;
+            flex-shrink: 0;
+            line-height: 0;
+            color: #35654D;
+        }
+        .preview-title-icon svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
+        .sample-deck-tabs {
+            display: flex;
+            gap: 6px;
+            margin: 0 0 8px;
+            padding: 4px;
+            background: #f0f4f1;
+            border-radius: 12px;
+            flex-shrink: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .sample-tab-btn {
+            flex: 1;
+            padding: 10px 8px;
+            border: none;
+            border-radius: 9px;
+            background: transparent;
+            color: #666;
+            font-weight: 700;
+            font-size: 0.88rem;
+            font-family: inherit;
+            cursor: pointer;
+            line-height: 1.2;
+            transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+        }
+        .sample-tab-btn.is-active {
+            background: #fff;
+            color: #1a3d2b;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        #sampleDeckGrid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 2px 0 0;
+            -webkit-overflow-scrolling: touch;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            min-height: 0;
+            align-content: start;
+            scrollbar-width: thin;
+            scrollbar-color: #35654D #eef1f4;
+            scrollbar-gutter: stable;
+        }
+        #sampleDeckGrid::-webkit-scrollbar {
+            width: 8px;
+            display: block;
+        }
+        #sampleDeckGrid::-webkit-scrollbar-track {
+            background: #eef1f4;
+            border-radius: 6px;
+        }
+        #sampleDeckGrid::-webkit-scrollbar-thumb {
+            background: #35654D;
+            border-radius: 6px;
+        }
+        .sample-deck-footer {
+            padding: 10px 0 0;
+            border-top: 1px solid #eee;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .sample-deck-footer .btn {
+            padding: 10px 32px;
+            justify-content: center;
+        }
         #previewOverlayToolbar {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 10px 14px 0;
+            padding: 0 0 8px;
             flex-shrink: 0;
         }
         #previewOverlayBody {
@@ -5281,7 +5732,8 @@
             flex: 1 1 auto;
             min-width: 0;
         }
-        #previewOverlayGrid .session-preview-item {
+        #previewOverlayGrid .session-preview-item,
+        #sampleDeckGrid .session-preview-item {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -5308,7 +5760,8 @@
         #previewOverlayModal.reorder-mode-on #previewOverlayGrid .preview-image-container {
             overflow: visible;
         }
-        #previewOverlayGrid .session-preview-label {
+        #previewOverlayGrid .session-preview-label,
+        #sampleDeckGrid .session-preview-label {
             width: 100%;
             box-sizing: border-box;
             text-align: center;
@@ -5399,7 +5852,7 @@
                 max-height: 96vh;
             }
             #createModal .create-modal-header {
-                padding: 8px 40px 6px 12px;
+                padding: 8px 12px 6px;
             }
             #createModal .create-modal-body {
                 padding: 6px 10px;
@@ -6722,11 +7175,11 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            height: 32px;
-            min-height: 32px;
-            padding: 0 10px;
+            height: 30px;
+            min-height: 30px;
+            padding: 0 12px;
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             font-weight: 700;
             font-family: inherit;
             line-height: 1;
@@ -6751,8 +7204,8 @@
             }
         }
         #manageSidePanel #mspManageBtn {
-            width: 32px;
-            min-width: 32px;
+            width: 30px;
+            min-width: 30px;
             padding: 0;
             background: white;
             border: 1.5px solid #888;
@@ -6864,30 +7317,42 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 16px;
-            border-bottom: 2px solid #e8f5e9;
+            gap: 8px;
+            padding: 12px 14px;
+            min-height: 30px;
+            border-bottom: 1px solid #eee;
             flex-shrink: 0;
-            background: #35654D;
-            color: white;
+            background: #fff;
+            color: #1a1a1a;
             overflow: hidden;
+            box-sizing: border-box;
         }
         .msp-title {
-            font-size: 1rem;
+            font-size: 17px;
             font-weight: 700;
             letter-spacing: 0.02em;
+            line-height: 30px;
+            color: #1a1a1a;
         }
         .msp-close {
             background: none;
             border: none;
-            font-size: 1.5rem;
-            color: rgba(255,255,255,0.85);
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #aaa;
             cursor: pointer;
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0;
             line-height: 1;
+            padding: 0;
+            flex-shrink: 0;
+            box-sizing: border-box;
         }
-        .msp-close:hover { background: rgba(255,255,255,0.15); }
+        .msp-close:hover { color: #666; background: none; }
         .msp-list {
             flex: 1;
             overflow-y: auto;
@@ -6903,10 +7368,10 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 14px;
-            margin: 4px 8px;
+            padding: 5px 10px;
+            margin: 1px 8px;
             border-radius: 8px;
-            border-bottom: 1px solid transparent;
+            border-bottom: 1px solid #e6e6e6;
             cursor: pointer;
             box-sizing: border-box;
             width: auto;
@@ -6915,7 +7380,7 @@
         .msp-unit-row.loaded {
             background: #f5ead0;
             border-left: none;
-            border-bottom-color: transparent;
+            border-bottom-color: #e6e6e6;
         }
         @media (hover: hover) and (pointer: fine) {
             .msp-unit-row:not(.loaded):hover {
@@ -7197,8 +7662,8 @@
             line-height: 1.35;
         }
         #unitConfigModal .ucm-unit-name-text {
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
         }
         #unitConfigModal .ucm-import-meta {
             font-size: 0.85rem;
@@ -7226,7 +7691,7 @@
         }
         #unitConfigModal .ucm-unit-name-input {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
         }
         #unitConfigModal .ucm-import-name-slot.is-editing .ucm-import-name,
         #unitConfigModal .ucm-unit-name-slot.is-editing .ucm-unit-name-text {
@@ -7343,8 +7808,8 @@
             min-width: 0;
         }
         #unitConfigModal .ucm-unit-name {
-            font-weight: 600;
-            font-size: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
             color: #1a1a1a;
             word-break: break-word;
         }
@@ -7645,7 +8110,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1455-caption-dots-stroke">
+    <meta name="flashabc-build" content="1466-library-units-rename-equal-btns">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -7701,7 +8166,7 @@
         function applyCardLetterFonts() {
             var font = window.SPELL_LETTER_FONT || 'Fredoka, Arial, sans-serif';
             var weight = window.SPELL_LETTER_WEIGHT || '400';
-            var sel = '.card-text, .card-text-auto-scale, .card-front-text, .card-char-label, .card-letter-banner-text, .card-front-text .vowel, .card-text .vowel, .vowel';
+            var sel = '.card-text, .card-text-auto-scale, .card-front-text, .card-char-label, .card-letter-banner-text, .card-front-text .vowel, .card-text .vowel, .vowel, .rename-name-field, .multi-rename-name, .multi-rename-input, .rename-name-input, #backText, #renameEditor, .session-preview-label';
             try {
                 document.querySelectorAll(sel).forEach(function (el) {
                     el.style.setProperty('font-family', font, 'important');
@@ -7714,7 +8179,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Comic+Neue:wght@400;700&family=Dancing+Script:wght@700&family=Fredoka:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Comic+Neue:wght@400;700&family=Dancing+Script:wght@700&family=Fredoka:wght@400;500;600&family=Great+Vibes&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800&display=swap" rel="stylesheet">
     
     
     
@@ -8021,7 +8486,7 @@
                     <button type="button" id="showCharBtn" class="settings-lc-tile" onclick="event.stopPropagation(); toggleCharOnCard()" ontouchend="event.stopPropagation(); event.preventDefault(); toggleCharOnCard()" aria-label="Letters">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="20" rx="2"/>
-                            <text x="12" y="16.2" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif" font-size="11" font-weight="600" fill="#35654D" stroke="none">Aa</text>
+                            <text x="12" y="16.2" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="11" font-weight="600" fill="#35654D" stroke="none">Aa</text>
                         </svg>
                         <span class="settings-lc-label settings-row-label">Letters</span>
                         <span class="settings-off-mark" aria-hidden="true">✕</span>
@@ -8133,7 +8598,9 @@
         <div class="letter-layout-card" onclick="event.stopPropagation()">
             <div class="letter-layout-head">
                 <h3 id="letterLayoutTitle">Cards layout</h3>
-                <button type="button" class="letter-layout-close" onclick="closeLetterLayoutPicker()" aria-label="Close">✕</button>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeLetterLayoutPicker()" aria-label="Close">✕</button>
+                </div>
             </div>
             <div class="letter-layout-grid" id="letterLayoutGrid">
                 <button type="button" class="letter-layout-option" data-layout="corner" onclick="selectLetterLayout('corner')" aria-label="Layout 1, corner letters">
@@ -8184,7 +8651,7 @@
         <div id="mspResizeHandle"></div>
         <div class="msp-header">
             <span class="msp-title">📚 Deck Library</span>
-            <button class="msp-close" onclick="closeManageSidePanel()">×</button>
+            <button class="msp-close" onclick="closeManageSidePanel()" aria-label="Close">✕</button>
         </div>
         <div class="msp-toolbar">
             <button id="mspManageBtn" class="msp-tool-btn" type="button" title="Manage"
@@ -8215,8 +8682,13 @@
     <div class="modal" id="createModal">
         <div class="modal-content" id="createModalContent">
             <div class="create-modal-header">
-                <button type="button" onclick="closeCreateModal()" class="create-modal-close" aria-label="Close">✕</button>
-                <h2 id="modalTitle">Create New Cards</h2>
+                <div class="create-modal-header-row">
+                    <div class="save-modal-title" id="modalTitle">Create New Cards</div>
+                    <div class="save-modal-header-actions">
+                        <button type="button" class="save-help-btn" onclick="document.getElementById('createHelpPopup').style.display='flex'" aria-label="About creating cards">?</button>
+                        <button type="button" onclick="closeCreateModal()" class="create-modal-close" aria-label="Close">✕</button>
+                    </div>
+                </div>
                 <div class="wizard-steps" id="createWizardSteps" role="tablist" aria-label="Create card steps">
                     <button type="button" class="wizard-step active" id="wizardStepBtn1" data-step="1" onclick="createWizardGoTo(1)" role="tab" aria-selected="true">
                         <span class="wizard-num">1</span>
@@ -8228,7 +8700,7 @@
                         <span class="wizard-label">Names</span>
                     </button>
                 </div>
-                <p class="wizard-step-hint" id="wizardStepHint">Add images to get started</p>
+                <p class="wizard-step-hint" id="wizardStepHint"></p>
             </div>
 
             <div class="create-modal-body">
@@ -8238,10 +8710,10 @@
                     <div class="upload-area-main">
                         <div class="upload-area" id="frontUpload" onclick="handleUploadAreaClick(event)">
                     <div id="frontPreview">
-                        <div class="upload-icon"><img src="icon-add-image.webp" data-asset="icon-add-image.webp" alt="Add Image" style="width: 80px; height: 80px;"></div>
-                        <p style="font-weight: bold; font-size: 1.1rem;">Tap, drag & drop, or paste image(s)</p>
-                        <p style="font-size: 0.95rem; color: #666; margin-top: 15px;">Card names = Image filenames</p>
-                        <p style="font-size: 0.9rem; color: #35654D; margin-top: 10px; font-weight: 600; line-height: 1.45;">Max 30 images · Photos ≤15MB auto-compress to 500KB · GIFs ≤3MB</p>
+                        <button type="button" class="create-select-logo" id="createSelectLogoBtn" onclick="event.stopPropagation(); document.getElementById('frontImage').click();" aria-label="Select images">
+                            <img id="createSelectLogoImg" src="data:image/webp;base64,UklGRpReAABXRUJQVlA4TIdeAAAv48K4EP8HJIT/59WICUjcUxxEkhQ4Pf5lQ+D4ioCImICu6cOW81dBFa1vrA0qk5uGNbFmvOvdfBnshToLed0x+XDkMj1IuvQ2cr5roF35aFsuQlR0aZfT8jN3hc7d57CEI5e5be+wC5o51gXdunrb/BSmphc+FH3a1/6n4crQQ/HLcH4ueXe4GT/pGFOjNrLDiNP2BHl+sG1cu+zby3DV5jfyPsfvymWvvlx019IsDaNyXDFG0YpOTbfC1XvbjU+2GtaH//8jN631+41WtqnnYCAQX4yb3JBs48CBnJJCB1eKsYHQUkx3IcTg+HBMigmX63TggRTiVEi7J43LOWm3994S5B3NzuzsyEW25G7Z0s73/Ye0kuY7uzO7+Sui/xPgDf9/RZLa/3ufU1XdM7PuLOyyyhostpDgrou7b2DxBIsgCcSNJHyAhISQT5AEiRHiLkD8Q0LsQwIrM9Pe0zLa01JVR143ZmZ3T3VPd0/diuj/BFDb2bIYi06fu/fSNQcdccq5l1134z2f/NJzP/rdv3ekB2tSYxdLA9nE67//yXce+dS9d1x39SXnv/2Q9av2nj/NocAz4xQy7Zq37/5HnHbeDR949PFv/TGuML5SAKB8iT2pdxla+fk/PP/Ep++59rzjD9+wfP7MKAv/cDaGdVF09uKNJ1108/u+/LusBKCl8D1foTyUS/Xl8oVsrjhc9hT2bK1WqxUKhUIqlUpl+vL9QmlMqAq/fuyD7zz/qA3zpkdZeId414IVB5/zrvu+8xfPl0oDyiv3Z+OpbL44MFLxPN/31Vitsef1Livhu7VatVLsS/S81ZsfUhirROVfz3/gypM3rVw0w+IsNGPZzJq+/LBzrnjwyX94QgJQMp1KxHOFgaHRqq+1RoB3bVyllJJS+G6tMjLUn8+mErFRVwJaq78//6EtJ69fMjPCuGPxcMv06WtP3vrJH2sIKG8w3R1P5YuDw54vldIawd8Du4yxSorSUDGXScZ7FDSA8o8+dd2JaxZM42GV6WvXXvb+l0TN0/DKhVg6P1j2Ue9mtAYAPb6ScriYTSdTA64v4cW/efeFBy7tDJvss+my978kxs3HU/myiwZparcBrURlMB2LJwBo4Cf3Xb5paSQcYROffdBF7/9aFfAr+e5Y37AvMdlLrzo63J+Op6sY++x7zt84y6ZxQxoXXf3AS/91tVKVvu2J/KhE86iFi2o1nU5XAYy+8fFrj1vaRUTMdqKOxUMUF139sZcARCGZLdU0mtZqqjfvAyh//Z3HLO4kcog4o7Ghh4uu/tjrjIyiaKSq0Nwq6bup7kwVAL5925HzLCIixmnc0MJFV3/sdUZGUURm1lL4/em+USE0nr7p4IURRiHDcXSueD4CiKKIzO0D/lC+fxjAWw+esXQ6Dyl0Pv5zgCiKyOxaSVHMZQSA7990yLzQQeeK5yMgiiLyYCmdyAt4yU+ds2Cqj49jOdbaznteh3hw/77Dp8iLcvpYFAF84+61XcT5lB0xRsTY/M6P/RyIogPHquTOKIrA+8HWjfOIT9Fxi2jOwXf9GoiiiNwaRUM+xM9vO3y6MyVHiw686y8CMooicm5/b9p33T/eenDUtviUmjP34He97EFkeofJw6KUSGl4v7ppv64ptI7VV71U1iKbLmuJfKyhRlMpCfWjq5dNjdkLLni2CtmXKwkNjdZ5FGK0N18FvnzO3Kmvoz7kCy/XPQSttFZKurlJ+RBAMTkE4MNHzJ2qsonsdTf+EmIwUXTRiusJ+5MC3u+3rLcZcTblRDM3f6UExPIVtOgTQSEVV8BXTpxNxBibQupw1t3eLUS6bxSt+y5ASXe0P6vx33eutclibKpo5mlfBir5YVejDTA+dGEbIJ44cUanw9lU0Irb/qxkbrCq0NrvzthSIQ71x1uXkkVsqmfTZyVEJqs0Wv09obXM5jTw0Y2zHTaVc/Etb3go9paEQuu/Z6Dd4WTVxXNnzGdTNhffX4REHj4g2xRaA0qlEhr/2bLXlErUsRgRMb7//UqqeI5Gr/U2PpPaG8yXKrhnLZs64dyyLZrx9kc8MZSRrm5AWislhT9Bk6xFKT8qxMPHTSM+NUKc09zTn1e13oKC0misSvoeoJUUvl8dHR7IZ5Lx2pWod19f/8Ch2ntq9sbiiWQqnSkOlWuTFwAlMnmlnzx5JvGpEIvmnP09qO6ihtLQqnEItzwyMjI8nE0nE8lMcUhhrPRRqMcqpaQ/lE92x1LZ/MBI1RdCKqV3teEBujaU1/r7Z81ypkDmXPYbiJ4coDS0UpNGMplOJ+IFCaGEBACR+usPn3rog7dfdfedq67/q6WXzZs17jmzZ86ev+Tq951x7kWXb73zQ5/92k9e65FKKq0VtKiOJNN9+YGRclWqMZgclS7klXjl7LlEnXwqY/6V/4QfHwCUhlZj612plBwLQElo5f7xhY+/Z+sFJx++dtHcGR0WBZVbTrTDmjZ7r6UbDj7mghtv/8xzr2tfSKW1cMvxeDxe89XkAGhvNCn9v162mHE2ZTH/yhjc1AigAa3Gr1+lUjKZTGLCFz9z9yXHvX3F4tkdEdtiVOfcis5YsPSI4y68/9M/FhhXFHrT6fRkAGgMpCrV/2yZO51PTcy/MgbERjCumrg+JZPJJMZNvviZSy99+6xZs2ZFbIsxRg2VMbtr9sJjz7z+Mz9OQwJAOp1OlxodFDCSBHrOmmdNIbDx+Kwr3xLl1CjqX2pOjPbLg4neggJQ7v7mB687dv3CDodTo+eWE5mx/vjrPvLdnT4kMJBKD4xUhFRaay2FVLrBAFrLynBZvXHhjPG4zdt/lsUt1nX535RMDKMRJlDJxXoyNSjf+/XHtp68Zn4n7TqbuAGNZXYH2dOXHHD89Z/8lQvAG071ZEd8ANBKCqm01g0EgFZub1n+5cyoTdGIbdk2a/Nx2+adZ7wqK+lRNMaJ8UrFTN4DUHv10xcduXxa1KJdZbvboIiIc2LE7M4F646+6FMvSwlUct2ZIddXGlpJIaTSunEAGqNx4JebpxNx27Jsq73nkH3UjyCTw2iU45ND6figkB7++aXrjl42m3aR7SpNpowRWfa8NUdf/eg/AX8kH+8rSQBaSSmEVKpuAMp3E3C/eSxRxLEti7X1Og58XolsHmO11g1kOJb41OG9YV4pVF69/4x1i6c5NJbtMk3ajHFiczee9uFXa4AsxBODQmqtlZSijkBLDGSl/8T+Dos4Nm/nLf8MkCkojNUajbCWHInCg6cE98X3nL56ZicREWOcs3GpSWRkzVp20nu/q1AWyUS+AkC49QRwgcFuifevIuqwWNtu+R0eEjmM1RoNcrRKxSem+vZT162a5RAR45wxRk2pTTOXn/a+H7tAKZ0ZcFFfNbQvixmJ25aSw1l7bvaVnucVFAD4QjWSSkVETv+3z9106RkmIzPetdfpD/4V8Prj0fF6IgEJoWIFra7ttHlbbllJpCTUWVWO9UkI/yvXbJxGTXZ05oIjrn5WQFWz6ULDGKmkkpVCv/vzE8huv838ukhJpI74gB7I5ATc1z520rIINeU2OUvO+sT/+crrSw41DkBJJasF6EcP5GR38DbazGdESjKyfqD/zSEN/PjGTXMtRk07szpp4RHvfMmFSqfTDQNQUslSD/Ce+XYk6rTNlomUSlJP/KFsRij19csOnE5NPyfi0w+48ikA6XS6UQBKQhXysrC5KxqNsrbYzK+LlKRmPZAjuaLU7hNnrYnSWM4Za+aIiHHOp62+/CkA6fSg3xgAJVVtJ/DMYRFyePtr5jMiJRlj+txsUkE8ddkBc4iIGGeMWkLGOOerL38KKKdTQxXZCACltBur4T0LGLdYm2uZSKkk9SOVEii/eM2qDmo9+birL/+eBFLp0YYArZVf7tWDZ80mh7ezFn5dpCRjT1UqBeCXd26c61ArOh7nXWtu/rXSiA/4DQDQWooE8PFVzGpfXfyQyMGTg8PpkwBGUikBfGATtbyMOQs33QeoRNID4Mr6GreUErh2NuOsPXWdJ5538lRV0odKLg1Uv3jaYmqNGbG5Zz7pQfcWfKWF1PWmRDbl/eZ4Iou1ny7eIeKJnI4ldbVictDTv792ncOodWbM3njda5DZ2ICA0rqelAZQTkLfszDKebvpOhFPJlRfKTckgIdOnEctt0VzTnnYQ7mvUPWk1vUDaAmIcgKp4yMUbStdvEPEk7oQJeC9cuPKiE3M4mNbKGKMaMXWv6tarK/kinoaX2YhP7WUWU2k60Q8mWhdUQTul0+eY3HLtvhYRi23PfOkp4BaslZ/8IoxDJ9BTeOLd4h4UgeiCNi8roMsy3YcmzNGLTdjnBNF193jKaRSdQd4aeDBaU2i60Q8SVBPFMFv7zz7bLKccS3OqDVnnDFadPUvgFSq7oChbThxTbPHYUTv/hRUSLeSXiWZrZYeP7CTE7MtNi618owxPv24r2skE369QdnHhxa0dxhzTqhQId1KKH9HRZceWRdlxLjFxlLrzxjvOuwTQDk2oOuM0R68eRwRZ20bmn83qJByWe6WqN29wmHEuMWJUduQUdd+91ah+kbrTHg7Fd7XwRhr16z/PZKkvRQHclv2IkaMW5zajIzYkltHILIlXU+AyCb8H62fQbwNwyl6vUQaadYSpX8Dr10yk6LEuMWpDckouvjaNyRirq4nKC/mqysiDjk2a7PQkqeRHIJOj9Io/xv495Z5nIjI4tSmZETzLvuTxM5+XUeo+f0x+eXl3OLtlhOVjI8q7aUHo/9S+PdZUcthDpFDbUxGkUXnvyy9TK2OFOD1oHBGBxFvqtynRR8UpEpPDN4fzopGo2QT59TmZIzmnfUXIDlSNwA0ikLfsYisZonFaf2PUa0IQGutTwEekAb+cvkCImLUJmVs4ZU9QvQIUTcAKj14YTU1SW2is2vodTX0WH2QQMzTiatnOUSMW+2SsQuvFEL0CEDpOgF6gFObIZ1ENOd+FAsa0PUi+gqqcvMi4sS4ZbVViBZeKUQuB0DpOkFPBU80QYicjS+hpwzoCfUNprS8czFxIm6Nba8QLbxTITnkQqs6QaWHH3Q0QTZX0O2ifqII8oGVRIy4xYgYY+0WolUPe7p7WPj1AnhwQ1Ojs5M6b3GHixhbJxF84WBORI7FidjY9gvRUV+u6YSoHzx4oqlBnU+iu4b6ieBXN8+yLOJERGz89kuHTdNP/jmq6foBj5c6mhd06E7s9AG3TqIIbp40iXUQcWK72H4Zd/oVFaTT9YOH19G0uAMq6NfSBSCGdwD3rCLLMs3i6Z8Atz81yAJnOTYRbz98ikqFFPoAoLql/uIGRjajJvKil06f6j2VFmSz+i6Hc7LaDHPeoEIqtQedKOK1My2ng1N7+Ywbd9PblxYg5j+1l+OQw9oJcypUSKfS/b2Qt8wkYha1nac+XKWSGrET/7+MONm8fXAHVEhprRf4wnqHEbc5azuZyVe8CJWUSJXy5OlEZPF2wR1UKqR0fxZvnTqNHGZZ1J4+55YKlUoqlEKuoG4iIm61Bz5FhbT2gNvmE7cjNqN2tZ3/GFTSMHYoi89Ns7osi7V+c96gQkr37+enmyyaRsSpfW2tnf9bKpVUaNR6Ks/sTY5lsRbLjttcWaFCSsuw1lLb2458DCppAFRlCG8exCzLYq3dlVAhneVjfKPDNsvs/F1UKmmA9pOoHhFlttXSPQAV0lmGtdY2z6xdB5U0AMhX9EUWRVq5B6iQzvIxvtFhm2t2/i4qlTT4GMzg1ii1cJ/GJZ1lWGtHb6NZuw4qKYDQpTjum92yXfoTXFJZLvONDtuMs/N3UTmoD1KiW35lnxbt0p/gksoyrLVjbK9Zuw48fdC+2q5f3qclu9TFJY3Hyvy0wzbv7Pyf4R1UB0gdw8v7tGDvgQppDOBhO/bm1/idreCpkpoRXJu7roEKaQz4/39hm33OIg8vDURwbc66hkqFFAYBW+24m3GOsxXPSwERXJur1lGpkMIAbnJaA85K8FJAFHFtjlpHhTQG/KTDaRU4i36GlwIGPVbnpk9QIYUBbHWc1oHjbAVP3/DpIN6Qkz5BhRQGcJPTWnBWgqeOePAdNuSiT1AhhQE/6XBaDc6in+GpQ2KXDXmn3bT/Hd3oHxjgCadm82/sTx8/fhyuCkhtXLbnHNO+g270dyM32olv7pnlx4+nUAsaLtvzTLtp30E3+rvlnTnWWmtakjP+p9oBqQOGy/b80m7ad9CN+oFueX6OtaZlOePzKqakChgu23OLad9BN+pLAzxurWlldt3o5/oBqQOFy/Z80m7ad9CN+hLcaFscjM6HSEkoHShctucS076DbtSX+G2Htda0NDnxA/6EnVqrYOGyPY+076Ab9SV2TnVaHkQU2evLotdVOli4bM8hz9KN9mwWtzuOaXnaUbdJj4y+ewZdto+w4850z9KNZq21zmh9tm3brRJ7l0jPKDo4uGzPGZvpRrEem9F6nT2VYrtEekbRwcHlkVyxmW4U67E96pdrrbGtE9vVIz2j6ODwztAjhfywlm4U67Hd6ivW+C0Ua3dJzyhaB6ZaHLonN6ylG2WqW32AT9hSsdukR9QYHRTkHa7JCR+kG23d6mJrasbeJT1lOUYHpUqFa3LBB+lGWY9SF3POJmyx2LtkcFSM0cGI4WSZa3LAFfT1KevRai2furEfBFIIhtQsw4zMdyn0obtXq7XWVI7dpGVcBooyzMh4l+6mD91F/GqtxTnnNGU6Plq5U6TcQFHm1zMy3aW/pg/dRX69zhrDpm6iHStfrmQrgaLMr2dkuV3sRneRlxx7DJvCIctZ8qyOy0BR5pUM93F2o7vIS+1TQGQ5kS/gzWBR5unM9nF2o7vIs+0tIeKcfU5tDxZl1me0NexGd5Fn21tERKzzI9geLMqsylK29vsIUe3uxB2cc2ZavrbmZopDyYxXVrtxsDW2uVrEwICubbieTy05mylqghoADh7Dmqk5Awygege2dhLnnFpIzr14Q0N6gAF0j+HN1BuEqN6BS5kd5ZxNKTn3UlSFbjxnWZbFmqcXCNHsxnChbVmcsykm5168IU3oxscsy+JN02OEqI7jcpqacu7FU4VunGtZFm+SlhGieoc6hyJTVM69FFWhG+dGLYs1RXMIUb0DV0as6VNVzr0UVQ0MYD/L4s3QnFCX3o6rLOpkE7d+xn8vRU0YwJsLyGmG3iBEczeusKmT0dSVcy9FTejWT3YSa34eI0RzEddY1MloKsvZTFETYuouiyJNTSfRMkI0F7mhizijqS1nM0VNOoHNdpRYE9NF6wjR7PIMo/GntJwXKCrySoNqHU2j5pXT4h5dPfHOSVNjzgsU9dRQ9P6xF7Oalc5OZj+BEMVFvtDeNkXmvEBRjQbi+PJ0alqI3om3UFzk1TOMM1XmfJeiFkCpmHgXa1K6OJ0se6FVCmTFT+Zxzkzr245y7u8I1QA+19pxZ4OoQxtrwzWtBTKOfy+0psaMsdZxnFkhoaKTMDuTdNDCbyKDmpqcVmut6FSZMdY6dhaEevD5Xiax+L1qO4I7WNbr2XTinFrn1s5Shc/GLGKfg7eqAepW6yyLc86m1OwthIrwuTaDrJY5jeDuwOX2GDbFZm8hVHTyJLOzx4t+RgVnB95BU3N2PaEefL6XOe7BDgR3Bx6wrSk6+xWKevDZmCmidLJKVwMjetRTUXLYhK02+xVCPfhcO3lydrDn+XoQge3DbxeRY03ZzfoPhHpO4mcJ5zGkENgi/NUsSjRlZ5dAqAafL2eIK9HtBacPR/BOsqfw7BJN+KzNBixKhyEnEVhfXUAOt9hUnr2DUM9Jn8szAac5P0QBOig+dxMR5zSlZ58iVIPPLzPCXeiBCorPTk4OcZris18hVIPPxkxwHP4JhYD4/O58ijJGU372PxCqwefyhmfTJb6MmpwAyt7AKsvkbjuxLVntUS7j4EE1h/DfNaJ2Q7I/Lb4S1BDzT+bOnwjYZRTV4LO9wdl0mviiRKlt+kbilOsu+OtVW7/w1DNf+8rH3nHkvpEWz26kqAafaxqZbdMSXVtBAg9N59TCXbDqC4yqlNZai2dOnMUYY62b3UlRzSEOvauBkW0/qH01ffIPCyxq4daWgXK5XM4Xivl8Ll8Qyt0yl6yu/GaLHNSCz/YGZtNpOiZaaoNyFVmc7Jw25++hXKamlr5XyySB195uUY67TBE+1zQuWqJ3NbFE5SzmWOSwfLYWyoxbYmSH1jd15Ti7jKKaQ/jvalwP6lhg8uX3dkRZhKg1W0u5zMQOxMTn8pzdSFELPtsbE+ug01RvDcnpsQn9rUWOzRmxFopPaO0XKDPxO/GLS42T2859i14t+FzekBxaXMUAtBKtV9kWI8ZasTl/T5kkd7LnCmNtTrOXKerDb1APIAUoHQl9OrcYsZZsU5kyyQbItWcYm9PsMnq14PNwI6JNSAGAioS+m3Ni4+etTZIySUf7hh49zzg5zT5FrxZ8Lm9AM//oDgUlob/FOWet2VVSlkn+wN7q1nNMXjv3LXq19PHrBnSD3KGCs6ple0Buk2g84sl3puc1e5kefB5uOAfqLMZVkNCn81btSblNBoPB3dX/ekVes3fQq4U+Lm80D/p9QUnou3mLtmmb3CaDEsf74Yq8Zv8pvXq+3GBWSv/QaMb75GuzqLV2ai6FEL3x6X64LSeN39qAfiX43GgnsI6dL3IcpT3qiK7WbCWEKBY5TplP5LUlBFoO4zeULVJGaQ/vIasle5QQ3SJQ5pWcZjcQKMHnqQbyHimLkj5+NC1KrdhXCdEeA2V+vTCf2R/SrwSfyxvG+T/UNJdabsdxlv6WkHSWYWE+W0Kg5TCvN4yVUhYlPdzptGJLISStZViey+x9BErwubFBnC8jVfTxmpPHVkJIestlPpbL7A8JlBzGv6QxbJGynrl57FHCkFS7fPbcPLaEfiX4PNIInAXVvUfR0cOdTh6y432WIml3+XEes/cRKMHnkgZgvja8V0RQ2MdrTv6a+R0pkn4X96ocZncRqPlCA1gW/1FE0DE3f80sSpF66MJVOWyeGnxurH//niNKerjTyV3LRYpSFzh0iHXn5S57H4ES+Ic610XvIDyNij5ec3LXcpGi1AkOuWw92xRsvrK7CJT43FjfaLk/dFhEUDE3dz0rRZG6Ae7gaxc6bU6+mqcGuKSeOXQH9iOCwh7udHLWzO9IUeoKf+S/LCw4Tq6y9xEo8XmkntE6lT0xpKKPHzk5a2ZRilJnqmGVD7S15yv7GwId+FxSpyzbifBPYACFVd9P6o1swvzjjFwAIXVXJiXO5mTHnT/GvkR8qZ3MgPgfaky2xdhhiFc1CJnUd7HW6h4IqcMy2ePeauUr84z4OnTC3Zs3JIdRx1eQ8zQgJ2KzW6t7CEPqshzp9j6Tsy6WMSaDfvGpmY2J6GTZI4UGkaodG4m2Ui8SUrf9t/D3s3KVWSG+DpUcOc5qRDZN+25lUEsNWXxyNrNbJMajC35MSP3WpQLMylXmG+KrQFE+3WlR44nQOUhqpZLzRZ+7ljhrjRyijRBSz3UpgNty1RItMo2TWANii39fHYXWySGGrVFG1CLZx4OQ+q4JAm7LU+ZJ8VWggJ/OYdRw6EIkEcgiXl9ILVPkBtUf0gADns1T833R4ffqcyKNZ9a/a8PBSFVPppZp1of0zhINMeD1WfnJrBBfBYbw8gKiRnMl0ghkBV8gxohY62PTvG8gJmuNgYBgcX4y3xBfhU7gUtZoFuwUo0HZELGIWAvEN/xFZQHVIAhgcX6arwQj+P3eFjWWK7AdgaxwM2dRYq3Q8UBcCQ8NM4DbcpN5UnwNCjF5eaSxLIiN9AcD9iaHtz6M2Rej1id9H5NpwIbcNF9Eg8ZA/986qKFegW4EssKNZDnEWh7e+d7K0KD0JSbXgM/nJbNCfAVQOo5LIo1kQQzDgajwq0k8Qqz1mf8/+E9VeAqTbcCvF+ck869Eg0a//4+VjeQKxBCQGydF2O7mD+bQ4t/LmBIeJuEAFuekFeIrgFLduNCpH4veQDUQBfmFTm5ypx2/uRLKQ1Wp2VjYDzfY8eYU8w3xZfQkNArV38/kDeNsdCOIMo5DyMk/5joRT8baYNi/n/vy0fwxSAJQshdnOI1i2W/VsAxCPz4UJZ5/1tM/IA0MfD6di8wL4ivQyFdfXMwbxIWIIwhev1xCUZZ7tokn42w8+Px4Vh6aPwZJAErsVOc6DYHPfMkdDIKbwbuI2y3P61QYvYHh48/KQeZR8WtIAhp58bVIQ6BT/YSWASi7tYUUYS3OFSEhGQAfbshB82WMCUDphD62Icx53htAEHrVLWRZLc4VEJIJ8OG+/GMeFb+GJKCRF1+f3giOqaWUDILsWWBHWGtzH4RkBPB5Ov/Ml7FOHKROqUPt+os+UhvSUipjKXkF2XZrs42QMTc6fHZdaHKOWSt+LZk4YACfYLzu1iAtpZQwq9Bf/cMMO8JamtcJyRSU+NcL20y+meqLCi+lVlh1dx8GtZTKEJBVl9iO1coseJuQjIHP6fc7BZNr14pfSxJA0r2rg9XZRf6IkFLCsBz0fjePHNbCLICQrFFloMqa9nwz9b/JWBMQHpZbdfZhZKWUypQq4jziVgtzH4RkDmI5uofHnFxj1oqvQRX866m+L/qjNyKlhOlR9ZvZ5LDW5T7CkPp27FgqiONhX754ca6Z+t9EqjVk4vQw/jaD19Uy0p6UylgCm6MWb10+R8hE6jhxQskxCFKBwP/nFxfnGbNW/FNxDZkweFnvLLuu3mRYSwnzP11INmtVFrxNSFp64YSKY/zwbYJUMDwsJZH35Jmpvpw8XUsmDIN4fiarH77J70WhSHuXcjZx3uDrQ0LS6WGb/sNPITVk8f7ZT6MbkDpwI0siN+QYulTH9O5OCGI4lOrX+hT6NAzUfjeH7NaEOSf5hKTU78azq76gRnV8hM3+CLpHtFL1IIcOyaYcs09M14LQjw8Sq5ulfk5q6JYXE7NaE34V+g+Q1hjumWZ/A1ktjG3BYM7Tqh7kUEk25RfaqmNB0ENYSXV7k99b04DUXtxmrclHdaxKSpNJ3Gjxrif1gB52BlR/Wct6ECnJty/NLftoXQsAkrjaqRM++0+6CoVJ3MC41YJYtOQZtR06JUngKCIKmHNwXmVlxdf1ICUpXZpX6FYdC8KA/+q8OqGTVBEBLA9hMbdZK7Lhj34vJNKZBNY4wWNs9S+xEzVP14OURG7IK6t1LQh+3j+tTqY/rgpaJZeRdxC3WpETBBKQdZLEi2scVg9s5sM64fo1VQ9SErkhp9A9OhYA5PHotPo4ZKRPIIA5LHds1oJcBFGABnQaknjIcRyqCxa9U2VLsirrQQ6VZFNOWR2MSr/Yn9fFTf6ACkCkH49YvLWwiXjne1GtCA3oOij04lqa0Aken3ex8lJwZT3I6ZJ8ub29nbUenY94aRjTXknfSPW4139lRQcBax2btRZWlBY/gqSrAK3roM8Xl9l1xFj0cCCmfVUPIiV5a2G7zVsO9jaVFMYgq/rv81nw+CnoFjAf8VSHxVsLFqF13/fjngZ0PXSDIyhSV4zW/0llhFR1ISWRhVHLajWo85laEca0362Ot4LX9ago6EAc6NisteCRtwG9roYeX1k33Wuoq85smv9Vt+Dp+pCSyCWdls1aDDoJ281B5fD5zuCtUz0ezEf8Q6fFWwx2BlDQgK6Lbl5ro12uD2bTnHuQKdWJlEryxg7H5q2EQ7TXH+QojGmZqi23AneD7FWBWOvYrMW4E9lhQO+ipr5uPtlWD5jF7GtQSdeJnN6JBxc4Fm8lGPGrVNockMZNkcD9ARUE8hyLtxZTt6PbRZ309bGyrT4wy6YTNdJ1IvgvvrUPRVsI22K0FwbLAch7P5vDAnaU3AlhLmLzOTZrKab+mO6KrJM+WNlWLxgja/800nVS0TvUvw6jFtKynQi9D2lzwu/xjrQCZVsP1LKQxkoJdz0zudGhCB3wBv5LWl3cDjsyfTTh0heQdAMxfq11XOuzWgg2dj22w5gU2fIHWIQr4sv9QllpYzl8udPOD4zRiVpnkFaXtztsnaG5n60lPbip0HGtz5rWWrD/RQ6mtBwRtQWMKWInowcCpmtD3skUyQ82XV4dyHn14rLT1qwfVmT69TJTQDq0juv3LGgtTkFKwhCE3y1PpSBP/yryUMaK4pW5dgth3SeSo1rUh+vysK0/ZBOdCeTTouPyK/u1FPO3ewPGlCzgi1aQ1mOoprQhhRius6hFtDto0eNur1ISdenCCluPyGJ0lNI9adFv4jcrWAvBbkJcmNICw2LfADnXIg4J0yIt920ZLHv/13S35yrUpQsdtj4R586y39KTFp1w1RFktw7r/dwwDEGKBC4P0NwfeENQpnQCn2F2q0AHQacAjbp0ebvD1ivinOY+R09KXJX15Tk2axnYo8hoUwoD7oudeg6uxiC1KfkWjiKnVThPIa4AURcuOzts/SLG2ZTn6EmH1nDT4l1263AyMmVTGqpQXq0lSnegAD3hxA3K308nu5ljE1rEb0asH3U64LLFjrfOEJHj3A89mnazG5+dwzuavIln/9Mb9mFI6wRucqbosKb/ZrSizSXwDuK8FaAZ/4OYizodgDW2AThXQU9a0I0fL7W6eEtANyNdM4aB2s/+rE0FowNEEtJcEmvIoVZg4TfwJurVhaVOQ3Cu6qEnLehG+lCnw24J1iMzqsxAw+9zFxiVFt2DPihjSXzVYlYrcGRJblf14uIudRqE43yPnrQgAXn6XCfSAljRr6LfhyGNPDZOVkFdvy+PKB2AzYzzFuBIgRTq1eXbjtM4nOfoSQtyNXWtxSzW9HF+lpeHhqnh6i8mOSoOquU9aQ7FxcRZ87dFiBTqdMDlU05Dce6npyclGB7GR7oYb/oYW6IqVWnMHTq9WMd7UJAKppK4l5hFTd99YqdAnQ4MsMZpMM5V0JMS1P6L5/aNsGaPLPoIsp4ZaI0i95o2BQt/pIeUDsCBxHnT9zWxU9SLC2uchuNcBT0pgdvtv76/xZo9RsfJVEkZK/HTcwsKDpCJUQ1Trvg5Ne1OTTP331EhrS502Jom0fow5gt/QTElEMJVbaM2b47NF77iFaGNjOzxD+DMGL8J2aq5DN7V/F0JFdLq8naHbUjmwi9STAshrMt4zCL+bsR8cxlca3FjXT+TQ0JDm5GJ0XVN3wqokFaXnR22QRnzGMXDKYGQj2c7smw6RPb5ylh/7fvTbGOrvLRWxkbUt2Y2e5upkNYBly12zI3GrIbDaSHkS9mOGM36geg35xXKGyxmyF6CbiiY6sMVdpP3VbpJ6wCssQ3NLIJiWgj5XZbjRNy+FhmpTYmMfxmZPudrXt6cX/CXUVO3sJtu0urCUqfBmUVFimkhhKuaN4uYY68rDbnKlBrE52cwQ7NVxlUa2syQ/F+nqVsI3aTVxV3qNDxjXqWYFkI4tWkbt+NZPWIM/ohcxpkRuwoxmMvoC4k1cSugm7S6fNtxsoD5JMXDKSEM5XVNm0Xcci5BUWpT6PFP69pTdvQXRB8UDFULWNqM2ZrrqJDWvm4+2daWDcxyoigd8eDhGD44z7IsqwnjnHG2QeRdc1n5YSLOJpyQaHTY3KD6crSJ+1sqpLWvj5VtmcEshygVyBBieGGeZVkWa7qYRZzPfA6D5oYr/zePmInLSQuloc30yYuIUZO26FtSIa19sLItQ5hFEKViZAyxwyzLslizRZwxzi9VKalNiT4cxsnEI6RhzBvAmqZtkS8+aXVxO+zENiyz6CdEaUEMOMyyLIs3W4wzzlYj5hpDDrd0GvklA1Awo4t4em6ztkjEl7S4vN1hM4YxnyZKC2LA5Y7lEG+yiDNGC76JIU+bGhHPzTVxOVFNa2gjMqavt5u0D4n4kpIBl0/ZCW9k5hGiKCVADPfPIpsx1lwxzljkHUjBmBzw1ppYTQRlyk9jLWPUjP2t+CIpGRhgjZNJzHKI0oIYHltCnDOWqYgzRptExjeGNE6zDLwwAoaq8mcd1JR9S3xJiwtrnIxiFoGfFuwUL+8XZZwyF5v1CkrKWFZ9aMaeuzBCYQw3U/Nlzexf001aXeiwYzWqGwCt/DV+WvDhyra2NlszG416K9KescHSG532HruaSEHW29SEtV1BtZu0urzdYTMMzf46flrwYWUWY8fp7qqxWh6borSnHlHh/nWOw6jZfq/EEWl12dlhMw2ZT+KnheM+KzMYLXrTG1WmkMDWzj22S0NKfNRiTdaU9gXI3qG0uGyx480g5k7wU8Jxn5XZy+IfVwVhLI/Hp7M9dCEaU+pExqiptua8/8C+4WoahiU8zK02A5ku8FPC8eMsyFycnYmE0qaGRW2utYeuJlIAvYyarDb7nOyrxnEahvYzdH1bJjJdPn5K8PnpOdlrTaU4qky5GewfoT3ziIYUnnJYk2XeJ7uHY5E0dFNaakw2Ml1fx08Jfnx71iI+7RteTppCLy7t3EO7dGylZmvyd9hbjYUUuvxguim0ZyRjPomfkuPxnnOylmW9A+masRIencb2yDQU6mH/YGLUXP8l5arEqB8+5bLFTmxmMQ/h+6lgT3x71uL8IJWraVMAltEetPZqosTUkP/adNZkOZ+mTCz69h5mjc1YZgX4KfnpORmL0cI39KA0lsKhe+YRBaJXfooYNdeXDHCcGPUuLHUyl+kCPw3xnnhB1mIdD6qMH4AtbI+8ogDb1blN19/ggqhzOX2lk8FM1y/x03F7xiKLTkHMNSefdvbENBS6fXoJa7Ye5I+IOjf+x2kmkxmzE/9YGp7LWpzWlLOjxlDuWbAnriZKbkD9tItRk/3p430IugdcvnR2e1YzD+EfS8FPz8lYjKa/MjpgroDD98T9GnLy3dR0fZ0DouxgVP2oM2o2MyvA1xbHezKXRfepvLkYtuyJVzTEcYJDzfabHBBU98IaJ9OZvwZfXZy1KEKnImtuu7x/D3S9JYaNyZxaaWUt5/vsRbFQOkWHHadJdWOiA/6BHRLV4IhQfbfJ2A6t9vs8Y2X5p7m7t8EtVIwNyu/Ppsz1gi68eHeHzXy09CnVI93gINXqBVnLolm/kKPGagXsv3vnISmNJeX7Opqvz+vq5pXZNgfQrNuQqARosLr7nKzFuXOPGDDmx7F59+6WWRjvxems+XqfKjd+dqrJBURbqsOjgZF+3pyStcihU9FnTCfxrt1yXpQjxryB8nJqvs7XE/cdYp3jOPnAopMkYkGhMrTRZLD11YIwNoj/tXZnsaxUjY34r0xrwg7Qs/c0N5rcQEQHjSIWkOF3uCl72TT9T6NlUxiFu2R3DkefMlaQ73dY8zXzLfbqCOLwcnNWnqAZLyAWkGPxjOzFLfqYP2TMT+Hw3TlTbYfxlHsq8eaLHlQS8IuZjlPIFzM+hVggIvlcW/ZiETpf5o0hXjt3d+5FCtDaiMyp/ZowommUNLjsnGrqcWNjNOcakRgVyXXzVyaDO7QJCWUsjffauzb9RZU3Viq/voBYE+Y8QymxAZct1uSOsedAZxLzef28LGZZC7u9srF++YNpu7ZOekPGsngs0pxNI/EBWGNzCm3ytZ/cFSaLswg9i7yxaiW3YHeGq8a6sYVYU+Ysp5SMC0ud3EIrX8VPxmdL2+QsRjZdr+PGUMSGXbtE9ilTqhtva9acZygl8Qf+/Swnx9DKV/CT8PmZyejcPklnzGVwxq7dK+MwVc1jFTFqzpxdlCYu4NUzTa4h50n8YxPm4/95VmPOykraXAp38l2Z/qLMGht2fze7eZu2i9IEBQFPGlPIOc4a8CfIr3ozJmU1sue/rEvGBsTXp+2SlP3GCvi01bw5zouUShMRwJ3OqPnG+Wvwj02A7/PWJYWzMhuPfBFFU7qC1xfsAjvAS0hAaxiUKX0xb86MHfGu+6FUGpsudtf0nw+j+p4ZnGmvQ3Ecbn8c6nZq6u0rVFKaqqbU8l2g02UCWsOonxBHsybNGOs4zpRFLwKlUsl1XXd0qC+ZlMBVs6lFcpxVRSgWi0Xwq4P5eKYKPLXJau74cYi7huCmcPyu3Ia01jBbG/BXUtNmrDNy0YYSY6396Jql1PCzhDNt1fcYs3hwUxc1+6u9/oopL6m3sFrWR5CD6TJ+M7OJM8Y6oy7a8OIPi1X5xvOfuOSgaRGrpXIcZ9qqv3u9CMq/eey2Exdb1PSzma9hxJSIeR/qqDXjZ2rAWAkf72zqjB3FcZy5c+fOnT3Npskxa4ycNm3JvGnTO2xqAVnnwzprSo7i+UitBX6lZGwYN9jEmjlTa+JWzXEYIza2+SP7dp0yVquVF9U6VBWFsUGcSlNEE7cAdDZ6lSElBrC+1gVIw3h/dd2UERu/FdhY7RaGNJL6hNE4Xalzxkq1bUubPTvu1inPLhzUnrGsuno05nwE/cb61YtziBiFi6b9HCPGivq+0WjatzBsLIsPRcNH/CMqZ2wITzqjLXjdqxpL4go7fESXI6lMVdyXp462rH9IGEuoYzix0NEJKi7NQPuDmD7aAUjDtM5UVlIIaQNSvikksWAUfjoSxkTp/xeFkNiSaqlsLOZdP8q0G7S5mvxBBxGjkBHv/BkGjcXVh0eh+1TGlCyozzpNX2NuenV8HnlDQBwfGCf6HZU3JdK4mRMLId2JtLE8nrTHzPo/OWBKJ7GZQkgsej6Sxir4w4wxCz05bAoJcUgoKfI2mQhAesGYQ/y0a8ob0vsQMQofrUBWmUJe7TfmCJnyTI3WUnNCSc5yv+obi6ujx2xWCWFqEN+OhJHI6fppZcScvHDMbTouTeXxUIRYCMme9hCK5tQtY+7TBZi7ywknRe9GxlgG7yMi62FdM5bC1VYoybKuQ9xYAQ9GiLpe0dqU7MVpPJxE56DH2BC+P4to1pCGaS+NTSyUxOlov9dYRfcuJlqqRozVhrGaQkr7oaBM+S7mObRWFYxV/NzeYaUlNemZwjD2s+lwFTc2qv40N5zEaG43KsZS+nDGTlA7jA3Lb3SGlTp/JoaM7VCnk3Ueeoxl9Sei1J5tgpnPESXWg5PIuhEJY2n5Xie0tFVBApcT3a/TxpL6eiucZIx5XEFa3070eZkzpRK4iIWW7lWQkx+njie8gimRxCkUWrqumlwBj/JZ3/GGTPlZvC28dNVQcv14oXPh/4mKKbeIdeGly0huCL+etTytfFO1IblXeOnSanIj+p+LVopBaWpUvTEvvHTxYHUwKenJffbX5kbwyozw0nn/Nz6eWFkuPwyDytQgXuoIL531GzmS2IBce2wAinjaCi+1/5yDieXkAachZyyHRyi8VHid/Qo2nxeAND4SYmrbyR4F512BvDakE/L2EJOzlVDBpVvNqbi4PMRkHyJQcNX1Om0OV4aZ7k9O96mtd+tsAC4LM92dnCroOz6lcjB3Xpjp9uR0v77/CVkIwGlhpuUKhvRnvqlGAnBMmOmG5NSofuJnuhaATSEm8z4FVf2NP2gZgP3DTFclJz385N8KAVgbZrpcgcTvtmtzeawMMy2mnJTS+Hs87NUplcSAbTmEvBZKlJQG4kNhr/lxb1IAcrWw19x4r4IBFfaaXd2nYESHvWZW9ysYDX1dOtynoIyCChaHuqRUozr2DnUpjbKGMpaEugBUNYxi3xBcCctCcCNYHvYqaxjCsnCX1iUNA9g31KWVHD6BJFbE0jDTMioKMgeoJlYIN+2rIt7LcGI5LAt7bS8ryGJVmGmliv/8dxJXGawLM21ITnnqlX9LNbE0NoaZDlNQ0S/9C05JUikcGmY6XkFJP/NTTsTJHRZmOlXBsH7ii3rYWBrHsRDTagV9+iMfVv3GMvoMHmJaq+LuO2XelM7qC+0Q0z0qbr1Z9mlTffpqJ8T0gIqt7whATt8UCS85j6h4x5UByKu7ouGlwtMqrrgoAAX1gc7w0qQdKs45NwBF9fGu8NKUL6s46XDklakSngwxtb9VParg7QfJojQ1ipemhZfO+G31RFK6iLVrxYBvCBX9hxnhpfP+MDyYFCpYtcId9EzV3N554aVpJ08OJ6aqy5fE/Jopr1RdzkJLHfTHSQlsXzT/TxjVhkQe+1uhpUVUSLqsfjqt87voN6VT+iAntPQX1UCSGlRfdtgTyJpCrzw8Glp6L0GcVD8+49DDqgjTCb2ZiE0YLuLsUp0yVtQfduh+lTGW0e8ILdHNOmsshzts2qq6jeVwG7Gw0r06r00lcYXNzlHbjRXxQSu09KAeMBbDmZZ1EnqNDeHrUR5S6vixN2SsFydZ1hHIGBuV/5plhZPY7G0YNZbFJk5rdd5YzRtaZIeSGFtYEVVjQ3oFp+Vy0Jhf1vs64STaF3kPpqtiHqf5hdqQKbFdHx1WOhJvSiMaqKi3ZnGa+Wt/wFi3PsEOKZ2C7cpUP747jVH0MV00JeO4KJTEiK5CjxkFZPBQlBH7IPKmVBbvt0JKn0Ram0riA5yI3ok+Y0X98Ug4yXlU9Qfg2jHnI2NKD8uXpoWTZv7MHQ3A2YyIjkLaWMUrzwknLfBGvQC8bcwGJI25NbUonLRUD8oArCQimue5JVM6pd5GYSTnWB03BFSRWTRm+htyyJw+z6LQESO6RKeUMf3qDGJE0W+iaAopfYsdSroNfcYG1FetMfyDyJnDxyJhJOthDBhL4X2cOBFdjYyxUfXdKAshzfgdStJUAtewcU5F0lhF9c7gIaT5pWrVWFqfzphFRIchZszt8dc5IaSN6HON5eTBNM4qdBvze92TOilkxIhOxw7fWAHLx9vrn7JkBkAKWyiE9E6dUNqMLOEHUeKciGa+gH5jWdzPGIWNrI/oPGAG/XiWMYsRkf1h3WesKL/TET6a/gsxZCwt7iLOiYj4O5A2VirFFtqho6WqVDUWw/nE2Rh2KhLG/CxWW6GjA3TSNZb0TpiANiCpTaEbp3NGoSKic3XKM6UKOHCipdWBWgBuDR2xO5ASpipebeFEs37sDhvLy4c6echo2iN+Wpoq4RuRiaIP+lm5x/SEeGU2Cxl1/dWvKZhVWf+DVi1+vYx7xvrlfoxRqGgVRoU25CfllawWOxmJmrEUjqSQ0fEqr2HYTeNYquWs9ZJlY1lcaIWL7Gu8GExXc/5+vJa1MO6XzMlP2uEi/j8omNKj6vV5rBaf9k01qE0N4bfzOFGIaN7vvSFTchiPd+4C8Xt0VprycmK/cNFaPVQ2JQZwG9EY6CI36ZlCThwdLjpOpHxTXtE7l9hYDkSP8gGtTSRxFYWILHaryElDGjuxkZgZ41LP97SpIh5l1G5tZpHzrOrXplwUl+5a54/FMExVav+YGyZa9Fa5ZEr162/M3DW6X/UZQxEbWYhoE9IuDIsU7o3uxpWIm4uJsylEdCG6hSk/IS4itmuHICsNafTV7rNCRB9WSWXK7cPK3Vnk9XvGRsq/nBkemvX7Wkkb0tVaecHuOM/JGrSGEX9ELQsPrZVDMK1G8aXIBGzC9yKtzQBI4GSyQ0LWZjViTCRwi71bF6BXaq3N5PR7iYeEIh9A2ZjXgzM4MRrbRjcnjJXw/RkUEpr3S7dqrJbDWtqtWds8z5gqYUVYaBVGPGMV/0/Td8/5qC4qU0jgGCskdDoy0lgG93TsHm2RKam1NhOX7+sKB7EHkIbxXlxqE9uto/2iMDaAV+aGg+a84g2b6/MPpz2weFj6ppRMVReFg1ZiRJnzdi7cEzOeEH0wpXI4LRoGss9FrzaWxuO0i7vAb0XSiAa0HsCnZ4SBIh9VWQTgmj1Cx6DPXLn02vww0Jw4RoJw2J5gNBuuNATlZ9Tb7fAPOxZxzxywaM+wr2NImVJZXEUhoGtlVhpL43HaM3QD8tKEBrQedL9us9DPtBcqAzoA1+ypI1EQxrx+bx8r7MOW+tkqAnDYnmFsHwz7hqAQ12d2hn06zlBpYQ7pRXuIpn0VBUy8iICwHw8SD/dYzkMoKFO1fvk47Sm6TuTMHXNfX0DhHtonjWFtCm+qa/YUYxt0RidEXE3qt4V9jtE9Lgxr5MXaPTfnP6I0cYxGD27hLNTD71ApaUq6+PPMPUaRB5FOREDox/em81DPnF+omjbl9al77T3G7M1ISEKIKuCwcM9BotuD6VoKp7E9R8uRP51UjCSu4CzMs1WnYLwyrFaQgc4fi2MTh4iAyBy+PiPU8yNZMlfGdzpMsFsQJTC6kimspsncjn3Jkrs2bNiw4brr5tnxN4F4B3OW7Hf6/Zuf2fShmzovcmramg1rPbIw343rLAOMDnKT07IPl/HmYMldbzPGH26Y12RyHGfOMR/5F6pxHMdw0n/xfRnhqiCIgnc4GZnzLxQU1dNdrAlYsg3oHSPw4rwmkuPQ7PN/4wGFniiKouIfo2GR4rosEPlGEEa812eZoc8QJQVR6Rfrm4Bt0Nvbyxh7e3thQ/OI6O3fgkomRyRqF4si/+p9jS5C62tZGFdDtQfI0HnJKcgELqHJbsnb9PYy7t5eeuc1hRyHnBtRSyRGsMsiUhTZ0OA66BoEAD04g7gJRguSk1AF/UzXJLcEepnQXriuKUTOJ7At62I3ZWRRXjy7ofGOb+sAiEGx0hS9RpSQgKz0i/3YpLYEepng3l7e3wQi5xPYht0fRYryhbMbGR0khmBc5fEYN3ZXYr5UKoYr7MlsCb29THhvL/OaP84nsA17TIrxFxrau2TSnJ+UF9Nujb8rMSkUCu63uiax8318EuzlPzV/bqVMkqGsc0bamo2EU+Qlt2hMe8PuCmLMkPMWR5LRvtRu1j14EtuGT6K9bGj2dFIeTERC6WpUzD7EG6gaU/2Vb3cFYD1RMhBC6SxumbyW4JNwL4ubPDsok9QXGxXR+5CGcdGLK4k4mepKTAmlS/7Lk9fLGnY2dzopk5CE0tWo9vkzBsxVYmJjEJy3OJIMfKlUunaYMxlZRAfjk3gvizODeV4CHY9lih0qvtiojhBx15juxzfnEGPm1hMlJIVCEvfSZGwTvU/HhuywQcuyLHE+gyQmoXQ1psin0QfjMivfxQLRlRh8qSDK+0xGFs37Ayr/U3a4RcsHssTNlFWsa0yrZVmYczPe/kSczDlvcSQhIRR6cOZkxGit72voZXFmWKplRpb4pJIvNqbzkYVxPVR6KRKQ9UQJKSFRFF/pmIzYmX6g44bMMLVUHUhuD9+1GeL8X1R7Fcjgfz7PNKCu5zFkTCKFOzgxFoSuxLQQ2h+Q6yelG0WoY0NmKDyDp2F9puB0nwa4qBEdJhLCGMoJbKKAOG9xJBlIIdGNG9gkxO8RFR07M4PpGlQxPUt0cuKQhlCudhrQrUjBfD++6xBxCsR6ooS0kLrs/WnhZHSfjDLW5O8zkNQe1ttsMXA8q8z/F/wA5HAtI8aC0ZUYhFBuQh3D+OTzUbknYzldeMlNzxh7h7LKaYjDvBuv7U/EKRjOWxxJSAkpc3g0QpPPx9XejGWcT+El47HeZoyQrPIlDAWgiKesAN1FlBCEULVBrJh86ONqX9YyZ3oMJOHxXZs19mSVNV6fF4A0LiViLChdyUkh0YtrJ6FPqP3ZaxEDAxPn4U3PHAeyym2ISWluFEuJOAWFP4ZRQ4DE4Ogf5/M2CKODFOJQ0HsihJkmY3aSlU0Jn/dWeUArYwN4zCGd421GLgAy659M7RBOBynEAQ0FtWsnQ8KZtklCpyMhJUzLpD6FAjUXw64prVAQT3S1QxhjG3+JZAIaGrt6MjzJSzNts2Tmk3JYaWMjunsvYpr4A7LfFBTcvtrG9ggn606Ivp4+H2q8k2EIrLK2afK2akJJGO9Td/OAHaFixrQWMfH+tggxxvj+d0sIxNKJcCTA+pm2eWJ9CBmlTWlsV8dSwOb+BoOmoLTwxLI2CFlkk0ORdRc9DgnNyPClVTPt6M2RpRiGgvFB/f05xILFr8IObUprkVFbefuDMUYWORShyLpDzjpv/fpVq2bOtGNsinRcg25fGxMxXMwCt8ZLwxzK6lez2h+cOHFijDhx4mz8TZF9X8cozIu8u5oCwyac/gSKpsamcXLbo9nOKGd56Zo53Sce7wqefRwSMhDPdoVf+HPoU+ZkT/UYTixobOa/vZEAIC2PDb3wI/xkFcZ1FX+eTnVAt6p0IPxPRsIuMx9GP8yrQbWV6mJ9JS0DgJzcL+TibEDfaAC8AawiYnVgfV4MBWEAd9vhFv6Azklzelg9RHXBnaORCYI/oFezUMu+5bSEeVFwj7TZuMosmveLcjkAept3RTTUcpvM+ub0qPtiJ/EATcw4WdehOwDIVcvLwywL0ZnW19N4pIxxWomBagBUDFfwEMtVBAp0zcUK4qwOiHGK3Ktz2hwG3DcWhlcWCjSKIu612TgUPMYP83rdAKDHuywSWrlKBBqqKW8dcVYXxDlFnvMGdAAG8OqCsMrCbkHiQiGvn5o+HgWfcUbn+DkRAP0mLg6rXCW6kwP8HnkyJ8YYo3rknBb//2ApAKjgldnhlIXdQiTni8HaK7Oonrh13UhOBcDrxuZwylWiOwCQPXorjUP1yTjfW5Z8Q0oDGJG/mG53hE067L1ex4hS4PtyLyJG9cs4fy/SOgDI4HxmhU0sdoVKIYAqgTuJWD0R4/vJvpoZPc5o9Y19KGxCyzJSBKFU8DcQqy9i9FFvUAUAGXmBEzaxt4juQGTwsQhjjOr8cJWRZjDuqFvdO2Riz3NrRQQxhUMYY1TnrOMJndcmJlQJ3MDCJXQT0jIIRf14xGZU/ycg65nSWuuKi6UsVLKiNlJGEGPyCIpQ/fNZP/ZL2ozWWinE9W0zQyXvRhpBLOKbdkMgOk/2wDcy/nDGXc15eGQpvWhUKZxJltUI+OyfYSQACll8mBp9S+2LOnQ/fmgxhxqifa7qhjSmtYrhkPDIB071ojKmziKbNwaa/TdZEMag0I8vzgmLTP0WOsriV/OYQ43ycvR62phGrQfH2SGRa+hBo4qJi8nmDWPum2JYGINCzv1ZZzjkrP/CURVF/G6BZVPDtLfovG9Oa6TklaGQ9g/H3WiU3f75FGGNg+bvGKoIY1DwPHdpGOQyjsdVDTX8rYtHqIFO24wdUMYApHF/M9CHhzhnbdpO+uJG195+xrPsj+PkJHqxhbjdSNjc/8phPwhIy41TPQM0OscsZj9VFI7id1GyrEZC/DJ012Qg8MXOyQ/4x0fatxxveOaM79OPKJCJylnEOG8oNPdPouzpACDhn94MtHWHGt+qeLcICgfwI5sszhoLnYteeEEYxv/PtazJr699S9zwLvAHD6CiW5xLzGINhls/V0UEMuHdQlZ00mvnSsN7glAEhX3eixZZvNFY/GRkVSCQUhvJsqZukq97i+g9gQ5xEnGLNRpuT3sJg77SkMPjUQpvfId9CAr78NQMsnjDYRYdpRMqEEjiOMcJT9hx3iP7Tg4r0KrHP9DmnDUc4jZ9DRmhAkiGNjpFjg8LCuN4zOacNSBm8YP0DuhM4r1hjb8VbyhGoerzD+CcNSLiHfRR9OlAEseFMzrFkxiFfjfuszlrTIyzfQP0k9mhDE9EUFjzi2olsQZFxOk25elAElusEMY94ulQWX0j2Y2Lpi2WaE36h4QvOsUTFaqokgsaGKMoXYan5unwxZtaRnvl5RRpXETEo7/hkA6k9aWMWbyxMM7vx8HW1YMSigo1iO/tQxY1dHZNXBrWIQfkcuJWgyH7MXW4ZdUpoejQb8kjyGKNjQovV/fFKpDR/9tFNqszM2PusZbVm2r68KBNnBr8pAUn9pxQ4WO7uoKcSJ1ZjpHBVtU9EoqSBNaQRY3emo9TijUoNZr011sddWaTKlRbVJ0SihIPdzjEG54xU0ucEAWQ6MNTtlNnjkOKFtWbavrZNp0smgxvo+e0BviI4yqqM8fKnhbVgxKKEo9TibFJwDFnfO/40ViDll4Wq+rMEXJHa6pTQlHSz6u2bVHjt9baDiooPcjPnJq2ZqqILVGDtSkAX3hYzurPjtFc+PvTh1DhV7NybeOwT1BRgsem+rJwmy5NAega/jmDGodjzFZKiAqVxLupMY7SUUGtR1ddmflVFKcAxIj6vMMah3WuGQpgSEVRvzFvMrE3UdFyEK+uRK5CdgpAJeVlrIGYWVH1tAyhoZLB8TSp2K9SUYLHC/WErRvpFW0/6LRYSQ3kzC9SiodjDbpPf27mJNOhB4/ldYSmfUcOyHafzuLLEdZA7qb7dLWKAiX7sJ4mGfsEFS14dNUPRmeiu9LuE9vkqdRAuoZKMISG6g5xjTPp2N9T0fOz+sFp3k8x3OZDqfadDqdxXPB7+oYQFUX3J3Np8nmvHjw21QM24VF4S7X3dK88jFmNY5scPokAklwaG2gSstuoaMFjeR2hd+ttqq23DXdxizeM26RyVEZIct3yds4no4sraO6qI7O+jW2qjefpZ2aRzRpFl1QkRkCSG8Zf5tKkZN9LRY3Hz+qHRUvewDbVtvP48zLq4I3igt9LRRBUdOMoy5qc7DYqWvDYUjeYRUv+gv/6bTqP3y2jDt4wtklFRABJrhv3T2cWm5wurqDXO7GsbjCLFj2qcul2nHeA56dQB2e7nqbbpCIigCQ3jO4osxhNTvYmKmo4caKzbjCLOe8A0ul0e+2AdwBunzKlg7NG0SUVGUUUdOOUqMVpsrLPU1H0P+sHixItuxtAOp1OZ7K5fKE4MNi+PjDS8w4AT06ZMmUKZ43igkoNUdCN+6NRTpP34qFKISjoxufqawL3fsePFaCa30ICSgM/uXFFl8WocV7wMmV0KvSjexExmsxPkt1wA4L/4pbGQhRZddrNH3ql6f3E41967MM3nrBmls2ogZ5hPk4RrbJbn0xRmtw/gR6IQEj4PbXN5DQUsjso6jTB2bjUUB2zslpEa63Xv4fZNMnv80+vT+ogAChX9P4UDixcWT2E2oz63RxiHZMcHaFiAhCBUAX8eSHxEIDz7v8T9+pJqrcTRfgkZ9GtMo3AxvHFKE3924t+WPVQG3k3RSzboUl/4a9rQ4HBW/rdkam/c56nOBRrifhhJ0WiNNl32LRJpUd1QKTMyrOn/KZ8KPZODSs60IpyNumRTdOvwI6gaOWmcPQUna1prh+Ojg7HosTnemoOuUWdTyAdEGg14Pnrp/Yul8ETw7Gg0+flQpNANp+2LCcrAQFQUH9ZNqX3B/qJBZ0+fiEzkMPpBPQGRyfwzPwpvO/RI6cFNddnCGZR573oDQxqWfHpqbsXKTE8jFKf9YUMQZzTXs+jNzAY2a63sCm6B3ERESU+LxcyBXGi/YBKYOD1qrOmTck9iIvqQsYgTnQaeoMDZNyT7Sm4m3BR7HN95hj5OCVFtQI2UefUWvuUpXH/SUVv+bd2EmOMZQ3zfUp6MCT1BuqYUjNdcXwSrQJ9+PwcYk3JXFSnEV/KolNpswaooLcPtWXEmhNzIyVFXtJ7ZTGPTJHZdvPud4b2oNdL6ROJNSvmcUp6fOx0vz6TOlpkbX/+5tAe9Hr/1ddYrHkxL7NHjZTowRNdzLbEnCmvsgetWvtpPBxtauaW2KMFUKVefDLS1hKb/EV5B73VgvrVPkTNjJmrCVJtF3cXbCtsB/+zqmh40N2PnObG3EJPrAbAdmwp2FFszVbUpKdx0dwrT+YW28VsYh4dKsWKsJ0tBdvamjTpaVw0v4nbiXFqdtq/NbRHFOH/ntpobEvLrMdFs+8+5nCLWLNjLnnnWL8oGvKGHzC2lbUeF80+ry8gItb0tJslwweOKmLIG37A2NbVg7goP4qIWPNjjHMjZU0MecMPGNuqehAX1T7LqFkyhQ/xzklFDHnDD5gW1f24qPZZZoiINUdm8gscHFTEkDf8QGvqQVxU+zxrDBFrloz5nngyqg5w+Ui7Y1pOm3DRrLfjaYe4ydSeeKpw+UihzVhrbQtpEy6qM/jjIrKbrDkyuhq644+e0WZaSptwUT0Id6UVpWZ7jni6Bv/AhjPajLW2VbQJF91pebjdRQ7PWGa1eKoY/APbJhnTGmo3Z38GF907xWYibltNl9konioG/yCfnWystS0g58wv4KJ7J66zHLJs3nyZjeKpYrCbL53ptITO+ebQ/0b3Trzb5kQ2b8bMq+Kpoury6rktn4IpXPjjanFY1048GiHHJt6czfm1eDWkphlw+VezTYvW1pzStuCdanEY1TH9rTk2NfFzfi2eLlyC2S2etq69w8VhFEvE9R8XWx3NnJkzJH26CGB2a2cJ8f5hNPtplJbYndTcX3bq6GFdBHBzK+cm4l50FyUOJM6t5s68l77DuggCbm7dPCCDR07pKg+KIxjnVpPX5ryPvsO6IOChVs0D0nPkFKrLCX0Mt7jV7DmT2z5I+dSwLgK+0pr5Z9Ijp1BdTuAURmQ1fZOsNfdWA20EfGV2C+YH0iOC7gQudIic5m/UJ3BRfmoP/2lxi8TW7vTx0b6bD5s8+QSuMo4EsLi10gk+2nfzYZMvn8BVBgHc0Uq5DXy072ZroVDIFWY7rjaCgKdaJ0/ho343WwumYHLmdlxtEPBai6Tzu/io383Wgsmh23HVEfCf5rZCOn181O9ma8EUcojZjquOAJa1Pm4DH/W72VowBZNLt+OqIwh4qtXxFL6P+t1sLZjcuh23ltQ0BgFfmttSsOO94BV89O9ma8Hk2O24+ggI5rYuurrx0b+brQWTa7fj6iOAZa2K2+PYR/9uthZMzt2Oq48g4Kk/a0Vc8FzcHaN/N1sLJvdux9UHAf84t/XQ1R13xynYLVvONPl3yhZKJ6rqCGBZq+H2OO6O9R0LZL2x+ccxZhOlY/oIArb+WSvhgufiuDvWdyzg3oIp5J+Rd7P3pD4I+Me5rYOu7rg7HlXXsYDb2p2Cyb925DUEASkswx2FQltbm+M41tpmHVG0ky5T6K+Oo/X4wFC/2myd4di8ZK+BIAWUy/yzhS0AWvyo21d01VgNvdrrh38867AmD49mr4EgBcRlyguaftbROa/Hh1JKaQQ6Dfk2smyTp+wcCFIAZeTxph7vmP/uCuLAGI1A9+qRDU6ErHxl5wQEKYgpB/Kz+U27KKeDfqoSFYyjEeid8tWl5JDVatk5/5xAHyCBxHc15xyHpl3n1eIK42gEeid+sBdZzGq9rH2JgDgFEvjx6/OacUQbv6X7BjW8MQHfiYejUWJWS2afJjgpKZDYj6vrmm4OOTdqsU26qMeduCtKjKhFsx+lp1/dqOUyuxYWRtqazS/a/xk90Cel3u3kFPqLtauI2IR5zK6G/lRAGe5pnkWj0ehWFzsrsh5Q8OXpFkVbOrsUetJBucyuhc0yogNf8uM5yLro1jiIEzmtnV3aQ086oAwfbZLNv06rVE3Vh+//cZnNGFGLZ8/7Mj0poVzmt/OaXsxiR/wauQEJ1IXPV/eyGKPWz573ZXr60wFlqpvnNblo0X2o9PkYWwc+fzeHMxrb8lm7mv7+lFAuVau3NLcudtE7Aq3rwodlhjNqF9jV0JMSqqVq9eV5zatFu2qjeQFdHz4sM4ZRKzaB4zir38KbdQJHy/BUoTabsD204B4F7zhp3YZtS6iNyMYueVLtqNYJlMuUVzShIifmZKqPtA5tw8NLqL3IGGPT7kdmsF6gDK8ubDZtehYiCZWWvhpuobYjY4zsc6EzdcPRMjy1sGlkk73gASXeHEXdxoDN1I5kjKyD3kR3aqBchhXNIpp1tdLDparUWutT0P5OvHwwtSkZ0ZJHfD89UD5KeUX7p8OmzrP/LoZHKr4eqw9qJIHPzbbbFcQ6aMb14KeHo2V4eE27h+iEZ4BE2dOoExnXuJqofUEsQvQB8NMDR8tSPrymvXPIIy56KtDQ4+vbCZwSIYvam3bGG/gpgqGEjzuXcJux9ottk7X2PUCmD3WqADXYjReW2oxTu8PazeCnCEhmgOv3ZhZjrK1iU5QWv1Mhk0TdVjQKyr25kzijNoi9Gfw0AYmihy1RTsRYG4XRwi3QQwXUsSztBI53qB06ws54Az9VVRFX6Ll2TpSItU/mX1mEjnuo5/6E+toqi9tWu8TazeCnaGxK4e9XTOOMWHtk0VX/VNg+KkQ99cC7hRPZnNon9mYfP10oJyH/fME8YsRY22PRVT2ili6jvnuQfDt1cM6onWJnvILvpwpAL9S/r10YJWKsrbHoqh4hevqFFGPrJZ3GJxfyDs4YtVesvRn8lGE4pbzEzUtmELH2xaKrhBA9Qigxfp2kgQs7rE7O2iUTM4s5G3+ARFkCEvDqBIgBuGklMWLjsQnbBcveBfikW6PYV/vhAdSWZSxKNPcWDKcEoFxZP6oWG9XqwwfP4MTaD+vud3HMH4xT5mdQe+dMat/aZB/0d90z6kPV0dhE0cOjG6fbxNoLhz8E5DOk3ot5/ziKiLVvxu71cZQyCnXmVwfzGi8cuzJCrH1w3veljmdcpN6D//5FRKzN41jHJpEqof5TKfh/vHw1tQmWXvdPyFxRaemnrN/jzdOIiLV77Cif+zmUsvUHWdwJuPdtaPk4zdj0MSmR7Feu0Fqly4NnlxCzWNuHc7L5sQnZU38A+rtLHp48ZUFrt9dZzwhUUiVAQisp09Tv4V03mYiN294hRpZDSx4EehoAMNCzE9h584bWbe2t/4VMZXRZyAlT5MGzkydPtjsi7aAJD+1BT74BAEjGPIgvnDIr0mpFiOad/vVRXUsOKDRCz8NbbMfcHuL8VqCnEbhQQ4kivL+9a12n1Uqxzg13/MdDNjGo0RA9eMKOs13ED/0N8vn0jRUDsZSE/spZS1siFrEpsvr8Z4XSO7MSjdHz+NVi26Ti/FbAO1QPAJRGUn0SeODwxR0tD9H8Ez4O1NLpkkaD9GC1HX8biR/6GHj1AX5lpD83Crz63gNmEPGIxVoNNuHMI2/5s9aV7ryLRunBlxfbphbn13t4h+oCoD1UswlAf++6g6M2s23OWg7bWnPFTwRUd9bTaJT9Ht5qO6HtJcd5CrxDdQHQwi0NxeMK4unLV0eJiDGWI2j6yqu/DfiDqX4XDbPfgyfsBLebnPd8C7z6AED51eFcKi+1fP7y1Qsi1EKs3fqCD6+YKFTQQD342mLbzKrtjLw+IorqBNBaiepIMQ+Jb29dv4ARMcaaMcZ2wZpx4NZvA8hms2icGqIvpV4/L2Ka4qM40x+FKKoTY7VW3mAqpuG9euuxi4iIMdZ0ETGLyO6gecfc+aqrkc1m0UC18EczwI2zLGqmOc70nRDVj3GVV8wWBPz/fPzM/bo4I2KMsabKYjRj33M/lpIKud5BNNjRbngPrbKpXV7Lca5/G6K6MlaWcwkNjae2HjSHETHGWPNkz9908089+KVkolCWuqH4lYSHF0+MUvt8LI5zfURUAHQjAYRbGUgPCujYQxeumOEQETHGWJPDrBn7nP+57Roi350ecBW0ko3D00gN6filS4nxsc03Z/qjyGyfhG4kABRqxb5cDRh95cOnrpzBiIgYY81KJDJryeZPvVIBvGxiUEkNpaSUqnEg3QfcspiIj9+Ec5zpHwESAwK6oQBQvirnYsWq0OWfvP+c5TOiRMRYMzJv1Vn3/7omobOZzKgGoKSUUmk0SB8inwTuOZAzPnFTzqH9H9WDyX6/0QDQ0i8Vs/EBT2r150+dc8gCIsZYM8Hmb7r4E6/Bhxzqy48CgJRSSKXQQMVAN8RjaznxXW2O2XGTNevY56FjRU/vhp4wRRPWhvPJfFkodD+79bj1Czsc3gRYzvx1x9719ddrUOVc/3BVaDRiBRR6gGeP5pxR230CiMg56Wc10TfSoMZ6pWJ6u5YQ+s+fv/SYVTM77V3hY9nYRsYYI87GsOjs/Y6+5JE/AZAj6Wx/WWk07GrW1z84xWac2vATw2jm2b+Cyo7oRjWu159MDEgo1P7y0G1nHbCgixER4zR2nPHrDWNsPE5256L1J932hbcqgFcp9uYGa2joPb1a/PbsCFmMpgrGzrjoNX8wO6waGACvPFRIxIpaSlWu/PRD156xfp85DqddbhyMMTZehJE9c8EBp7zzw78YllIB/cnMUNlHo++B98olHdS2nziixVe9rmW8XzaysaJWHi70JeMCAhrerx+764IjVi/stPk4RHaM2tgujsct2+mcvWjfoy+584t/LCko4Q73JbIFV2g0er8S8/F/l3eSE41YUw5ECy/5k3YTRdHYxteiOpiN9yZHpAR84AeP3LPljMNWL5k3bXy2ph4iHpk+f+mat2++9qOf+6WoQmslRvPxTGGo7GNcrZVSDawY9/HyhQuorZ8M0YqL/wA3VgR0oxtXSb8y3JdKZwfKQmCs1/Oz57c9eud1Vy3pnH7huZPa2xyrw3KiXZGuOXuvPvDwIy+58Z4v/Hx7GWOVOzq4ozddHPU1AGgld7VhFYsQv7kgQm3+pIjmnf8DLeIZd1IYV/gKfmVkIBPbuTOvoKj9r3/1xsufffLBe+9es/KG9//lVbPGPXvW7LmLrr725nMvunzLze/96MPf+ulfahIeIH0NlPNvbu9J9496Uiql5B5tUMVe4CfnzemyWJvPvEVzT/8R3OxAxVdjtG50Y7XWWkkp/droYKUmaXQHEt07epLZwmCp6ms0er3b0LX+Pshvn+QwmhqdecKzAtmUJ+QYrXXD20W9q0ePHOrv27enV29+YLgqMJnunpcsQHzpmC5iNEXKafqhnxCuSBZ9YMzYyaGp3jXo4awL8ckjOojT1Oryu7RA32BVAuNordsX6QQ0bl9BU7HOvlv/6iGbKQMYT+t2BCq5XuC3V8/nZE3FENH0zc8BQ8kBH8A4Wrcf0lXgS8fNYTSFy6Yf/ADg5/MVXwNtiGRSQ79n4yyLpnyXX/mKj/6hUVcCbYZkUuvfXLU3TQ07XSd+HlrvzPpaC6l0G0AppfIxeHjkuDlERIxzPuVDRNM23PQvIJ8fBJSQSrd6GMgOKvG3rcvIJiLGx04FEad5x3/BhdfdVwaUkErr1s0diFWBx97exSxGxPj4U0JEzOpYftPPfeVnCoCrlVJa61ZsND8K9ZvrlkcZMb6rbIqIiKzI7CM/mIKb3znkS6WVUlrnrGw2C937gRPmEBHju8poSplZbMEpX5Jw89kRDWil8lQ2mwXw6MmLiBjfTUZT0J2rr/zOENxULF9By6wq2SyAb16xqstijO8mo6lp3jHvoOt/VEOpL1HMRX6pv+gC37xiFeecGN9NRlPYnBYecuMvqtDxTMGXuqUZiqd8oX966yqbiNm2aal32MRnbtj6HRfVvtSAbFF0dSA3JCFevGNjJyPGbduyWmvj8zkHXvvSqIvBnekh0WroajE7BO2+eOX6WYyIWbZtWZy14ojImnHApZ+XLtxc30BNq9YhFfe1p764eU0n2Ra3bduyLM5o6p7RjOWn3/93QA3szA17GlC+29yl40WF2j8/esKqTiIixrllWZwxmuJnnTTvsFuedeF7hVS27Eo07/lE3ldQ37nliBlExC3GLcuyOGcUBrQZ8WlrNn/8tRq0TMVKzVkmk4FSldc/ft6+XTZzImMty+KMUWiQWYwoOnfTO77kC6WRSqWaq0wmAwCZx6/ebwaRFZmYUZiQTchtJzp34yWPAJDlQmx7ueZr3dQo361mYn0eAO/pKw+fQ4zYng0XjOWWE1l26JanewCpCvHUcEU2J1rLWinenfMEdPrpmw9d1EmMEdvT4YOxRMyZf/iW+/+EselEetBrLpSs9Gcz+Rqkwp/vvexte3URY0TMYFhh/Ln7b37X/3pwJcq9qfxQuVrzhJRKT9x4pFsplQf7ktuhAainrz1l3SybiBExw+GGsdaSw8994MUhCACpVDI2WhOYfIUC4JUGk7FkVgESo9+/+4IN+9gWIzaWjxvmGGtNX7Tu7Hc98Y+aBnSl0JvKDYxKPZmUBzOJ1IALoaH/9b93XbB+7xlRRtyy+MTMcDhiLHc65i07bsuHn4UGoCvJZCrh7zt+vL5VRwqZZCqbh/AgIF/82JYT1y2cxoiIGOMTsiCGJ8ZnUWfR+hOueuDpl2tCY+Q+3/ejvkMnhurKkf49geeHkZrwl8/cd8kxaxd02IwszhnfRRbUcID+gjHnzei85t57nng1KaSQgFZ6NLOjJ5HOFfqHRuSESiophRBSKj1G7YbeRaW09kYH+/dUAr+8d+BYXLP4Dy9vvPu6JTNMTaem+ZNa1jlnrxVvP+f6uz/7w5gvfAEoKXzP9SuD+bHpvsLA8GjNE0pppaSSaoxWSknhVUeH8xPmCiVfCqnjmt0/e/7JD9/8noXTp04utFnzp8L2jIXz9zvslFOvuutTD33t53/VEwo5Vu2qHqOkAgDt1/TEQGXnL5/+/HMb1934N0vn/pMpkye1WfMny4yId83ea8mKdRvPOv+yq7fefv+DX37hx6++/lYs2z9cGi1XqrVquTRSjP3ntd9+//knP/XAHTdccfE5Zxy9bsXS+dMiUaemaSoDAA==" alt="Select">
+                        </button>
+                        <p class="create-empty-copy">Select, Drag &amp; Drop,<br>or Paste (Ctrl + V)</p>
                     </div>
                 </div>
                     </div>
@@ -8263,12 +8735,9 @@
                         </button>
                     </div>
                     <!-- Helper text -->
-                    <div class="ipad-helper-text" id="ipadHelperText" style="display: none;">
-                        <div class="card-names">Card names = Image filenames</div>
-                        <div class="max-warning">Max 30 · Photos ≤15MB → 500KB · GIFs ≤3MB</div>
-                    </div>
+                    <div class="ipad-helper-text" id="ipadHelperText" style="display: none;"></div>
                 </div>
-                <input type="file" id="frontImage" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp,image/svg+xml,image/heic,image/heif,image/avif" multiple title="Max 30 · Photos ≤15MB auto-compress to 500KB · GIFs ≤3MB" onchange="handleImageUpload('front', this)">
+                <input type="file" id="frontImage" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp,image/svg+xml,image/heic,image/heif,image/avif" multiple title="Max 50 · Photos ≤15MB auto-compress to 500KB · GIFs ≤3MB" onchange="ingestCreateModalImageFiles(this.files); this.value='';">
             </div>
 
             <div class="form-group card-name-group">
@@ -8284,7 +8753,6 @@
 
             <div class="form-actions create-modal-footer">
                 <div class="wizard-footer-nav">
-                    <button type="button" class="btn btn-secondary" id="wizardCancelBtn" onclick="closeCreateModal()" style="padding: 8px 12px;">Cancel</button>
                     <button type="button" class="btn" id="wizardBackBtn" onclick="createWizardBack()" style="display: none;">← Back</button>
                     <button type="button" class="btn" id="wizardNextBtn" onclick="createWizardNext()">Next →</button>
                     <button type="button" class="btn" id="wizardCreateBtn" onclick="addCard()" style="display: none;">✓ Finish</button>
@@ -8772,7 +9240,7 @@
             <div style="margin-bottom:16px;">
                 <strong style="font-size:0.95rem;color:#35654D;">📄 Quick Save (JSON)</strong>
                 <p style="margin:5px 0 0;font-size:0.85rem;color:#555;">Fast and simple • Human-readable • ~5-15MB</p>
-                <p style="margin:3px 0 0;font-size:0.8rem;color:#777;">Best for: Quick backups, small decks (1–30 cards)</p>
+                <p style="margin:3px 0 0;font-size:0.8rem;color:#777;">Best for: Quick backups, small decks (1–50 cards)</p>
             </div>
 
             <div style="margin-bottom:16px;">
@@ -8785,6 +9253,28 @@
                 <strong style="font-size:0.95rem;color:#888;">🔒 Save Over Existing File</strong>
                 <p style="margin:5px 0 0;font-size:0.85rem;color:#888;">Saving over an existing file isn't possible because of browser limits on tablets and phones. The browser can't replace a file you already saved.</p>
                 <p style="margin:3px 0 0;font-size:0.8rem;color:#aaa;">This feature is only available on the app.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create New Cards Help Popup -->
+    <div id="createHelpPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+         background:rgba(0,0,0,0.55);z-index:30001;align-items:center;justify-content:center;">
+        <div style="background:white;border-radius:16px;padding:24px 24px 20px;max-width:400px;width:88%;
+                    box-shadow:0 20px 60px rgba(0,0,0,0.35);position:relative;">
+            <button type="button" onclick="document.getElementById('createHelpPopup').style.display='none'"
+                style="position:absolute;top:10px;right:12px;background:none;border:none;
+                       cursor:pointer;font-size:1.5rem;line-height:1;color:#888;padding:4px;">
+                ×
+            </button>
+            <h3 style="margin:0 0 18px;font-size:1.05rem;color:#333;">About Create New Cards</h3>
+            <div style="margin-bottom:16px;">
+                <strong style="font-size:0.95rem;color:#35654D;">Card names = Image filenames</strong>
+                <p style="margin:5px 0 0;font-size:0.85rem;color:#555;">Each card is named from the image file you add.</p>
+            </div>
+            <div>
+                <strong style="font-size:0.95rem;color:#35654D;">Limits</strong>
+                <p style="margin:5px 0 0;font-size:0.85rem;color:#555;">Max 50 images · Photos ≤15MB auto-compress to 500KB · GIFs ≤3MB</p>
             </div>
         </div>
     </div>
@@ -8918,56 +9408,58 @@
         </div>
     </div>
 
-    <!-- Option A: Hover overlay preview window -->
-    <div id="previewOverlayModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:25000; align-items:center; justify-content:center; padding:20px;">
-        <div style="background:white; border-radius:20px; width:95vw; max-width:560px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.4); overflow:hidden;">
-            <div style="background:#35654D; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
-                <span style="color:white; font-weight:700; font-size:17px;">👁️ Card Preview</span>
-                <button onclick="closePreviewOverlay()" style="background:rgba(255,255,255,0.2); border:none; color:white; font-size:18px; cursor:pointer; border-radius:8px; width:34px; height:34px; display:flex; align-items:center; justify-content:center;">✕</button>
+    <!-- Card Preview — same chrome as Save this deck -->
+    <div id="previewOverlayModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:25000; align-items:center; justify-content:center; padding:12px;">
+        <div class="preview-overlay-card">
+            <div class="save-modal-header">
+                <div class="save-modal-title load-modal-title">
+                    <span class="preview-title-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                    </span>
+                    <span id="previewOverlayTitleText">Card Preview</span>
+                </div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closePreviewOverlay()" aria-label="Close">✕</button>
+                </div>
             </div>
             <div id="previewOverlayToolbar">
                 <button type="button" class="preview-toolbar-btn arrange" id="previewArrangeBtn" onclick="toggleSessionPreviewArrange(event)">🔀 Reorder &amp; Remove</button>
             </div>
             <div id="previewOverlayBody">
-                <div id="previewOverlayGrid" style="flex:1; overflow-y:auto; padding:14px; -webkit-overflow-scrolling:touch; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; min-height:0; align-content:start;"></div>
+                <div id="previewOverlayGrid" style="flex:1; overflow-y:auto; padding:4px 0 0; -webkit-overflow-scrolling:touch; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; min-height:0; align-content:start;"></div>
                 <div id="previewOverlayScroll" title="Drag to scroll" style="width:10px;">
                     <div id="previewOverlayScrollThumb"></div>
                 </div>
             </div>
-            <div style="padding:10px 16px; border-top:1px solid #eee; flex-shrink:0; text-align:right;">
-                <button onclick="closePreviewOverlay()" class="btn btn-secondary" style="padding:8px 24px;">Close</button>
-            </div>
         </div>
     </div>
 
-    <!-- Sample Deck Modal -->
-    <div id="sampleDeckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center; padding:20px;">
-        <div style="background:white; border-radius:16px; width:100%; max-width:560px; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
-            <div style="background:#35654D; padding:14px 18px; border-radius:16px 16px 0 0; display:flex; flex-direction:column; gap:10px; flex-shrink:0;">
-                <span style="color:white; font-weight:700; font-size:17px;">Sample Deck</span>
-                <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                    <button id="sampleTabFruits" onclick="switchSampleTab('fruits')"
-                        style="padding:5px 12px; border-radius:20px; border:2px solid white; background:white;
-                               color:#35654D; font-weight:700; font-size:13px; cursor:pointer;">
-                        🍎 Fruits
-                    </button>
-                    <button id="sampleTabAnimals" onclick="switchSampleTab('animals')"
-                        style="padding:5px 12px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
-                               color:rgba(255,255,255,0.8); font-weight:700; font-size:13px; cursor:pointer;">
-                        🐾 Animals
-                    </button>
-                    <button id="sampleTabWeather" onclick="switchSampleTab('weather')"
-                        style="padding:5px 12px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); background:transparent;
-                               color:rgba(255,255,255,0.8); font-weight:700; font-size:13px; cursor:pointer;">
-                        ☀️ Weather
-                    </button>
+    <!-- Sample Deck — same chrome as Card Preview -->
+    <div id="sampleDeckModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:25000; align-items:center; justify-content:center; padding:12px;">
+        <div class="preview-overlay-card">
+            <div class="save-modal-header">
+                <div class="save-modal-title load-modal-title">
+                    <span class="preview-title-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                    </span>
+                    Sample Deck
+                </div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeSampleDeck()" aria-label="Close">✕</button>
                 </div>
             </div>
-            <!-- Card preview grid -->
-            <div id="sampleDeckGrid" style="display:none; grid-template-columns:repeat(3,1fr); gap:10px; padding:16px; overflow-y:auto; flex:1; min-height:120px;"></div>
-            <div style="padding:12px 16px; border-top:1px solid #eee; flex-shrink:0; display:flex; gap:10px; justify-content:flex-end;">
-                <button onclick="closeSampleDeck()" class="btn btn-secondary" style="padding:10px 24px;">Close</button>
-                <button id="sampleDeckCreateBtn" onclick="createFromSampleDeck()" class="btn btn-success" style="padding:10px 24px;" disabled>Create</button>
+            <div class="sample-deck-tabs" role="tablist" aria-label="Sample decks">
+                <button type="button" id="sampleTabFruits" class="sample-tab-btn is-active" onclick="switchSampleTab('fruits')">🍎 Fruits</button>
+                <button type="button" id="sampleTabAnimals" class="sample-tab-btn" onclick="switchSampleTab('animals')">🐾 Animals</button>
+                <button type="button" id="sampleTabWeather" class="sample-tab-btn" onclick="switchSampleTab('weather')">☀️ Weather</button>
+            </div>
+            <div id="sampleDeckGrid"></div>
+            <div class="sample-deck-footer">
+                <button type="button" id="sampleDeckCreateBtn" onclick="createFromSampleDeck()" class="btn btn-success" disabled>Create</button>
             </div>
         </div>
     </div>
@@ -9181,72 +9673,72 @@
 
     <!-- Single Card Rename Modal -->
     <div class="modal" id="singleRenameModal">
-        <div class="modal-content" style="max-width:420px; padding:0; overflow:hidden; border-radius:20px; position:relative;">
-            <button type="button" onclick="closeSingleRenameModal()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;z-index:2;" aria-label="Close">✕</button>
-            <div style="padding:14px 18px 8px; background:#f9f9f9;">
-                <span style="font-weight:700; font-size:17px; color:#1a1a1a;">✏️ Rename</span>
+        <div class="modal-content" style="max-width:640px; width:95vw; padding:12px 14px 14px; overflow:hidden; border-radius:20px; position:relative;">
+            <div class="save-modal-header">
+                <div class="save-modal-title load-modal-title rename-window-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Rename
+                </div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeSingleRenameModal()" aria-label="Close">✕</button>
+                </div>
             </div>
-            <div style="padding:0 20px 10px; background:#f9f9f9;">
+            <div style="padding:0 0 10px;">
                 <img id="singleRenameImage" src="" alt="" style="width:100%; height:240px; object-fit:contain; border-radius:14px; background:#fff; border:1px solid #eee;">
             </div>
-            <div style="padding:10px 20px 24px; background:#f9f9f9;">
-                <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:10px;">
-                    <div style="font-size:13px; color:#aaa;">Tap name to edit</div>
-                    <button id="caseToggleBtn" type="button"
-                        onclick="toggleRenameCase()"
-                        style="font-size:13px; padding:5px 14px; border-radius:20px; border:1px solid #ccc;
-                               background:white; color:#555; cursor:pointer; font-weight:600; white-space:nowrap;">
-                        Sentence case
-                    </button>
-                </div>
-                <input id="singleRenameInput" autocapitalize="none" autocorrect="off"
-                    type="text"
+            <div style="padding:10px 0 16px;">
+                <textarea id="singleRenameInput" class="rename-name-field" autocapitalize="none" autocorrect="off"
+                    rows="1"
                     readonly
                     oninput="onSingleRenameInput()"
-                    onkeydown="onSingleRenameInput()"
+                    onkeydown="onSingleRenameKeydown(event)"
                     onclick="this.removeAttribute('readonly'); this.select();"
                     ontouchend="event.preventDefault(); this.removeAttribute('readonly'); this.focus(); this.select();"
-                    style="width:100%; box-sizing:border-box; text-align:center; font-size:1.7rem; font-weight:600; color:#1a1a1a;
-                           border:none; border-bottom:2px solid #35654D; background:transparent; outline:none;
-                           padding:8px 4px; border-radius:0; cursor:pointer; -webkit-user-select:text; user-select:text;"
-                    placeholder="Card name...">
+                    placeholder="Card name..."></textarea>
             </div>
-            <div style="padding:10px 16px; border-top:1px solid #eee; display:flex; gap:8px; align-items:stretch;">
-                <button type="button" id="renameMultiBtn" onclick="closeSingleRenameModal(true); openMultiRenameModal();"
-                    style="flex:1; padding:7px 4px; border-radius:10px; border:none; background:#f5a623; color:white;
-                           cursor:pointer; font-weight:700; font-size:0.85rem; line-height:1.3; text-align:center;">
-                    Rename<br>Multiple
+            <div class="rename-footer-bar">
+                <button type="button" id="caseToggleBtn" class="rename-case-btn" onclick="toggleRenameCase()">Sentence case</button>
+                <button type="button" id="renameMultiBtn" class="rename-switch-btn" onclick="closeSingleRenameModal(true); openMultiRenameModal();">Rename Multiple</button>
+                <button type="button" id="singleRenameSaveBtn" class="rename-done-btn" onclick="saveSingleRename()" disabled title="Done" aria-label="Done">
+                    Done
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M8 12h8"></path>
+                        <path d="m12 8 4 4-4 4"></path>
+                    </svg>
                 </button>
-                <button type="button" id="singleRenameSaveBtn" class="btn btn-success" onclick="saveSingleRename()" style="flex:1; padding:8px 6px; justify-content:center; font-size:0.85rem;">✅ Save</button>
             </div>
         </div>
     </div>
 
     <!-- Multi Card Rename Modal -->
     <div class="modal" id="multiRenameModal">
-        <div class="modal-content" style="max-width:560px; width:95vw; max-height:88vh; padding:0; overflow:hidden; border-radius:20px; display:flex; flex-direction:column; position:relative;">
-            <button type="button" onclick="closeMultiRenameModal()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#aaa;line-height:1;padding:4px;z-index:2;" aria-label="Close">✕</button>
-            <div style="padding:14px 18px 8px; background:#f9f9f9; flex-shrink:0;">
-                <span style="font-weight:700; font-size:17px; color:#1a1a1a;">✏️ Rename</span>
+        <div class="modal-content" style="max-width:640px; width:95vw; max-height:88vh; padding:12px 14px 14px; overflow:hidden; border-radius:20px; display:flex; flex-direction:column; position:relative;">
+            <div class="save-modal-header">
+                <div class="save-modal-title load-modal-title rename-window-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Rename
+                </div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeMultiRenameModal()" aria-label="Close">✕</button>
+                </div>
             </div>
-            <div id="multiRenameGrid" style="flex:1; overflow-y:auto; padding:14px; -webkit-overflow-scrolling:touch;
-                display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
-            </div>
-            <div style="padding:8px 16px 0; border-top:1px solid #eee; flex-shrink:0; display:flex; align-items:center; justify-content:center; gap:12px;">
-                <div style="font-size:13px; color:#aaa;">Tap name to edit</div>
-                <button id="caseToggleBtnMulti" type="button" onclick="toggleRenameCase()"
-                    style="font-size:13px; padding:5px 14px; border-radius:20px; border:1px solid #ccc;
-                           background:white; color:#555; cursor:pointer; font-weight:600; white-space:nowrap;">
-                    Sentence case
+            <div id="multiRenameGrid"></div>
+            <div class="rename-footer-bar" style="flex-shrink:0; padding-top:8px;">
+                <button type="button" id="caseToggleBtnMulti" class="rename-case-btn" onclick="toggleRenameCase()">Sentence case</button>
+                <button type="button" id="renameSingleBtn" class="rename-switch-btn" onclick="closeMultiRenameModal(true); openRenameModal();">Rename Single</button>
+                <button type="button" id="multiRenameSaveBtn" class="rename-done-btn" onclick="saveMultiRename()" disabled title="Done" aria-label="Done">
+                    Done
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M8 12h8"></path>
+                        <path d="m12 8 4 4-4 4"></path>
+                    </svg>
                 </button>
-            </div>
-            <div style="padding:8px 16px 10px; flex-shrink:0; display:flex; gap:8px; align-items:stretch;">
-                <button type="button" onclick="closeMultiRenameModal(true); openRenameModal();"
-                    style="flex:1; padding:7px 4px; border-radius:10px; border:none; background:#35654D; color:white;
-                           cursor:pointer; font-weight:700; font-size:0.85rem; line-height:1.3; text-align:center;">
-                    Rename<br>Single
-                </button>
-                <button type="button" id="multiRenameSaveBtn" class="btn btn-success" onclick="saveMultiRename()" style="flex:1; padding:8px 6px; justify-content:center; font-size:0.85rem;">✅ Save All</button>
             </div>
         </div>
     </div>
@@ -9323,7 +9815,7 @@
             const wrapper = document.querySelector('#createModal .upload-area-wrapper') || document.querySelector('.upload-area-wrapper');
             const ipadSection = document.getElementById('ipadPasteSection');
             const helper = document.getElementById('ipadHelperText');
-            const hasImage = (typeof newCard !== 'undefined') && newCard && (
+            const hasImage = !_createAddingMore && (typeof newCard !== 'undefined') && newCard && (
                 newCard.frontImage || (newCard.multipleFiles && newCard.multipleFiles.length > 0)
             );
             const digital = isDigitalDeviceLayout();
@@ -9355,6 +9847,7 @@
 
         // ==================== STATE ====================
         let cards = [];
+        const DECK_MAX = 50;
         let isShuffling = false;
         let currentLoadedUnitId = null; // Track which unit is currently loaded
         const loadedUnitIds = new Set(); // Track all unit IDs contributing to current deck
@@ -9601,6 +10094,7 @@
         let _reorderDragIndex = null;  // Index of card being dragged
         // Create New Cards wizard: 1=Cards (import+reorder+delete), 2=Names
         let createWizardStep = 1;
+        let _createAddingMore = false;
         let _wizardSyncing = false; // prevent re-entrancy when modes sync to steps
         const CREATE_WIZARD_MAX_STEP = 2;
         let guessGameState = {
@@ -10991,10 +11485,10 @@
             const sub = document.getElementById('mainDropSubtext');
             if (sub) {
                 if (fileCount && fileCount > 1) {
-                    const remaining = 30 - cards.length;
+                    const remaining = DECK_MAX - cards.length;
                     const willAdd  = Math.min(fileCount, remaining > 0 ? remaining : 0);
                     if (remaining <= 0) {
-                        sub.textContent = '⚠️ Deck is full (30 cards max)';
+                        sub.textContent = '⚠️ Deck is full (' + DECK_MAX + ' cards max)';
                     } else {
                         sub.textContent = willAdd < fileCount
                             ? `${willAdd} of ${fileCount} images will be added`
@@ -11081,8 +11575,6 @@
 
         // Handle main-page drop: open createModal with images pre-loaded
         function handleMainPageDrop(files) {
-            const DECK_MAX = 30;
-
             // Filter to images only
             const validTypes = ['image/jpeg','image/jpg','image/png','image/gif','image/webp',
                                 'image/bmp','image/svg+xml','image/heic','image/heif','image/avif'];
@@ -11096,7 +11588,7 @@
             // Check remaining capacity against the deck max
             const remaining = DECK_MAX - cards.length;
             if (remaining <= 0) {
-                showToast('⚠️ Deck is full (30 cards max)', 2500);
+                showToast('⚠️ Deck is full (' + DECK_MAX + ' cards max)', 2500);
                 return;
             }
 
@@ -11164,14 +11656,7 @@
                 // Create a DataTransfer object to mimic file input
                 const dataTransfer = new DataTransfer();
                 imageFiles.forEach(file => dataTransfer.items.add(file));
-
-                // Create fake input object
-                const fakeInput = {
-                    files: dataTransfer.files,
-                    value: ''
-                };
-
-                handleImageUpload('front', fakeInput);
+                ingestCreateModalImageFiles(dataTransfer.files);
             }
         });
 
@@ -11275,6 +11760,8 @@
          */
         function ingestCreateModalImageFiles(fileList) {
             if (!fileList || !fileList.length) return;
+            // Drop-zone "add more" view: keep prior files and re-expand to previews
+            _createAddingMore = false;
 
             const existing = (newCard.multipleFiles && newCard.multipleFiles.length > 0)
                 ? Array.from(newCard.multipleFiles)
@@ -11296,9 +11783,9 @@
             });
 
             const currentCount = existing.length;
-            const remainingSlots = 30 - cards.length - currentCount;
+            const remainingSlots = DECK_MAX - cards.length - currentCount;
             if (remainingSlots <= 0) {
-                showToastWithButton('⚠️ Maximum 30 cards reached!<br>Delete cards to add more.');
+                showToastWithButton('⚠️ Maximum ' + DECK_MAX + ' cards reached!<br>Delete cards to add more.');
                 return;
             }
 
@@ -12356,10 +12843,8 @@
         }
 
         function openCreateModal() {
-            // Check if user already has 30 cards
-            if (cards.length >= 30) {
-                // Show toast notification for all devices
-                showToast('⚠️ Maximum 30 cards reached!<br>Delete some cards to add new ones', 3000);
+            if (cards.length >= DECK_MAX) {
+                showToast('⚠️ Maximum ' + DECK_MAX + ' cards reached!<br>Delete some cards to add new ones', 3000);
                 return;
             }
 
@@ -12392,9 +12877,10 @@
             if (createWizardStep === 2 && step !== 2) {
                 createWizardCommitNames();
             }
-            // Leaving Cards: end reorder mode
+            // Leaving Cards: end reorder / add-more drop-zone so Names → Cards shows previews
             if (createWizardStep === 1 && step !== 1) {
                 createWizardSetReorder(false);
+                _createAddingMore = false;
             }
             createWizardStep = step;
             updateCreateWizardUI();
@@ -12410,20 +12896,32 @@
         }
 
         function createWizardBack() {
-            // Names → Cards (keep images)
+            // Names → Cards (keep images, restore preview grid)
             if (createWizardStep === 2) {
+                _createAddingMore = false;
                 createWizardGoTo(1);
                 return;
             }
-            // Cards (with images) → empty Paste + Add page
+            // Compact drop zone (files kept) → image previews
+            if (createWizardStep === 1 && _createAddingMore && createWizardHasImages()) {
+                _createAddingMore = false;
+                const frontUpload = document.getElementById('frontUpload');
+                if (frontUpload) frontUpload.classList.add('has-image');
+                if (typeof renderImagePreviews === 'function') renderImagePreviews();
+                applyCreateUploadLayout();
+                updateCreateWizardUI();
+                return;
+            }
+            // Cards with images → compact drop zone, keep imported files
             if (createWizardStep === 1 && createWizardHasImages()) {
-                createWizardReturnToPasteAdd();
+                createWizardShowAddMoreDrop();
                 return;
             }
         }
 
-        // Clear imported images and return to compact Paste / Add + empty state
-        function createWizardReturnToPasteAdd() {
+        // Return to compact Paste / Add drop zone without wiping imported images
+        function createWizardShowAddMoreDrop() {
+            _createAddingMore = true;
             if (isDragReorderMode) {
                 isDragReorderMode = false;
                 _reorderDragIndex = null;
@@ -12435,50 +12933,31 @@
             if (_renameUIActive) {
                 try { createWizardCommitNames(); } catch (e) { _renameUIActive = false; }
             }
-            _renameUIActive = false;
-
-            newCard.multipleFiles = null;
-            newCard.frontImage = null;
-            newCard.backText = '';
-            newCard.editedNames = null;
-            newCard.previewThumbs = null;
-            if (typeof _revokeRenameThumbUrls === 'function') _revokeRenameThumbUrls();
-
-            if (typeof clearPastePreview === 'function') clearPastePreview();
 
             const frontUpload = document.getElementById('frontUpload');
             if (frontUpload) frontUpload.classList.remove('has-image');
             const frontImage = document.getElementById('frontImage');
             if (frontImage) frontImage.value = '';
 
-            // Restore empty PC drop-zone content (hidden on digital; used on desktop)
             const fp = document.getElementById('frontPreview');
             if (fp) {
                 if (typeof _rescueScrollIndicator === 'function') _rescueScrollIndicator();
-                fp.innerHTML =
-                    '<p style="font-weight: bold; font-size: 1.1rem;">Tap, drag & drop, or paste image(s)</p>' +
-                    '<p style="font-size: 0.95rem; color: #666; margin-top: 15px;">Card names = Image filenames</p>' +
-                    '<p style="font-size: 0.9rem; color: #35654D; margin-top: 10px; font-weight: 600; line-height: 1.45;">' + imageImportLimitsSummary() + '</p>';
+                fp.innerHTML = emptyCreatePreviewHTML();
             }
 
-            const bt = document.getElementById('backText');
-            if (bt) {
-                bt.value = '';
-                bt.disabled = true;
-                bt.style.display = '';
-                bt.style.background = '#f8f9fa';
-                bt.style.border = '';
-            }
             const rnl = document.getElementById('renameNamesList');
             if (rnl) rnl.style.display = 'none';
-            const rnlBody = document.getElementById('renameNamesBody');
-            if (rnlBody) rnlBody.innerHTML = '';
             const re = document.getElementById('renameEditor');
             if (re) { re.style.display = 'none'; re.innerHTML = ''; }
 
             createWizardStep = 1;
             applyCreateUploadLayout();
             updateCreateWizardUI();
+        }
+
+        // Legacy name: keep files (do not wipe the import)
+        function createWizardReturnToPasteAdd() {
+            createWizardShowAddMoreDrop();
         }
 
         function createWizardSetReorder(on) {
@@ -12624,7 +13103,7 @@
                 if (label) label.textContent = hasImages ? ('Cards (' + count + ')') : 'Add images';
                 if (hint) {
                     if (!hasImages) {
-                        hint.textContent = 'Add images to get started';
+                        hint.textContent = '';
                     } else if (isDragReorderMode) {
                         hint.textContent = 'Drag to reorder · tap ✕ to remove · Done when finished';
                     } else {
@@ -12649,9 +13128,9 @@
                 }
             }
 
-            // Footer buttons — Cancel always leftmost
-            // Cards (with images): [Cancel] [Back] [Next]
-            // Names:               [Cancel] [Back] [Finish]
+            // Footer buttons — centered
+            // Cards (with images): [Back] [Next]
+            // Names:               [Back] [Finish]
             const backBtn = document.getElementById('wizardBackBtn');
             const nextBtn = document.getElementById('wizardNextBtn');
             const createBtn = document.getElementById('wizardCreateBtn');
@@ -12679,6 +13158,11 @@
                 if (_renameUIActive && !_wizardSyncing) createWizardCommitNames();
                 // Do NOT auto-enable arrange mode — user toggles via toolbar button
                 if (!hasImages && isDragReorderMode) createWizardSetReorder(false);
+                // Names → Cards: restore the preview grid if it was replaced
+                if (hasImages && !_createAddingMore) {
+                    const grid = document.getElementById('imagePreviewGrid');
+                    if (!grid && typeof renderImagePreviews === 'function') renderImagePreviews();
+                }
             } else {
                 if (isDragReorderMode) createWizardSetReorder(false);
                 createWizardEnterNames();
@@ -12810,6 +13294,7 @@
 
         let singleRenameOriginal = '';
         let singleRenameUserEdited = false;
+        let _singleRenameIndex = 0;
         const CASE_MODES = ['Sentence', 'Capitalize', 'UPPER', 'lower'];
         let singleRenameCaseIndex = 0;
         let _renameNameSnapshot = [];
@@ -12837,11 +13322,43 @@
 
         function updateRenameSaveBtns() {
             var input = document.getElementById('singleRenameInput');
-            var singleDirty = !!(input && input.value.trim() !== (singleRenameOriginal || '').trim());
+            var fieldDirty = !!(input && input.value.trim() !== (singleRenameOriginal || '').trim());
+            var snapDirty = false;
+            if (_renameNameSnapshot && _renameNameSnapshot.length) {
+                snapDirty = cards.some(function(c, i) {
+                    return (c.backText || '') !== (_renameNameSnapshot[i] || '');
+                });
+            }
             var sBtn = document.getElementById('singleRenameSaveBtn');
             var mBtn = document.getElementById('multiRenameSaveBtn');
-            if (sBtn) sBtn.classList.toggle('is-visible', singleDirty);
-            if (mBtn) mBtn.classList.toggle('is-visible', _multiRenameDirty);
+            if (sBtn) sBtn.disabled = !(fieldDirty || snapDirty);
+            if (mBtn) mBtn.disabled = !_multiRenameDirty;
+        }
+
+        function loadSingleRenameCard() {
+            const card = cards[_singleRenameIndex];
+            if (!card) return;
+            const img = document.getElementById('singleRenameImage');
+            if (img) img.src = gifSrc(card.frontImage);
+            const input = document.getElementById('singleRenameInput');
+            const name = card.backText || '';
+            if (input) {
+                input.value = name;
+                input.setAttribute('readonly', true);
+                autosizeRenameNameField(input);
+            }
+            singleRenameOriginal = name;
+        }
+
+        function commitSingleRenameField() {
+            const input = document.getElementById('singleRenameInput');
+            if (!input || !cards[_singleRenameIndex]) return;
+            const newName = input.value.replace(/\s+/g, ' ').trim();
+            if (newName !== (cards[_singleRenameIndex].backText || '')) {
+                cards[_singleRenameIndex].backText = newName;
+                delete cachedBackTextSizes[_singleRenameIndex];
+                singleRenameUserEdited = true;
+            }
         }
 
         function openRenameModal() {
@@ -12849,33 +13366,60 @@
             window.speechSynthesis.cancel();
             closeMultiRenameModal(true);
 
-            const currentCard = cards[currentIndex];
-            document.getElementById('singleRenameImage').src = gifSrc(currentCard.frontImage);
-            const input = document.getElementById('singleRenameInput');
-            const name = currentCard.backText || '';
-            input.value = name;
-            input.setAttribute('readonly', true);
-
-            singleRenameOriginal = name;
+            _singleRenameIndex = currentIndex;
+            loadSingleRenameCard();
             singleRenameUserEdited = false;
             singleRenameCaseIndex = 0;
             updateCaseToggleBtn();
-            updateRenameSaveBtns();
             if (!_renameSessionOpen) {
                 captureRenameSnapshot();
                 _renameSessionOpen = true;
             }
+            updateRenameSaveBtns();
 
             document.body.style.overflow = 'hidden';
             document.getElementById('singleRenameModal').classList.add('active');
         }
 
+        function autosizeRenameNameField(el) {
+            if (!el) el = document.getElementById('singleRenameInput');
+            if (!el) return;
+            el.style.height = 'auto';
+            var cs = window.getComputedStyle(el);
+            var pad = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+            var line = parseFloat(cs.lineHeight) || 28;
+            var maxH = line * 2 + pad;
+            el.style.height = Math.min(maxH, Math.max(line + pad, el.scrollHeight)) + 'px';
+        }
+
+        function onSingleRenameKeydown(event) {
+            if (event.key === 'Enter' || event.key === 'Return') {
+                event.preventDefault();
+                commitSingleRenameField();
+                if (_singleRenameIndex < cards.length - 1) {
+                    _singleRenameIndex++;
+                    loadSingleRenameCard();
+                    const input = document.getElementById('singleRenameInput');
+                    if (input) {
+                        input.removeAttribute('readonly');
+                        input.focus();
+                        input.select();
+                    }
+                }
+                updateRenameSaveBtns();
+                return;
+            }
+            onSingleRenameInput();
+        }
+
         function onSingleRenameInput() {
             singleRenameUserEdited = true;
+            autosizeRenameNameField();
             updateRenameSaveBtns();
         }
 
         function closeSingleRenameModal(switching) {
+            if (switching) commitSingleRenameField();
             var modal = document.getElementById('singleRenameModal');
             if (modal) modal.classList.remove('active');
             if (!switching) endRenameSession(false);
@@ -12885,18 +13429,13 @@
             var single = document.getElementById('singleRenameModal');
             var multi = document.getElementById('multiRenameModal');
             if (single) single.classList.remove('active');
-            if (_activeMultiCard !== null) collapseMultiCard(_activeMultiCard);
+            collectMultiRenameInputs();
             if (multi) multi.classList.remove('active');
             endRenameSession(false);
         }
 
         function saveSingleRename() {
-            const newName = document.getElementById('singleRenameInput').value.trim();
-            cards[currentIndex].backText = newName;
-            delete cachedBackTextSizes[currentIndex];
-            if (_renameNameSnapshot && _renameNameSnapshot.length > currentIndex) {
-                _renameNameSnapshot[currentIndex] = newName;
-            }
+            commitSingleRenameField();
             saveCards();
             var modal = document.getElementById('singleRenameModal');
             if (modal) modal.classList.remove('active');
@@ -12909,7 +13448,7 @@
             closeSingleRenameModal(true);
             _activeMultiCard = null;
             const grid = document.getElementById('multiRenameGrid');
-            grid.innerHTML = cards.map((card, i) => _buildMultiCard(card, i, false)).join('');
+            grid.innerHTML = cards.map((card, i) => _buildMultiCard(card, i)).join('');
             if (!_renameSessionOpen) {
                 captureRenameSnapshot();
                 _renameSessionOpen = true;
@@ -12917,6 +13456,13 @@
             updateRenameSaveBtns();
             document.body.style.overflow = 'hidden';
             document.getElementById('multiRenameModal').classList.add('active');
+            setTimeout(function() {
+                const focusEl = document.getElementById('mc-input-' + currentIndex) || document.getElementById('mc-input-0');
+                if (focusEl) {
+                    focusEl.focus();
+                    try { focusEl.scrollIntoView({ block: 'nearest' }); } catch (e) {}
+                }
+            }, 40);
         }
 
         function updateCaseToggleBtn() {
@@ -12943,16 +13489,12 @@
 
             const multiModal = document.getElementById('multiRenameModal');
             if (multiModal && multiModal.classList.contains('active')) {
-                if (_activeMultiCard !== null) {
-                    const input = document.getElementById('mc-input-' + _activeMultiCard);
-                    if (input) input.value = applyCase(input.value);
+                const inputs = multiModal.querySelectorAll('#multiRenameGrid .rename-name-input');
+                const active = document.activeElement;
+                if (active && multiModal.contains(active) && active.classList.contains('rename-name-input')) {
+                    active.value = applyCase(active.value);
                 } else {
-                    cards.forEach((card, i) => {
-                        card.backText = applyCase(card.backText || '');
-                        delete cachedBackTextSizes[i];
-                    });
-                    const grid = document.getElementById('multiRenameGrid');
-                    grid.innerHTML = cards.map((card, i) => _buildMultiCard(card, i, false)).join('');
+                    inputs.forEach(function(inp) { inp.value = applyCase(inp.value); });
                 }
                 markMultiRenameDirty();
             } else {
@@ -12960,6 +13502,7 @@
                 if (input && input.value) {
                     input.value = applyCase(input.value);
                     singleRenameUserEdited = true;
+                    autosizeRenameNameField(input);
                     updateRenameSaveBtns();
                 }
             }
@@ -12969,56 +13512,54 @@
 
         let _activeMultiCard = null;
 
-        function _buildMultiCard(card, i, expanded) {
-            const name = (card.backText || '').replace(/"/g, '&quot;');
-            const nameDisplay = (card.backText || '').replace(/</g, '&lt;');
-            if (expanded) {
-                return `<div id="mc-${i}" style="display:flex;flex-direction:column;align-items:center;gap:8px;
-                            grid-column:span 2;background:#f0f9f4;border-radius:14px;padding:10px;
-                            box-shadow:0 4px 16px rgba(53,101,77,0.15);transition:all 0.25s;">
-                    <img src="${card.frontImage}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:2px solid #35654D;">
-                    <input id="mc-input-${i}" type="text" value="${name}"
-                        style="width:100%;box-sizing:border-box;text-align:center;font-size:1.05rem;font-weight:600;
-                               color:#1a1a1a;border:none;border-bottom:2px solid #35654D;background:transparent;
-                               outline:none;padding:8px 4px;-webkit-user-select:text;user-select:text;"
-                        oninput="markMultiRenameDirty()"
-                        onkeydown="if(event.key==='Enter'){event.preventDefault();collapseMultiCard(${i});}"
-                        onblur="collapseMultiCard(${i});">
-                </div>`;
-            } else {
-                return `<div id="mc-${i}" style="display:flex;flex-direction:column;align-items:center;gap:6px;transition:all 0.25s;">
-                    <img src="${card.frontImage}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:1px solid #eee;">
-                    <div onclick="expandMultiCard(${i})"
-                         ontouchend="event.preventDefault();expandMultiCard(${i});"
-                         style="width:100%;box-sizing:border-box;text-align:center;font-size:1rem;font-weight:600;
-                                border-bottom:2px solid #35654D;padding:6px 2px;cursor:pointer;
-                                color:${nameDisplay ? '#1a1a1a' : '#bbb'};
-                                white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:1.8em;">
-                        ${nameDisplay || 'tap to name'}
-                    </div>
-                </div>`;
-            }
+        function _escapeRenameValue(s) {
+            return String(s || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/"/g, '&quot;');
         }
 
-        function expandMultiCard(i) {
-            if (_activeMultiCard !== null && _activeMultiCard !== i) {
-                collapseMultiCard(_activeMultiCard);
-            }
-            _activeMultiCard = i;
-            const cell = document.getElementById('mc-' + i);
-            if (!cell) return;
-            cell.outerHTML = _buildMultiCard(cards[i], i, true);
+        function _buildMultiCard(card, i) {
+            const name = _escapeRenameValue(card.backText || '');
+            const src = gifSrc(card.frontImage);
+            return '<div class="rename-name-row" id="mc-' + i + '" data-rename-index="' + i + '">' +
+                '<img class="rename-thumb" src="' + src + '" alt="" draggable="false" onclick="onSessionRenameThumb(' + i + ')">' +
+                '<span class="rename-index-badge">' + (i + 1) + '.</span>' +
+                '<input type="text" class="rename-name-input" id="mc-input-' + i + '" value="' + name + '"' +
+                ' spellcheck="false" autocomplete="off" autocapitalize="off"' +
+                ' oninput="markMultiRenameDirty()"' +
+                ' onkeydown="onSessionRenameKeydown(event,' + i + ')"' +
+                ' onfocus="onSessionRenameFocus(event,' + i + ')">' +
+                '</div>';
+        }
+
+        function onSessionRenameThumb(i) {
             const input = document.getElementById('mc-input-' + i);
-            if (input) {
-                input.focus();
-                input.select();
-            }
-            const scrollToCenter = () => {
-                const expandedCell = document.getElementById('mc-' + i);
-                if (expandedCell) expandedCell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (input) input.focus();
+        }
+
+        function onSessionRenameFocus(e, i) {
+            _activeMultiCard = i;
+            document.querySelectorAll('#multiRenameGrid .rename-name-row').forEach(function(row) {
+                row.classList.toggle('rename-row-focused', parseInt(row.dataset.renameIndex, 10) === i);
+            });
+            const input = e.target;
+            const selectAll = function() {
+                try { input.setSelectionRange(0, (input.value || '').length); } catch (err) {}
             };
-            setTimeout(scrollToCenter, 50);
-            setTimeout(scrollToCenter, 350);
+            selectAll();
+            setTimeout(selectAll, 0);
+        }
+
+        function onSessionRenameKeydown(e, i) {
+            if (e.key !== 'Enter' && e.key !== 'Return') return;
+            e.preventDefault();
+            const next = document.getElementById('mc-input-' + (i + 1));
+            if (next) {
+                next.focus();
+            } else {
+                e.target.blur();
+            }
         }
 
         function markMultiRenameDirty() {
@@ -13026,33 +13567,31 @@
             updateRenameSaveBtns();
         }
 
-        function collapseMultiCard(i) {
-            if (_activeMultiCard === i) _activeMultiCard = null;
-            const input = document.getElementById('mc-input-' + i);
-            if (input) {
-                const next = input.value.trim();
-                if (next !== (cards[i].backText || '')) markMultiRenameDirty();
-                cards[i].backText = next;
+        function collectMultiRenameInputs() {
+            const grid = document.getElementById('multiRenameGrid');
+            if (!grid || !grid.querySelector('.rename-name-input')) return;
+            cards.forEach(function(card, i) {
+                const input = document.getElementById('mc-input-' + i);
+                if (!input) return;
+                const next = input.value.replace(/\s+/g, ' ').trim();
+                if (next !== (card.backText || '')) markMultiRenameDirty();
+                card.backText = next;
                 delete cachedBackTextSizes[i];
-            }
-            const cell = document.getElementById('mc-' + i);
-            if (!cell) return;
-            cell.outerHTML = _buildMultiCard(cards[i], i, false);
-            setTimeout(() => {
-                const collapsedCell = document.getElementById('mc-' + i);
-                if (collapsedCell) collapsedCell.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 50);
+            });
         }
 
         function closeMultiRenameModal(switching) {
-            if (_activeMultiCard !== null) collapseMultiCard(_activeMultiCard);
+            collectMultiRenameInputs();
+            _activeMultiCard = null;
+            var grid = document.getElementById('multiRenameGrid');
+            if (grid) grid.innerHTML = '';
             var modal = document.getElementById('multiRenameModal');
             if (modal) modal.classList.remove('active');
             if (!switching) endRenameSession(false);
         }
 
         function saveMultiRename() {
-            if (_activeMultiCard !== null) collapseMultiCard(_activeMultiCard);
+            collectMultiRenameInputs();
             _renameNameSnapshot = cards.map(function(c) { return c.backText || ''; });
             saveCards();
             var modal = document.getElementById('multiRenameModal');
@@ -13064,6 +13603,8 @@
         function closeCreateModal() {
             document.getElementById('createModal').classList.remove('active');
             document.body.style.overflow = ''; // Re-enable background scrolling
+            const createHelp = document.getElementById('createHelpPopup');
+            if (createHelp) createHelp.style.display = 'none';
             resetForm();
         }
 
@@ -13102,7 +13643,7 @@
             };
 
             if (typeof _rescueScrollIndicator === 'function') _rescueScrollIndicator();
-            document.getElementById('frontPreview').innerHTML = '<div class="upload-icon"><img src="' + assetUrl('icon-add-image.webp') + '" alt="Add Image" style="width: 80px; height: 80px;"></div><p style="font-weight: bold; font-size: 1.1rem;">Tap, drag & drop, or paste image(s)</p><p style="font-size: 0.95rem; color: #666; margin-top: 15px;">Card names = Image filenames</p><p style="font-size: 0.9rem; color: #35654D; margin-top: 10px; font-weight: 600; line-height: 1.45;">' + imageImportLimitsSummary() + '</p>';
+            document.getElementById('frontPreview').innerHTML = emptyCreatePreviewHTML();
 
             const backTextElement = document.getElementById('backText');
             backTextElement.value = '';
@@ -13152,6 +13693,7 @@
             isDragReorderMode = false;
             _reorderDragIndex = null;
             createWizardStep = 1;
+            _createAddingMore = false;
             _wizardSyncing = false;
             const createModalEl = document.getElementById('createModal');
             if (createModalEl) {
@@ -13219,7 +13761,7 @@
                     if (!imageType) continue;
                     const blob = await item.getType(imageType);
                     const file = await blobToSupportedImageFile(blob);
-                    handleImageUpload('front', { files: [file] });
+                    ingestCreateModalImageFiles([file]);
                     return;
                 }
                 showToast('📋 No image on the clipboard. Copy an image first.', 4000);
@@ -13250,7 +13792,7 @@
                 try {
                     const file = await blobToSupportedImageFile(blob);
                     showPastePreview(file);  // turn the button into a live preview
-                    handleImageUpload('front', { files: [file] });
+                    ingestCreateModalImageFiles([file]);
                 } catch (err) {
                     showToast('📋 Could not read that image. Try Add + instead.', 3500);
                 }
@@ -13345,12 +13887,22 @@
             return cached === imageData;
         }
 
+
+        function emptyCreatePreviewHTML() {
+            var img = document.getElementById('createSelectLogoImg');
+            var src = (img && img.getAttribute('src')) || ((typeof assetUrl === 'function') ? assetUrl('Select.avif') : 'Select.avif');
+            return '<button type="button" class="create-select-logo" id="createSelectLogoBtn" onclick="event.stopPropagation(); document.getElementById(\'frontImage\').click();" aria-label="Select images">' +
+                '<img id="createSelectLogoImg" src="' + src + '" alt="Select">' +
+                '</button>' +
+                '<p class="create-empty-copy">Select, Drag &amp; Drop,<br>or Paste (Ctrl + V)</p>';
+        }
+
         function handleUploadAreaClick(event) {
-            // Only allow clicking to upload if no images are currently loaded
-            if (!newCard.multipleFiles || newCard.multipleFiles.length === 0) {
+            // Empty drop zone, or Back-to-add-more (files kept): open the picker
+            if (_createAddingMore || !newCard.multipleFiles || newCard.multipleFiles.length === 0) {
                 document.getElementById('frontImage').click();
             }
-            // If images are loaded, do nothing (user must use Add More button or click outside images)
+            // If images are loaded in preview, user uses Add More or Back
         }
 
         function _rescueScrollIndicator() {
@@ -13375,7 +13927,7 @@
             // Toolbar: Add More + Reorder & Remove (no "# selected" label)
             if (!isRenameMode) {
                 const totalCards = cards.length + files.length;
-                const showAddButton = totalCards < 30;
+                const showAddButton = totalCards < DECK_MAX;
                 const arrangeActive = isDragReorderMode;
 
                 previewHTML += '<div class="preview-toolbar">';
@@ -14616,10 +15168,10 @@
             // Check if we're already at or near the limit
             const currentCount = newCard.multipleFiles ? newCard.multipleFiles.length : 0;
             const totalCards = cards.length + currentCount;
-            const remainingSlots = 30 - totalCards;
+            const remainingSlots = DECK_MAX - totalCards;
 
             if (remainingSlots <= 0) {
-                showToastWithButton('⚠️ Maximum 30 cards reached!<br>Delete cards to add more.');
+                showToastWithButton('⚠️ Maximum ' + DECK_MAX + ' cards reached!<br>Delete cards to add more.');
                 return;
             }
 
@@ -14660,13 +15212,13 @@
         // ── Image import limits (one coherent procedure) ──────────────────
         // Photos ≤15MB each → auto-compress to ~500KB
         // GIFs ≤3MB each (cannot compress without killing animation)
-        // Max 30 images per deck
+        // Max 50 images per deck
         const IMAGE_IMPORT_LIMITS = {
-            maxCount: 30,
+            maxCount: DECK_MAX,
             maxPhotoBytes: 15 * 1024 * 1024,
             maxGifBytes: 3 * 1024 * 1024,
             compressToKB: 500,
-            summaryText: 'Max 30 images · Photos ≤15MB auto-compress to 500KB · GIFs ≤3MB'
+            summaryText: 'Max 50 images · Photos ≤15MB auto-compress to 500KB · GIFs ≤3MB'
         };
 
         function isGifFile(file) {
@@ -14918,11 +15470,11 @@
 
             // Check total limit considering existing cards
             const totalAfterUpload = cards.length + files.length;
-            const remainingSlots = 30 - cards.length;
+            const remainingSlots = DECK_MAX - cards.length;
 
-            if (side === 'front' && totalAfterUpload > 30) {
+            if (side === 'front' && totalAfterUpload > DECK_MAX) {
                 if (remainingSlots <= 0) {
-                    showToastWithButton('⚠️ Maximum 30 cards reached!<br>Delete cards to add more.');
+                    showToastWithButton('⚠️ Maximum ' + DECK_MAX + ' cards reached!<br>Delete cards to add more.');
                     if (input.value) {
                         input.value = '';
                     }
@@ -14951,14 +15503,12 @@
                 if (input.value) {
                     input.value = '';
                 }
-            } else if (side === 'front' && files.length > 30) {
-                // Original check for single upload exceeding 30
+            } else if (side === 'front' && files.length > DECK_MAX) {
                 setTimeout(function() {
-                    showToastWithButton('⚠️ Maximum exceeded<br>Only 30 added');
+                    showToastWithButton('⚠️ Maximum exceeded<br>Only ' + DECK_MAX + ' added');
                 }, 100);
 
-                // Create array of only first 30 files
-                const limitedFiles = Array.from(files).slice(0, 30);
+                const limitedFiles = Array.from(files).slice(0, DECK_MAX);
 
                 // Try to create FileList, fallback to array if not supported
                 try {
@@ -16169,7 +16719,7 @@
                 return `
                 <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
                     <img src="${gifSrc(card.frontImage)}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; border:1px solid #eee;">
-                    <div style="width:100%; box-sizing:border-box; text-align:center; font-size:1rem; font-weight:600;
+                    <div class="session-preview-label" style="width:100%; box-sizing:border-box; text-align:center; font-size:1rem; font-weight:600;
                                 color:#1a1a1a; padding:0 2px; word-break:break-word; line-height:1.3;">
                         ${label}
                     </div>
@@ -16182,6 +16732,8 @@
                 const modal = document.getElementById('previewOverlayModal');
                 const toolbar = document.getElementById('previewOverlayToolbar');
                 if (toolbar) toolbar.style.display = 'none';
+                const title = document.getElementById('previewOverlayTitleText');
+                if (title) title.textContent = 'Card Preview';
                 modal.classList.remove('reorder-mode-on');
                 modal.style.display = 'flex';
                 // Defer grid build so overlay is fully painted before images load
@@ -16221,11 +16773,11 @@
         function renderSessionPreviewGrid() {
             const modal = document.getElementById('previewOverlayModal');
             const grid = document.getElementById('previewOverlayGrid');
-            const title = modal ? modal.querySelector('span') : null;
+            const title = document.getElementById('previewOverlayTitleText');
             const arrangeBtn = document.getElementById('previewArrangeBtn');
             if (!grid) return;
 
-            if (title) title.textContent = '👁️ Card Preview (' + cards.length + ')';
+            if (title) title.textContent = 'Card Preview (' + cards.length + ')';
             if (arrangeBtn) {
                 arrangeBtn.textContent = _previewArrangeMode ? '✓ Done' : '🔀 Reorder & Remove';
                 arrangeBtn.classList.toggle('active', !!_previewArrangeMode);
@@ -16466,6 +17018,7 @@
 
         let sampleDeckData = null;
         let _sampleTab = 'fruits';
+        const sampleDeckCache = { fruits: null, animals: null, weather: null };
         const SAMPLE_DECK_URLS = {
             fruits:  'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Fruits_Sample_Set.json',
             animals: 'https://raw.githubusercontent.com/Weeksder/burstcard123/main/Animals_Sample_Set.json',
@@ -16485,62 +17038,101 @@
             Object.keys(SAMPLE_TAB_BTN_IDS).forEach(function(key) {
                 const btn = document.getElementById(SAMPLE_TAB_BTN_IDS[key]);
                 if (!btn) return;
-                if (key === tab) {
-                    btn.style.background = 'white'; btn.style.color = '#35654D'; btn.style.borderColor = 'white';
-                } else {
-                    btn.style.background = 'transparent'; btn.style.color = 'rgba(255,255,255,0.8)'; btn.style.borderColor = 'rgba(255,255,255,0.5)';
-                }
+                btn.classList.toggle('is-active', key === tab);
             });
             loadSampleTab(tab);
+        }
+
+        function renderSampleDeckGrid(data) {
+            const grid = document.getElementById('sampleDeckGrid');
+            if (!grid || !data || !Array.isArray(data.cards)) return;
+            grid.innerHTML = data.cards.map(function(card, i) {
+                const rawLabel = (card.backText || '').replace(/<[^>]*>/g, '').replace(/[\r\n]+/g, ' ').trim();
+                const label = rawLabel !== '' ? rawLabel : ('Card ' + (i + 1));
+                const safeLabel = label.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const img = card.frontImage
+                    ? '<img src="' + gifSrc(card.frontImage) + '" alt="" draggable="false" style="border:1px solid #eee;">'
+                    : '';
+                return '<div class="session-preview-item">' +
+                    '<div class="preview-image-container has-preview-img">' +
+                    img +
+                    '<div class="preview-card-num">' + (i + 1) + '</div>' +
+                    '</div>' +
+                    '<div class="session-preview-label">' + safeLabel + '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        async function fetchSampleDeck(tab) {
+            if (sampleDeckCache[tab] && sampleDeckCache[tab].cards) return sampleDeckCache[tab];
+            const urls = [SAMPLE_DECK_URLS[tab], SAMPLE_DECK_URL_FALLBACKS[tab]].filter(Boolean);
+            let response = null;
+            let lastErr = null;
+            for (let i = 0; i < urls.length; i++) {
+                try {
+                    response = await fetch(urls[i]);
+                    if (response && response.ok) break;
+                    lastErr = new Error('Failed to fetch sample deck');
+                    response = null;
+                } catch (fetchErr) {
+                    lastErr = fetchErr;
+                    response = null;
+                }
+            }
+            if (!response || !response.ok) throw lastErr || new Error('Failed to fetch sample deck');
+            const data = await response.json();
+            if (!data.cards || !Array.isArray(data.cards)) throw new Error('Invalid sample deck format');
+            sampleDeckCache[tab] = data;
+            return data;
+        }
+
+        function prefetchSampleTabs(exceptTab) {
+            Object.keys(SAMPLE_DECK_URLS).forEach(function(key) {
+                if (key === exceptTab) return;
+                if (sampleDeckCache[key] && sampleDeckCache[key].cards) return;
+                fetchSampleDeck(key).catch(function() { /* keep prior grid */ });
+            });
         }
 
         async function loadSampleTab(tab) {
             const grid = document.getElementById('sampleDeckGrid');
             const createBtn = document.getElementById('sampleDeckCreateBtn');
-            sampleDeckData = null;
-            createBtn.disabled = true;
+            if (!grid) return;
             grid.style.display = 'grid';
 
-            const urls = [SAMPLE_DECK_URLS[tab], SAMPLE_DECK_URL_FALLBACKS[tab]].filter(Boolean);
-            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#666;">Loading sample cards...</div>';
-            try {
-                let response = null;
-                let lastErr = null;
-                for (const url of urls) {
-                    try {
-                        response = await fetch(url);
-                        if (response.ok) break;
-                        lastErr = new Error('Failed to fetch sample deck');
-                        response = null;
-                    } catch (fetchErr) {
-                        lastErr = fetchErr;
-                        response = null;
-                    }
-                }
-                if (!response || !response.ok) throw lastErr || new Error('Failed to fetch sample deck');
-                const data = await response.json();
-                if (!data.cards || !Array.isArray(data.cards)) throw new Error('Invalid sample deck format');
-                sampleDeckData = data;
-                createBtn.disabled = false;
-                grid.innerHTML = data.cards.map((card, i) => {
-                    const rawLabel = (card.backText || '').replace(/<[^>]*>/g, '').replace(/[\r\n]+/g, ' ').trim();
-                    const label = rawLabel !== '' ? rawLabel : `Card ${i + 1}`;
-                    const escapedLabel = label.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-                    return `
-                    <div style="background:#f9f9f9;border:1px solid #ddd;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;align-items:center;">
-                        ${card.frontImage
-                            ? `<div style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-                                <img src="${gifSrc(card.frontImage)}" style="width:100%;height:100%;object-fit:contain;padding:4px;box-sizing:border-box;">
-                               </div>`
-                            : `<div style="width:100%;aspect-ratio:1;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:24px;">🖼️</div>`}
-                        <div style="padding:5px 6px;font-size:12px;font-weight:600;color:#333;text-align:center;width:100%;box-sizing:border-box;background:white;border-top:1px solid #eee;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${escapedLabel}">
-                            ${label}
-                        </div>
-                    </div>`;
-                }).join('');
-            } catch (err) {
-                grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#c62828;">⚠️ Could not load sample deck.<br><small>${err.message}</small></div>`;
+            const cached = sampleDeckCache[tab];
+            if (cached && cached.cards) {
+                sampleDeckData = cached;
+                if (createBtn) createBtn.disabled = false;
+                grid.classList.remove('is-loading');
+                renderSampleDeckGrid(cached);
+                prefetchSampleTabs(tab);
+                return;
             }
+
+            // Keep the previous grid painted so the window does not shrink or flash
+            if (createBtn) createBtn.disabled = true;
+            if (grid.childElementCount === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#666;">Loading sample cards...</div>';
+            }
+            try {
+                const data = await fetchSampleDeck(tab);
+                if (_sampleTab !== tab) return;
+                sampleDeckData = data;
+                if (createBtn) createBtn.disabled = false;
+                renderSampleDeckGrid(data);
+            } catch (err) {
+                if (_sampleTab !== tab) return;
+                if (grid.childElementCount === 0 || grid.querySelector('[style*="Loading sample"]')) {
+                    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#c62828;">⚠️ Could not load sample deck.<br><small>' +
+                        (err && err.message ? err.message : 'Error') + '</small></div>';
+                } else if (typeof showToast === 'function') {
+                    showToast('⚠️ Could not load sample deck', 2000);
+                }
+            } finally {
+                if (_sampleTab === tab) grid.classList.remove('is-loading');
+            }
+            prefetchSampleTabs(tab);
         }
 
         async function openSampleDeck() {
@@ -16669,8 +17261,8 @@
                             // Cards exist — show Add, Replace, Preview
                             document.getElementById('loadDirectBtn').style.display = 'none';
                             replaceBtn.style.display = '';
-                            // Disable "Add" if would exceed 30 cards
-                            if (cards.length + data.cards.length > 30) {
+                            // Disable "Add" if would exceed deck max
+                            if (cards.length + data.cards.length > DECK_MAX) {
                                 addBtn.disabled = true;
                                 addBtn.style.display = '';
                                 addBtn.innerHTML = '➕ Add <span style="font-size:10px;">(limit)</span>';
@@ -16752,14 +17344,14 @@
 
                 if (mode === 'replace') {
                     const incoming = incomingCards;
-                    const discarded = Math.max(0, incoming.length - 30);
-                    cards = incoming.slice(0, 30);
+                    const discarded = Math.max(0, incoming.length - DECK_MAX);
+                    cards = incoming.slice(0, DECK_MAX);
                     currentIndex = 0;
                     isFlipped = false;
                     loadedUnitIds.clear();
                     currentLoadedUnitId = null;
                     if (discarded > 0) {
-                        setTimeout(() => showToast(`⚠️ ${incoming.length} cards imported — ${discarded} discarded (30 max)`, 4000), 100);
+                        setTimeout(() => showToast(`⚠️ ${incoming.length} cards imported — ${discarded} discarded (${DECK_MAX} max)`, 4000), 100);
                     }
                 } else if (mode === 'add') {
                     loadedUnitIds.clear();
@@ -16767,8 +17359,8 @@
                     const newCards = incomingCards;
                     const totalAfter = cards.length + newCards.length;
 
-                    if (totalAfter > 30) {
-                        showToast('⚠️ Adding this would exceed the 30-card limit', 3000);
+                    if (totalAfter > DECK_MAX) {
+                        showToast('⚠️ Adding this would exceed the ' + DECK_MAX + '-card limit', 3000);
                         return;
                     }
 
@@ -17217,8 +17809,8 @@
                     const skipped = incoming.length - deduped.length;
 
                     const combined = cards.concat(deduped);
-                    const discarded = Math.max(0, combined.length - 30);
-                    cards = combined.slice(0, 30);
+                    const discarded = Math.max(0, combined.length - DECK_MAX);
+                    cards = combined.slice(0, DECK_MAX);
 
                     // Track this unit as contributing to the deck
                     loadedUnitIds.add(unitId);
@@ -17232,13 +17824,13 @@
 
                     let msg = `✅ Added ${deduped.length} cards! Total: ${cards.length}`;
                     if (skipped > 0) msg += ` (${skipped} duplicate${skipped > 1 ? 's' : ''} skipped)`;
-                    if (discarded > 0) msg += ` — ${discarded} discarded (30 max)`;
+                    if (discarded > 0) msg += ` — ${discarded} discarded (${DECK_MAX} max)`;
                     showToast(msg, 3000);
                     loadQuickLoadList(true);
                 } else {
                     const incoming = jsonData.cards.map(c => ({ ...c, _unitId: unitId }));
-                    const discarded = Math.max(0, incoming.length - 30);
-                    cards = incoming.slice(0, 30);
+                    const discarded = Math.max(0, incoming.length - DECK_MAX);
+                    cards = incoming.slice(0, DECK_MAX);
                     currentIndex = 0;
                     currentLoadedUnitId = unitId;
                     loadedUnitIds.clear();
@@ -17250,7 +17842,7 @@
                     if (typeof requestSwipeHintAfterImport === 'function') requestSwipeHintAfterImport();
                     renderDisplay();
                     if (discarded > 0) {
-                        showToast(`⚠️ ${incoming.length} cards imported — ${discarded} discarded (30 max)`, 4000);
+                        showToast(`⚠️ ${incoming.length} cards imported — ${discarded} discarded (${DECK_MAX} max)`, 4000);
                     } else {
                         showToast(`✅ Loaded ${cards.length} cards from ${unit.name}!`, 2000);
                     }
@@ -18003,7 +18595,7 @@
                 sorted.filter(function(u){ return !assignedIds.has(Number(u.id)); }),
                 loadUncatOrder()
             );
-            if (uncat.length > 0 || groups.length > 0) {
+            if (uncat.length > 0) {
                 var uncatCollapsed = false;
                 try { uncatCollapsed = localStorage.getItem('flashabc_uncat_collapsed') === '1'; } catch (e) {}
                 var uac = uncatCollapsed ? ' collapsed' : '';
@@ -18019,7 +18611,7 @@
                     '<div class="msp-group-body' + uac + '" id="msp-uncat-body"' +
                     ' ondragover="mspGroupBodyDragOver(event,this)" ondragleave="this.classList.remove(\'msp-drop-active\')"' +
                     ' ondrop="mspDropOnUncat(event,this)">' +
-                    (uncat.length === 0 ? '<div class="msp-group-empty">Drop decks here</div>' : uncat.map(makeUnitRow).join('')) +
+                    uncat.map(makeUnitRow).join('') +
                     '</div></div>';
             }
             list.innerHTML = html || '<div class="msp-empty">No decks in your library yet.</div>';
@@ -19600,7 +20192,7 @@
                         && Number(currentLoadedUnitId) === Number(replaceUnit.id)
                         && normalizedData.cards && normalizedData.cards.length) {
                         const incoming = normalizedData.cards;
-                        cards = incoming.slice(0, 30);
+                        cards = incoming.slice(0, DECK_MAX);
                         currentIndex = 0;
                         isFlipped = false;
                         if (typeof resetAllGameSessions === 'function') resetAllGameSessions();
