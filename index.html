@@ -4301,10 +4301,27 @@
             background: #fff;
             color: #333;
         }
-        #helpMenuModal .modal-content {
+        #helpMenuModal .modal-content,
+        #settingsHelpModal .modal-content {
             padding: 12px 14px 14px;
             border-radius: 20px;
         }
+        #settingsMenu .settings-cc-btn.settings-help-btn {
+            font-size: 0 !important;
+            color: #35654D;
+        }
+        #settingsMenu .settings-cc-btn.settings-help-btn .settings-help-mark {
+            display: block;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: inherit;
+            font-family: inherit;
+        }
+        /* Tablet/PC: settings help mark scales with #settingsMenu scale(2) */
         .dialog-card {
             background: #fff;
             border-radius: 20px;
@@ -6965,6 +6982,49 @@
             color: #333;
             margin-bottom: 10px;
         }
+        /* Word size on the real card back — slider docks under the card */
+        #wordSizeCardDock {
+            position: fixed;
+            left: 50%;
+            bottom: max(18px, env(safe-area-inset-bottom, 0px));
+            transform: translateX(-50%);
+            z-index: 16050;
+            width: min(440px, 92vw);
+            box-sizing: border-box;
+            padding: 14px 16px 16px;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 14px 44px rgba(0,0,0,0.38);
+            display: none;
+        }
+        #wordSizeCardDock.open {
+            display: block;
+        }
+        #wordSizeCardDock .word-size-row {
+            border-bottom: none;
+            padding: 0 0 12px;
+            margin: 0;
+            background: transparent;
+        }
+        #wordSizeCardDock .word-size-label {
+            margin-bottom: 8px;
+        }
+        #wordSizeCardDock .word-size-done {
+            width: 100%;
+            padding: 12px 14px;
+            border: none;
+            border-radius: 12px;
+            background: #35654D;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        body.word-size-card-mode #settingsMenu,
+        body.word-size-card-mode #settingsBackdrop {
+            display: none !important;
+        }
+
         .word-size-slider {
             display: flex;
             align-items: center;
@@ -7283,68 +7343,15 @@
             }
         }
 
-        /* Gear menu: 1.2× type/icons, no wrapping — tablet & PC only (not iPhone) */
+        /* Gear menu: 2× whole panel — tablet & PC only (phone keeps base sizes) */
         @media (min-width: 700px) and (min-height: 520px) {
             #settingsMenu {
                 min-width: 0;
-            }
-            #settingsMenu .settings-menu-main {
-                min-width: 248px;
-            }
-            .settings-menu-stack {
-                min-width: 248px;
-            }
-            #letterLayoutBtn.settings-layout-float {
-                font-size: 18px !important;
-                padding: 16px 18px !important;
-            }
-            #letterLayoutBtn.settings-layout-float svg {
-                width: 22px;
-                height: 22px;
-            }
-            .settings-lc-tile svg {
-                width: 66%;
-                max-height: 68%;
-            }
-            .settings-lc-label {
-                font-size: 18px;
-            }
-            #showCharBtn .settings-off-mark,
-            #showTextBtn .settings-off-mark {
-                font-size: 1.5rem;
+                transform: scale(2);
+                transform-origin: bottom left;
             }
             #settingsMenu .settings-menu-main button:not(.resize-btn) {
-                font-size: 18px !important;
-                padding: 16px 18px !important;
                 white-space: nowrap;
-                gap: 12px;
-            }
-            #settingsMenu .settings-menu-main button:not(.resize-btn) svg {
-                width: 22px !important;
-                height: 22px !important;
-                flex-shrink: 0;
-            }
-            #settingsMenu .settings-cc-btn {
-                width: 56px;
-                height: 56px;
-                min-width: 56px;
-                min-height: 56px;
-            }
-            #settingsMenu .settings-cc-btn.settings-on {
-                width: 56px !important;
-            }
-            #settingsMenu .settings-cc-btn svg {
-                width: 26px !important;
-                height: 26px !important;
-            }
-            #settingsMenu .word-size-label {
-                font-size: 18px !important;
-            }
-            #settingsMenu .word-size-a-sm { font-size: 15px !important; }
-            #settingsMenu .word-size-a-lg { font-size: 26px !important; }
-            #settingsMenu .word-size-thumb {
-                width: 32px;
-                height: 32px;
             }
         }
 
@@ -8722,7 +8729,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1527-organize-x-black">
+    <meta name="flashabc-build" content="1543-wordsize-flip-front">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -9081,6 +9088,20 @@
         </div>
         <div id="settingsBackdrop" onclick="closeSettingsMenu()" ontouchend="event.preventDefault(); closeSettingsMenu()"></div>
         <div id="wordSizeGhost" aria-hidden="true"></div>
+        <div id="wordSizeCardDock" aria-hidden="true">
+            <div class="word-size-row">
+                <div class="word-size-label">Word size</div>
+                <div class="word-size-slider">
+                    <span class="word-size-a-sm" aria-hidden="true">A</span>
+                    <div class="word-size-track" id="wordSizeTrack" role="slider" aria-label="Word size" aria-valuemin="0" aria-valuemax="2" aria-valuenow="0">
+                        <span class="word-size-ticks" aria-hidden="true"><i></i><i></i><i></i></span>
+                        <button type="button" class="word-size-thumb" id="wordSizeThumb" tabindex="-1" aria-hidden="true"></button>
+                    </div>
+                    <span class="word-size-a-lg" aria-hidden="true">A</span>
+                </div>
+            </div>
+            <button type="button" class="word-size-done" onclick="closeWordSizeCardMode()">Done</button>
+        </div>
         <!-- Fixed card overlays: always in DOM, unaffected by card-container size or overflow -->
         <div id="cardOverlaySettings" style="display:none; position:fixed; z-index:10000;">
             <button id="settingsGearBtn" class="fullscreen-btn" style="position:relative; bottom:auto; left:auto; color:#35654D; overflow:visible; -webkit-appearance:none; appearance:none;"
@@ -9119,17 +9140,11 @@
                     Layout
                 </button>
                 <div class="settings-menu-main">
-                <div class="word-size-row" onclick="event.stopPropagation()">
-                    <div class="word-size-label">Word size</div>
-                    <div class="word-size-slider">
-                        <span class="word-size-a-sm" aria-hidden="true">A</span>
-                        <div class="word-size-track" id="wordSizeTrack" role="slider" aria-label="Word size" aria-valuemin="0" aria-valuemax="2" aria-valuenow="0">
-                            <span class="word-size-ticks" aria-hidden="true"><i></i><i></i><i></i></span>
-                            <button type="button" class="word-size-thumb" id="wordSizeThumb" tabindex="-1" aria-hidden="true"></button>
-                        </div>
-                        <span class="word-size-a-lg" aria-hidden="true">A</span>
-                    </div>
-                </div>
+                <button type="button" id="wordSizeMenuBtn" onclick="event.stopPropagation(); openWordSizeCardMode()" ontouchend="event.stopPropagation(); event.preventDefault(); openWordSizeCardMode()"
+                    style="width:100%; padding:13px 16px; border:none; background:white; text-align:left; font-size:15px; font-weight:600; color:#333; cursor:pointer; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f0f0f0;">
+                    <span style="font-size:1.15rem;font-weight:800;color:#35654D;width:18px;text-align:center;line-height:1;" aria-hidden="true">A</span>
+                    Word size
+                </button>
                 <button onclick="event.stopPropagation(); openSessionPreview()" ontouchend="event.stopPropagation(); event.preventDefault(); openSessionPreview()"
                     style="width:100%; padding:13px 16px; border:none; background:white; text-align:left; font-size:15px; font-weight:600; color:#333; cursor:pointer; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f0f0f0;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -9190,6 +9205,11 @@
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                             <path d="M7 11V8a5 5 0 0 1 9.9-1"/>
                         </svg>
+                    </button>
+                    <button type="button" class="settings-cc-btn settings-help-btn" id="settingsHelpBtn" data-tip="Help" aria-label="Settings help"
+                        onclick="event.stopPropagation(); openSettingsHelpMenu()"
+                        ontouchend="event.stopPropagation(); event.preventDefault(); openSettingsHelpMenu()">
+                        <span class="settings-help-mark">?</span>
                     </button>
                 </div>
             </div>
@@ -9463,6 +9483,41 @@
                 <span><strong>More</strong> — Access Load, Save, Rename All, and Clear All options.</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                 <span><strong>Settings</strong> — Clip images, resize text, preview cards, toggle sound and display options.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="settingsHelpModal">
+        <div class="modal-content" style="width:fit-content;max-width:90vw;position:relative;">
+            <div class="save-modal-header">
+                <div class="save-modal-title">Settings Buttons</div>
+                <div class="save-modal-header-actions">
+                    <button type="button" class="save-modal-close" onclick="closeSettingsHelpMenu()" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:24px 1fr;gap:8px 12px;align-items:center;font-size:0.83rem;color:#444;line-height:1.7;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><text x="12" y="16" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-size="10" font-weight="600" fill="#35654D" stroke="none">Aa</text></svg>
+                <span><strong>Letters</strong> — Show or hide letters on the picture.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="15" x2="21" y2="15"/><path d="M8 18h.01M12 18h.01M16 18h.01"/></svg>
+                <span><strong>Caption</strong> — Show or hide the word under the picture.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+                <span><strong>Layout</strong> — Choose where letters appear (corner, middle, large, or picture only).</span>
+                <span style="font-size:1rem;font-weight:700;color:#35654D;text-align:center;">A</span>
+                <span><strong>Word size</strong> — Shows the back of the card with a slider so you can see the word grow or shrink.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                <span><strong>Preview Cards</strong> — See all cards in a grid; reorder or remove them.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 21 12 15 6"/><line x1="21" y1="12" x2="9" y2="12"/><polyline points="9 6 3 12 9 18"/></svg>
+                <span><strong>Swipe goes next</strong> — Swipe any direction to go forward. Turn off for left/right fan swipes only.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>
+                <span><strong>Crop</strong> — Trim the picture on the current card.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span><strong>Hide buttons</strong> — Hide the menu buttons for a cleaner study view.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.2" y="1.6" width="7.6" height="13" rx="3.8"/><path d="M5.2 11.1v.7a6.8 6.8 0 0 0 13.6 0v-.7"/><line x1="12" y1="18.6" x2="12" y2="21.15"/><line x1="8.1" y1="21.5" x2="15.9" y2="21.5"/></svg>
+                <span><strong>Speak</strong> — Show the mic button so you can hear the word read aloud.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <span><strong>Mute</strong> — Turn off all app sounds.</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#35654D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V8a5 5 0 0 1 9.9-1"/></svg>
+                <span><strong>Stay on the back</strong> — Keep every card on the text side (back).</span>
             </div>
         </div>
     </div>
@@ -11634,7 +11689,7 @@
             const W = field.clientWidth || 320;
             const H = field.clientHeight || 400;
             const isPhone = Math.min(window.innerWidth, window.innerHeight) <= 500;
-            const r = isPhone ? 51 : (W < 700 ? 63 : 75);
+            const r = isPhone ? 32 : (W < 700 ? 63 : 75);
             const correctPool = [
                 { kind: 'letter', ch: letter, correct: true },
                 { kind: 'letter', ch: letter.toLowerCase(), correct: true }
@@ -16925,6 +16980,24 @@
             const modal = document.getElementById('helpMenuModal');
             if (modal && modal.classList.contains('active') && e.target === modal) {
                 closeHelpMenu();
+            }
+        });
+
+        function openSettingsHelpMenu() {
+            if (typeof closeSettingsMenu === 'function') closeSettingsMenu();
+            document.body.style.overflow = 'hidden';
+            const modal = document.getElementById('settingsHelpModal');
+            if (modal) modal.classList.add('active');
+        }
+        function closeSettingsHelpMenu() {
+            document.body.style.overflow = '';
+            const modal = document.getElementById('settingsHelpModal');
+            if (modal) modal.classList.remove('active');
+        }
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('settingsHelpModal');
+            if (modal && modal.classList.contains('active') && e.target === modal) {
+                closeSettingsHelpMenu();
             }
         });
 
@@ -22834,7 +22907,8 @@
         function setCardTextScaleIndex(nextIndex, opts) {
             const max = TEXT_SCALES.length - 1;
             nextIndex = Math.max(0, Math.min(max, nextIndex | 0));
-            const showGhost = !opts || opts.ghost !== false;
+            // Real card back is the preview — ghost only if explicitly requested
+            const showGhost = !!(opts && opts.ghost === true);
             if (nextIndex === cardTextScaleIndex) {
                 syncWordSizeSlider();
                 if (showGhost) {
@@ -22872,6 +22946,84 @@
             });
         }
 
+        let _reopenSettingsAfterWordSize = false;
+        function ensureStudyCardBackVisible() {
+            const cardEl = document.querySelector('.card');
+            if (!cardEl) return;
+            if (!isFlipped) {
+                isFlipped = true;
+                cardEl.classList.remove('swiping');
+                cardEl.style.transform = '';
+                cardEl.style.transition = '';
+                cardEl.classList.add('flipped');
+                const navHint = document.getElementById('navHintLabel');
+                const navIndex = document.getElementById('navIndexLabel');
+                if (navHint) { navHint.textContent = 'Tap to flip'; navHint.style.color = 'white'; }
+                if (navIndex) navIndex.style.color = 'white';
+                if (typeof updateOverlayIconColors === 'function') updateOverlayIconColors();
+            }
+            const _ft = document.querySelector('.card > .card-back .card-text-auto-scale');
+            if (_ft) _ft.style.visibility = 'hidden';
+            requestAnimationFrame(function () {
+                if (typeof scaleTextToFit === 'function') scaleTextToFit();
+                const _ft2 = document.querySelector('.card > .card-back .card-text-auto-scale');
+                if (_ft2) _ft2.style.visibility = '';
+            });
+        }
+        function openWordSizeCardMode() {
+            _reopenSettingsAfterWordSize = true;
+            if (typeof closeSettingsMenu === 'function') closeSettingsMenu();
+            if (typeof hideWordSizeGhost === 'function') hideWordSizeGhost(0);
+            document.body.classList.add('word-size-card-mode');
+            ensureStudyCardBackVisible();
+            const dock = document.getElementById('wordSizeCardDock');
+            if (dock) {
+                dock.classList.add('open');
+                dock.setAttribute('aria-hidden', 'false');
+            }
+            if (typeof bindWordSizeSlider === 'function') bindWordSizeSlider();
+            requestAnimationFrame(function () {
+                if (typeof syncWordSizeSlider === 'function') syncWordSizeSlider();
+                ensureStudyCardBackVisible();
+            });
+        }
+        function ensureStudyCardFrontVisible() {
+            const cardEl = document.querySelector('.card');
+            if (!cardEl) return;
+            if (!isFlipped) return;
+            // Stay on back if lock-to-back is on
+            if (lockSide === 'back') return;
+            isFlipped = false;
+            cardEl.classList.remove('swiping');
+            cardEl.style.transform = '';
+            cardEl.style.transition = '';
+            cardEl.classList.remove('flipped');
+            const navHint = document.getElementById('navHintLabel');
+            const navIndex = document.getElementById('navIndexLabel');
+            if (navHint) { navHint.textContent = 'Tap to flip'; navHint.style.color = '#333'; }
+            if (navIndex) navIndex.style.color = '#333';
+            if (typeof updateOverlayIconColors === 'function') updateOverlayIconColors();
+        }
+        function closeWordSizeCardMode() {
+            const dock = document.getElementById('wordSizeCardDock');
+            if (dock) {
+                dock.classList.remove('open');
+                dock.setAttribute('aria-hidden', 'true');
+            }
+            document.body.classList.remove('word-size-card-mode');
+            if (typeof hideWordSizeGhost === 'function') hideWordSizeGhost(0);
+            ensureStudyCardFrontVisible();
+            const reopen = _reopenSettingsAfterWordSize;
+            _reopenSettingsAfterWordSize = false;
+            if (reopen && typeof toggleSettingsMenu === 'function') {
+                setTimeout(function () {
+                    const menu = document.getElementById('settingsMenu');
+                    const isOpen = menu && (menu.style.display === 'flex' || menu.style.display === 'block');
+                    if (!isOpen) toggleSettingsMenu();
+                }, 10);
+            }
+        }
+
         function wordSizeIndexFromClientX(clientX) {
             const track = document.getElementById('wordSizeTrack');
             if (!track) return cardTextScaleIndex;
@@ -22906,7 +23058,7 @@
             function onUp() {
                 if (!dragging) return;
                 dragging = false;
-                hideWordSizeGhost(450);
+                if (typeof hideWordSizeGhost === 'function') hideWordSizeGhost(0);
             }
             track.addEventListener('mousedown', onDown);
             window.addEventListener('mousemove', onMove);
@@ -23235,10 +23387,9 @@
             showCharOnCard = mode !== 'off' && mode !== 'image';
             if (mode === 'corner' || mode === 'banner' || mode === 'giant') {
                 preferredLetterLayout = mode;
-                showTextOnFront = true;
+                // Letters and Caption are independent — do not force Caption on/off here.
+                // (Giant/image still hide Caption via showFrontCaption / updateCaptionButton.)
                 try { localStorage.setItem('flashabc_char_layout_pref', preferredLetterLayout); } catch (e) {}
-            } else if (mode === 'image') {
-                showTextOnFront = false;
             }
             try { localStorage.setItem('flashabc_char_mode', charDisplayMode); } catch (e) {}
             if (typeof resetFrontTextCache === 'function') resetFrontTextCache();
@@ -23254,13 +23405,8 @@
                 const next = (preferredLetterLayout === 'banner' || preferredLetterLayout === 'giant')
                     ? preferredLetterLayout : 'corner';
                 applyCharDisplayMode(next);
-                if (typeof showToast === 'function') {
-                    const label = next === 'banner' ? 'middle' : next === 'giant' ? 'large' : 'corner';
-                    showToast('Letters: ' + label, 1600);
-                }
             } else {
                 applyCharDisplayMode('off');
-                if (typeof showToast === 'function') showToast('Letters off', 1600);
             }
         }
 
@@ -23299,12 +23445,22 @@
             if (layout !== 'corner' && layout !== 'banner' && layout !== 'giant' && layout !== 'image') return;
             applyCharDisplayMode(layout);
             closeLetterLayoutPicker();
-            const label = layout === 'banner' ? 'middle' : layout === 'giant' ? 'large' : layout === 'image' ? 'image' : layout;
-            if (typeof showToast === 'function') showToast('Layout: ' + label, 1600);
         }
 
         document.addEventListener('keydown', function(e) {
             if (e.key !== 'Escape') return;
+            const dock = document.getElementById('wordSizeCardDock');
+            if (dock && dock.classList.contains('open')) {
+                e.preventDefault();
+                closeWordSizeCardMode();
+                return;
+            }
+            const settingsHelp = document.getElementById('settingsHelpModal');
+            if (settingsHelp && settingsHelp.classList.contains('active')) {
+                e.preventDefault();
+                closeSettingsHelpMenu();
+                return;
+            }
             const m = document.getElementById('letterLayoutModal');
             if (m && m.classList.contains('open')) {
                 e.preventDefault();
@@ -24376,6 +24532,34 @@
                 if (cards.length > 0) positionNavOverlay(true);
             });
         }
+        function scheduleGameGearsAfterResume() {
+            const spellOpen = document.getElementById('spellingGameModal')?.style.display === 'flex';
+            const matchOpen = document.getElementById('matchGameModal')?.style.display === 'flex';
+            if (!spellOpen && !matchOpen) return;
+            if (spellOpen) {
+                if (typeof schedulePositionSpellGear === 'function') schedulePositionSpellGear();
+                else if (typeof positionSpellGear === 'function') positionSpellGear();
+            }
+            if (matchOpen) {
+                if (typeof schedulePositionMatchGear === 'function') schedulePositionMatchGear();
+                else if (typeof positionMatchGear === 'function') positionMatchGear();
+            }
+            // iOS/Edge chrome often finishes moving after the first layout pass
+            setTimeout(function () {
+                if (spellOpen && typeof positionSpellGear === 'function') positionSpellGear();
+                if (matchOpen && typeof positionMatchGear === 'function') positionMatchGear();
+            }, 400);
+            setTimeout(function () {
+                if (spellOpen && typeof positionSpellGear === 'function') positionSpellGear();
+                if (matchOpen && typeof positionMatchGear === 'function') positionMatchGear();
+            }, 900);
+        }
+        document.addEventListener('visibilitychange', function () {
+            if (!document.hidden) scheduleGameGearsAfterResume();
+        });
+        window.addEventListener('pageshow', function () {
+            scheduleGameGearsAfterResume();
+        });
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', () => {
                 relayoutCardOverlaysForViewport();
@@ -24387,9 +24571,25 @@
                     if (document.getElementById('bombGameModal')?.classList.contains('active')) {
                         if (typeof renderBombGame === 'function') renderBombGame();
                     }
+                    if (document.getElementById('spellingGameModal')?.style.display === 'flex') {
+                        if (typeof schedulePositionSpellGear === 'function') schedulePositionSpellGear();
+                        else if (typeof positionSpellGear === 'function') positionSpellGear();
+                    }
+                    if (document.getElementById('matchGameModal')?.style.display === 'flex') {
+                        if (typeof schedulePositionMatchGear === 'function') schedulePositionMatchGear();
+                        else if (typeof positionMatchGear === 'function') positionMatchGear();
+                    }
                 }, 80);
             });
-            window.visualViewport.addEventListener('scroll', relayoutCardOverlaysForViewport);
+            window.visualViewport.addEventListener('scroll', function () {
+                relayoutCardOverlaysForViewport();
+                if (document.getElementById('spellingGameModal')?.style.display === 'flex' && typeof positionSpellGear === 'function') {
+                    positionSpellGear();
+                }
+                if (document.getElementById('matchGameModal')?.style.display === 'flex' && typeof positionMatchGear === 'function') {
+                    positionMatchGear();
+                }
+            });
         }
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
@@ -26164,6 +26364,7 @@
             if (typeof updateMatchTimerDisplay === 'function') updateMatchTimerDisplay();
             if (typeof schedulePositionMatchGear === 'function') schedulePositionMatchGear();
             else positionMatchGear();
+            if (typeof observeMatchShellForGear === 'function') observeMatchShellForGear();
             positionMatchTimer();
             document.fonts.ready.then(() => requestAnimationFrame(() => {
                 scaleMatchLabels();
@@ -26209,6 +26410,8 @@
             }
         }
 
+        let _matchGearRetry = 0;
+        let _matchGearRo = null;
         function resetMatchGearStyle(tools) {
             const el = tools || document.getElementById('matchTools');
             if (!el) return;
@@ -26218,6 +26421,7 @@
             el.style.right = '';
             el.style.bottom = '';
             el.style.transform = '';
+            _matchGearRetry = 0;
         }
         function positionMatchGear() {
             const modal = document.getElementById('matchGameModal');
@@ -26231,9 +26435,13 @@
             const mr = modal.getBoundingClientRect();
             const cr = shell.getBoundingClientRect();
             if (cr.width < 8 || cr.height < 8 || mr.width < 8 || mr.height < 8) {
-                requestAnimationFrame(positionMatchGear);
+                if (_matchGearRetry < 24) {
+                    _matchGearRetry += 1;
+                    requestAnimationFrame(positionMatchGear);
+                }
                 return;
             }
+            _matchGearRetry = 0;
             const inset = 8;
             tools.style.display = 'block';
             tools.style.position = 'absolute';
@@ -26251,6 +26459,19 @@
             });
             setTimeout(positionMatchGear, 50);
             setTimeout(positionMatchGear, 180);
+            setTimeout(positionMatchGear, 450);
+        }
+        function observeMatchShellForGear() {
+            const shell = document.getElementById('matchShell');
+            if (typeof ResizeObserver !== 'function') return;
+            if (!_matchGearRo) {
+                _matchGearRo = new ResizeObserver(function () {
+                    const m = document.getElementById('matchGameModal');
+                    if (m && m.style.display === 'flex') positionMatchGear();
+                });
+            }
+            try { _matchGearRo.disconnect(); } catch (e) { /* ignore */ }
+            if (shell) _matchGearRo.observe(shell);
         }
 
         function positionMatchTimer() {
@@ -27094,24 +27315,25 @@
             return (bombGameState.gameCards || []).filter(function (c) { return c && c.isBomb; }).length;
         }
 
-        /** Scale bomb-count reduction from the round's 9/12/15 size, not the shrinking leftover grid. */
-        function maybeReduceBombCount() {
+        /** How many bombs should be on the board right now (~1/3, taper when few safes left). */
+        function bombDesiredBombs() {
+            const safes = bombSafeLeft();
+            if (safes <= 0) return 0;
+            if (safes === 1) return 1; // last pair: 1 flashcard + 1 bomb
+            const n = (typeof cards !== 'undefined' && cards) ? cards.length : 0;
             const size = bombGameState.roundSize || 9;
-            const t1 = Math.floor(size * 7 / 9);
-            const t2 = Math.floor(size * 4 / 9);
-            const maxBombs = Math.max(1, Math.round(size * (3 / 9)));
-            const midBombs = Math.max(1, Math.round(size * (2 / 9)));
-            const live = bombGameState.gameCards.length;
-            if (live <= t1 && bombGameState.bombCount === maxBombs && bombBombsLeft() > midBombs) {
-                bombGameState.bombCount = midBombs;
-                const bombIndexToRemove = bombGameState.gameCards.findIndex(c => c.isBomb);
-                if (bombIndexToRemove !== -1) bombGameState.gameCards.splice(bombIndexToRemove, 1);
-            } else if (live <= t2 && bombGameState.bombCount >= midBombs && bombBombsLeft() > 1) {
-                bombGameState.bombCount = 1;
-                const bombIndexToRemove = bombGameState.gameCards.findIndex(c => c.isBomb);
-                if (bombIndexToRemove !== -1) bombGameState.gameCards.splice(bombIndexToRemove, 1);
+            let desired;
+            if (n > 0 && n < 9) {
+                // Compact deck: same start counts as bombTargetCounts
+                desired = n <= 3 ? 1 : (n <= 5 ? 2 : Math.max(1, Math.round(n * 0.3)));
+            } else {
+                // Full 9/12/15 round: keep ~1/3 bombs
+                desired = Math.max(1, Math.round(size * (3 / 9)));
             }
-            bombGameState.bombCount = bombBombsLeft();
+            // Few flashcards left — ease off so the board is not mostly bombs
+            if (safes <= 2) desired = 1;
+            else if (safes <= 4) desired = Math.min(desired, 2);
+            return Math.max(1, desired);
         }
 
         /** Last flashcard always sits with exactly one bomb. */
@@ -27126,14 +27348,36 @@
             bombGameState.bombCount = bombBombsLeft();
         }
 
-        /** While any flashcard remains, keep a bomb on the board. Last two tiles are always 1 bomb + 1 flashcard. */
-        function ensureBombPairWhileSafesRemain() {
-            if (bombSafeLeft() >= 1 && bombBombsLeft() === 0) {
+        /**
+         * Keep bomb count near target for the whole round:
+         * hit a bomb → replace it (respawn) until only a few safes remain.
+         * Replaces the old maybeReduceBombCount path that silently deleted unhit bombs.
+         */
+        function maintainBombTargets() {
+            const safes = bombSafeLeft();
+            if (safes <= 0) {
+                bombGameState.bombCount = bombBombsLeft();
+                return;
+            }
+            if (safes === 1) {
+                isolateLastBombPair();
+                return;
+            }
+            const desired = bombDesiredBombs();
+            while (bombBombsLeft() > desired) {
+                const i = bombGameState.gameCards.findIndex(function (c) { return c && c.isBomb; });
+                if (i === -1) break;
+                bombGameState.gameCards.splice(i, 1);
+            }
+            while (bombBombsLeft() < desired) {
                 bombGameState.gameCards.push({ isBomb: true });
             }
-            isolateLastBombPair();
             bombGameState.bombCount = bombBombsLeft();
         }
+
+        /** @deprecated name kept as alias — older call sites / Continue paths */
+        function maybeReduceBombCount() { maintainBombTargets(); }
+        function ensureBombPairWhileSafesRemain() { maintainBombTargets(); }
 
         function bombLastPairIsolated() {
             return bombSafeLeft() === 1 && bombBombsLeft() === 1;
@@ -27445,8 +27689,8 @@
                 renderBombGame();
                 return;
             }
-            maybeReduceBombCount();
-            ensureBombPairWhileSafesRemain();
+            // Hit bomb → respawn to ~1/3 target; safes taper bombs only when few left
+            maintainBombTargets();
             if (isBomb) bombGameState.gameCards = fisherYatesShuffle(bombGameState.gameCards);
             shrinkBombGridToLive();
             renderBombGame();
@@ -27458,6 +27702,9 @@
             const gear = document.getElementById('spellGearBtn');
             if (gear) gear.setAttribute('aria-expanded', 'false');
         }
+        let _spellGearRetry = 0;
+        let _spellGearRo = null;
+        let _spellGearScrollBound = false;
         function resetSpellGearStyle(tools) {
             const el = tools || document.getElementById('spellTools');
             if (!el) return;
@@ -27467,6 +27714,7 @@
             el.style.right = '';
             el.style.bottom = '';
             el.style.transform = '';
+            _spellGearRetry = 0;
         }
         function positionSpellGear() {
             const modal = document.getElementById('spellingGameModal');
@@ -27479,11 +27727,15 @@
             }
             const mr = modal.getBoundingClientRect();
             const cr = card.getBoundingClientRect();
-            // After exit/re-enter, first layout pass can report an empty card — retry
+            // After exit/re-enter, first layout pass can report an empty card — retry (capped)
             if (cr.width < 8 || cr.height < 8 || mr.width < 8 || mr.height < 8) {
-                requestAnimationFrame(positionSpellGear);
+                if (_spellGearRetry < 24) {
+                    _spellGearRetry += 1;
+                    requestAnimationFrame(positionSpellGear);
+                }
                 return;
             }
+            _spellGearRetry = 0;
             const inset = 8;
             tools.style.display = 'block';
             tools.style.position = 'absolute';
@@ -27499,9 +27751,32 @@
                 positionSpellGear();
                 requestAnimationFrame(positionSpellGear);
             });
-            // Fonts / image layout can settle a beat later after Continue
+            // Fonts / image / app-chrome can settle later after Continue or resume
             setTimeout(positionSpellGear, 50);
             setTimeout(positionSpellGear, 180);
+            setTimeout(positionSpellGear, 450);
+        }
+        function observeSpellCardForGear() {
+            const card = document.getElementById('spellingCard');
+            const content = document.getElementById('spellingGameContent');
+            if (typeof ResizeObserver === 'function') {
+                if (!_spellGearRo) {
+                    _spellGearRo = new ResizeObserver(function () {
+                        const m = document.getElementById('spellingGameModal');
+                        if (m && m.style.display === 'flex') positionSpellGear();
+                    });
+                }
+                try { _spellGearRo.disconnect(); } catch (e) { /* ignore */ }
+                if (card) _spellGearRo.observe(card);
+                if (content) _spellGearRo.observe(content);
+            }
+            if (content && !_spellGearScrollBound) {
+                _spellGearScrollBound = true;
+                content.addEventListener('scroll', function () {
+                    const m = document.getElementById('spellingGameModal');
+                    if (m && m.style.display === 'flex') positionSpellGear();
+                }, { passive: true });
+            }
         }
         function toggleSpellTools() {
             const modal = document.getElementById('spellingGameModal');
@@ -27962,6 +28237,7 @@
                 positionSpellGear();
                 requestAnimationFrame(positionSpellGear);
             }
+            if (typeof observeSpellCardForGear === 'function') observeSpellCardForGear();
             if (typeof applySpellLetterFonts === 'function') applySpellLetterFonts();
 
             // Remember layout so resize handler can skip no-op reflows
