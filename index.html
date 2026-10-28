@@ -221,10 +221,22 @@
             background: #f0f8f3;
             background-clip: border-box;
             -webkit-background-clip: border-box;
-            overflow: hidden;
+            overflow: visible;
             box-sizing: border-box;
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+        }
+        /* iPhone-keyboard style: enlarge & lift while pressed */
+        #spellingGameModal .letter-tile.spell-tile-press {
+            z-index: 80;
+            -webkit-transform: scale(1.55) translateY(-42%) translateZ(0) !important;
+            transform: scale(1.55) translateY(-42%) translateZ(0) !important;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+            background: #ffffff !important;
+            border-color: #cfe0d6 !important;
         }
         /* Shared glyph box: flex-center every letter the same way (g/y/p match a/e/n). */
         #spellingGameModal .letter-tile-ch,
@@ -246,6 +258,11 @@
         #spellingGameModal #letterRow,
         #spellingGameModal #answerRow {
             overflow: visible !important;
+        }
+        #spellingGameModal #spellLetterBank,
+        #spellingGameModal #letterRow {
+            position: relative;
+            z-index: 5;
         }
 
         /* Spell Me responsive shell — override global landscape 85% shrink on #spellingGameContent */
@@ -7183,6 +7200,45 @@
         body.settings-menu-open #cardOverlaySettings {
             z-index: 15001 !important;
         }
+        /* Gear: white rounded plate on card front only (no plate on green back) */
+        #settingsGearBtn {
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
+            min-height: 40px !important;
+            border-radius: 8px !important;
+            background: #ffffff !important;
+            box-shadow: none;
+            padding: 0 !important;
+        }
+        #settingsGearBtn svg {
+            width: 22px;
+            height: 22px;
+        }
+        #settingsGearBtn:hover,
+        #settingsGearBtn:active {
+            background: #ffffff !important;
+            opacity: 0.92;
+            box-shadow: none;
+        }
+        /* Back side: no white boundary — icon only on green */
+        #settingsGearBtn.gear-on-back,
+        #settingsGearBtn.gear-on-back:hover,
+        #settingsGearBtn.gear-on-back:active {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        /* Gear pops to 2× while settings are open; returns to normal on close */
+        body.settings-menu-open #settingsGearBtn {
+            transform: scale(2) !important;
+            transform-origin: bottom left;
+            background: #ffffff !important;
+            border-radius: 8px !important;
+            box-shadow: none;
+        }
+        body.settings-menu-open #settingsGearBtn.gear-on-back {
+            background: transparent !important;
+        }
         body.settings-menu-open #cardOverlayHidePeek {
             z-index: 1 !important;
         }
@@ -7200,12 +7256,19 @@
             box-shadow: none;
             overflow: visible;
             min-width: 0;
+            /* Clear the enlarged gear (40px × 2) */
+            bottom: 96px !important;
         }
         .settings-menu-stack {
             display: flex;
             flex-direction: column;
             gap: 8px;
             min-width: 200px;
+        }
+        /* Left menu boxes sit low next to the gear; round button column stays put */
+        body.settings-menu-open #settingsMenu .settings-menu-stack {
+            justify-content: flex-end;
+            margin-top: auto;
         }
         .settings-lc-row {
             display: flex;
@@ -8729,7 +8792,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1543-wordsize-flip-front">
+    <meta name="flashabc-build" content="1550-menu-stack-lower">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -10702,14 +10765,18 @@
             const iconColor = isFlipped ? 'white' : '#35654D';
             const settings = document.getElementById('cardOverlaySettings');
             if (settings) {
-                const btn = settings.querySelector('button.fullscreen-btn');
+                const btn = settings.querySelector('button.fullscreen-btn') || document.getElementById('settingsGearBtn');
                 if (btn) {
+                    btn.classList.toggle('gear-on-back', !!isFlipped);
                     const gearSvg = btn.querySelector('svg');
+                    // Front: green on white plate. Back: white icon, no plate.
+                    const gearColor = isFlipped ? 'white' : '#35654D';
                     if (gearSvg) {
-                        gearSvg.setAttribute('stroke', iconColor);
-                        gearSvg.style.color = iconColor;
+                        gearSvg.setAttribute('stroke', gearColor);
+                        gearSvg.style.color = gearColor;
                         gearSvg.style.filter = isFlipped ? 'drop-shadow(0 0 3px rgba(0,0,0,0.5))' : 'none';
                     }
+                    btn.style.color = gearColor;
                 }
             }
             const lockOv = document.getElementById('cardOverlayLock');
@@ -10779,7 +10846,8 @@
             const needTts = showTtsButton && !ttsPlaced;
             if (force || !gearPlaced || needTts) {
                 const rect = container.getBoundingClientRect();
-                const offset = -2;
+                // Inset so the white gear plate stays inside the card’s 20px rounded corner
+                const offset = 8;
                 if (force || !gearPlaced) {
                     if (settings) {
                         settings.style.bottom = (window.innerHeight - rect.bottom + offset) + 'px';
@@ -10787,7 +10855,7 @@
                     }
                     const lockOverlay = document.getElementById('cardOverlayLock');
                     if (lockOverlay) {
-                        lockOverlay.style.bottom = (window.innerHeight - rect.bottom + offset + 58) + 'px';
+                        lockOverlay.style.bottom = (window.innerHeight - rect.bottom + offset + 48) + 'px';
                         lockOverlay.style.left   = (rect.left + offset) + 'px';
                     }
                     if (typeof positionHidePeekEye === 'function' && document.body.classList.contains('hide-ui')) {
@@ -28134,6 +28202,9 @@
                 `<span class="letter-tile" data-index="${idx}"
                     onclick="selectLetter(${idx})"
                     draggable="false"
+                    onmousedown="spellTilePressMouse(event)"
+                    onmouseup="spellTileClearPress()"
+                    onmouseleave="spellTileClearPress()"
                     ontouchstart="spellingTouchStart(event,${idx},'tile')"
                     ontouchmove="spellingTouchMove(event)"
                     ontouchend="spellingTouchEnd(event)"
@@ -28141,7 +28212,7 @@
                     style="display:inline-flex;align-items:center;justify-content:center;
                            width:${tileW}px;height:${tileH}px;min-width:${tileW}px;min-height:${tileH}px;
                            font-size:${lineFS};line-height:1;font-weight:${window.SPELL_LETTER_WEIGHT||'400'};
-                           padding:0;margin:0;box-sizing:border-box;overflow:hidden;
+                           padding:0;margin:0;box-sizing:border-box;overflow:visible;
                            font-family:${window.SPELL_LETTER_FONT||'Fredoka, Arial, sans-serif'};border-radius:${radius}px;
                            background:${SPELL_FILL_BG};border:2px solid transparent;
                            background-clip:border-box;-webkit-background-clip:border-box;
@@ -28287,7 +28358,26 @@
             }
         }
 
+        function spellTileClearPress() {
+            document.querySelectorAll('#spellingGameModal .letter-tile.spell-tile-press').forEach(function (el) {
+                el.classList.remove('spell-tile-press');
+            });
+        }
+        function spellTileSetPress(el) {
+            spellTileClearPress();
+            if (el && el.classList && el.classList.contains('letter-tile')) {
+                el.classList.add('spell-tile-press');
+            }
+        }
+        function spellTilePressMouse(e) {
+            if (e.button != null && e.button !== 0) return;
+            // Touch devices use spellingTouchStart; ignore synthetic mouse after touch
+            if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
+            const tile = e.currentTarget;
+            spellTileSetPress(tile);
+        }
         function selectLetter(letterIndex) {
+            spellTileClearPress();
             const letter = spellingGameState.scrambledLetters[letterIndex];
             if (letter === null) return;
             const firstEmptySlot = spellingGameState.answerSlots.findIndex(slot => slot === null);
@@ -28848,6 +28938,7 @@
             const ghost = _spellTouch && _spellTouch.ghost;
             _spellTouch = null;
             spellRemoveTouchGhosts(ghost);
+            if (typeof spellTileClearPress === 'function') spellTileClearPress();
             clearSpellDropHover();
             clearSpellInsertMarks();
             spellUnbindTouchSafety();
@@ -28917,8 +29008,10 @@
                 touchId: t.identifier,
                 startX: t.clientX, startY: t.clientY,
                 offX: ghostSize / 2, offY: ghostSize / 2,
-                isDragging: false
+                isDragging: false,
+                pressEl: (type === 'tile') ? e.currentTarget : null
             };
+            if (type === 'tile') spellTileSetPress(e.currentTarget);
             spellBindTouchSafety();
         }
 
@@ -28984,6 +29077,7 @@
             clearSpellDropHover();
             clearSpellInsertMarks();
             spellRemoveTouchGhosts(ghost);
+            if (typeof spellTileClearPress === 'function') spellTileClearPress();
 
             // Pure tap — never treat as page swipe (swipes only start outside play area)
             if (!isDragging) {
@@ -29097,13 +29191,14 @@
                 tile.style.padding = '0';
                 tile.style.margin = '0';
                 tile.style.boxSizing = 'border-box';
-                tile.style.overflow = 'hidden';
+                tile.style.overflow = 'visible';
                 tile.style.border = '2px solid transparent';
                 tile.style.background = SPELL_FILL_BG;
                 tile.style.backgroundClip = 'border-box';
                 tile.style.boxShadow = 'none';
                 tile.style.opacity = '1';
                 tile.style.color = spellLetterColor(letter);
+                tile.classList.remove('spell-tile-press');
                 tile.style.webkitTransform = 'translateZ(0)';
                 tile.style.transform = 'translateZ(0)';
                 tile.style.textAlign = 'center';
