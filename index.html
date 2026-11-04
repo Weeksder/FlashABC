@@ -284,6 +284,55 @@
             position: relative;
             z-index: 5;
         }
+        /* 1556: tablet portrait — extra bank tiles sit in-flow on the left/right */
+        #spellingGameModal.spell-bank-stack #spellMain {
+            overflow: visible;
+        }
+        #spellingGameModal.spell-bank-stack #spellColumn,
+        #spellingGameModal.spell-bank-stack #spellLetterBank {
+            overflow: visible !important;
+        }
+        #spellingGameModal.spell-bank-stack #letterRow {
+            flex-wrap: nowrap !important;
+        }
+        #spellingGameModal #spellAnswerBand {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+        #spellingGameModal #spellPlayBlock {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+        #spellingGameModal .spell-bank-stack-col {
+            display: none;
+            flex-direction: column-reverse;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 0 0 auto;
+            z-index: 8;
+            overflow: visible;
+            box-sizing: border-box;
+        }
+        #spellingGameModal.spell-bank-stack .spell-bank-stack-col:not(:empty) {
+            display: flex;
+        }
+        #spellingGameModal .spell-bank-stack-col .letter-tile {
+            pointer-events: auto;
+            flex-shrink: 0;
+        }
+        #spellingGameModal.spell-portrait.spell-big-tiles #spellMain.spell-main-col.spell-tier-long #spellingImgWrap {
+            flex: 1 1 0 !important;
+            max-height: none !important;
+        }
 
         /* Spell Me responsive shell — override global landscape 85% shrink on #spellingGameContent */
         #spellingGameModal {
@@ -304,13 +353,17 @@
             padding-right: 12px;
             box-sizing: border-box;
         }
-        /* Desktop: wider shell so landscape side-by-side has room for image + tiles */
+        /* Desktop PC: cap the shell. Tablets use .spell-full-width (100%). */
         @media (min-width: 900px) and (min-height: 640px) {
             #spellingGameModal #spellingGameContent {
                 width: min(1100px, 96vw) !important;
                 max-width: 1100px !important;
                 padding-left: 16px;
                 padding-right: 16px;
+            }
+            #spellingGameModal.spell-full-width #spellingGameContent {
+                width: 100% !important;
+                max-width: 100% !important;
             }
             #spellingGameModal .spell-glass-btn,
         #matchGameModal .spell-glass-btn {
@@ -725,11 +778,78 @@
             flex: 0 1 28%;
             max-height: min(30vh, 220px);
         }
+        #spellingGameModal.spell-portrait.spell-big-tiles #spellMain.spell-main-col.spell-tier-long #spellingImgWrap,
+        #spellingGameModal.spell-bank-stack.spell-big-tiles #spellMain.spell-main-col.spell-tier-long #spellingImgWrap {
+            flex: 1 1 0;
+            max-height: none;
+        }
         #spellingGameModal.spell-big-tiles #spellMain.spell-main-col #spellColumn {
             flex: 0 0 auto;
             margin-top: auto;
             justify-content: flex-end !important;
             padding-bottom: 28px;
+        }
+        /* 1559: tablet/PC landscape — image left, bank grid right, underlines full-width bottom */
+        #spellingGameModal.spell-land-split #spellMain.spell-main-land {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            flex: 1 1 auto;
+            gap: 8px;
+            height: 100%;
+            min-height: 0;
+            min-width: 0;
+        }
+        #spellingGameModal.spell-land-split #spellLandTop {
+            flex: 1 1 auto;
+            min-height: 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0;
+        }
+        #spellingGameModal.spell-land-split #spellLandTop #spellingImgWrap {
+            flex: 1 1 auto;
+            width: auto !important;
+            min-width: 0;
+            min-height: 0;
+            max-height: none !important;
+            align-self: stretch;
+        }
+        #spellingGameModal.spell-land-split #spellLetterBank {
+            flex: 0 0 auto;
+            width: auto !important;
+            max-width: none;
+            display: flex;
+            align-self: stretch;
+            align-items: flex-start;
+            justify-content: center;
+            /* Same inset on every side of the 20-letter bank (clears progress bar + right edge). */
+            padding: 36px !important;
+            box-sizing: border-box;
+        }
+        #spellingGameModal.spell-land-split #spellProgressBar {
+            z-index: 9;
+        }
+        #spellingGameModal.spell-land-split #letterRow {
+            display: grid !important;
+            width: auto !important;
+            min-height: 0 !important;
+            justify-content: center;
+            align-content: start;
+            justify-items: center;
+            margin-top: auto;
+            margin-bottom: auto;
+            flex-shrink: 0;
+        }
+        #spellingGameModal.spell-land-split #spellAnswerWrap {
+            flex: 0 0 auto;
+            width: 100%;
+            padding: 4px 0 22px !important;
+        }
+        #spellingGameModal.spell-land-split #answerRow {
+            flex-wrap: nowrap !important;
         }
         /* Progress: original corners (index left, dots right) — never centered with tools */
         /* Duolingo-style progress: short bar, top-right; fill = completed only */
@@ -8824,7 +8944,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1553-spell-pop-slot">
+    <meta name="flashabc-build" content="1562-spell-land-bank-inset">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -10523,6 +10643,7 @@
             <div style="padding:10px 0 16px;">
                 <textarea id="singleRenameInput" class="rename-name-field" autocapitalize="none" autocorrect="off"
                     rows="1"
+                    maxlength="20"
                     readonly
                     oninput="onSingleRenameInput()"
                     onkeydown="onSingleRenameKeydown(event)"
@@ -11146,8 +11267,11 @@
          *  medium 6–8 letters OR multi-word → side-by-side, medium image (~45%), spell min-width
          *  long   >8 letters (single only) → stack, image top (capped), spelling bottom
          *
-         * Tablet/PC tileScale: 1.5× for short single words (≤6 letters); never wrap a
-         * single word — shrink tiles so the whole word stays on one row.
+         * Tablet/PC tileScale: 1.5× for short single words (≤6 letters).
+         * Portrait tablet/PC: shrink tiles so a single word’s answer line and bank
+         * stay on one row (13–20 letters get smaller). Max 20 letters; no stacking.
+         * Landscape tablet/PC: image left, bank grid right (full tile size),
+         * answer underlines full-width on one line (may shrink).
          */
         const SPELL_SHORT_BOOST_LETTERS = 6;
         const SPELL_SCALE_PHONE = 1;
@@ -11156,8 +11280,26 @@
         const SPELL_SCALE_MIN = 0.4;
         const SPELL_SLOT_GAP = 2;
         const SPELL_HYPHEN_W = 14;
+        const SPELL_MAX_LETTERS = 20;
+        const SPELL_BANK_LINE_MAX = 12;
+        const SPELL_BANK_GAP_PORTRAIT = 4;
+        const SPELL_LAND_BANK_INSET = 36;
+        const SPELL_LAND_BANK_GAP = 10;
+
+        function clampCardName(s) {
+            return String(s == null ? '' : s).slice(0, SPELL_MAX_LETTERS);
+        }
+
+        function spellUseFullWidth() {
+            return typeof isDigitalDeviceLayout === 'function' && isDigitalDeviceLayout();
+        }
+
+        function spellUseBankStack(L) {
+            return false;
+        }
 
         function spellContentBoxWidth(vw, vh) {
+            if (spellUseFullWidth()) return vw;
             if (vw >= 900 && vh >= 640) return Math.min(1100, vw * 0.96);
             return vw;
         }
@@ -11186,14 +11328,73 @@
             return nTiles * tileW + nHyphens * SPELL_HYPHEN_W + gaps;
         }
 
-        function spellTileScaleForWord(L, word, letterCount, isMultiWord) {
-            if (!L.bigTiles) return SPELL_SCALE_PHONE;
+        function spellBankRowWidth(fsPx, scale, count, gap) {
+            const n = Math.max(0, count | 0);
+            if (!n) return 0;
+            const tileW = Math.round(fsPx * 0.88 * scale);
+            return n * tileW + Math.max(0, n - 1) * gap;
+        }
+
+        // Landscape bank: size a 20-letter box with equal inset on all sides so
+        // tiles never run into the top-right progress bar or the card's right edge.
+        function spellLandBankLayout(hint, fsPx, tileScale, letterCount) {
+            const tileW = Math.round(fsPx * 0.88 * tileScale);
+            const tileH = Math.round(fsPx * 1.32 * tileScale);
+            const gap = SPELL_LAND_BANK_GAP;
+            const inset = SPELL_LAND_BANK_INSET;
+            const innerW = spellAnswerRowAvail(hint);
+            const maxBankW = Math.floor(innerW * 0.52);
+            const maxGridW = Math.max(tileW, maxBankW - 2 * inset);
+            const maxColsByWidth = Math.max(1, Math.floor((maxGridW + gap) / (tileW + gap)));
+            const availColH = Math.max(tileH + 2 * inset, (hint.vh || 0) - 200);
+            const maxGridH = Math.max(tileH, availColH - 2 * inset);
+            const maxRowsByHeight = Math.max(1, Math.floor((maxGridH + gap) / (tileH + gap)));
+            let cols = Math.min(4, maxColsByWidth);
+            let rows = Math.ceil(SPELL_MAX_LETTERS / Math.max(1, cols));
+            while (rows > maxRowsByHeight && cols < maxColsByWidth) {
+                cols++;
+                rows = Math.ceil(SPELL_MAX_LETTERS / cols);
+            }
+            const regionW = cols * tileW + Math.max(0, cols - 1) * gap;
+            const bankCols = Math.min(cols, Math.max(1, letterCount || 1));
+            return { bankCols: bankCols, regionW: regionW, inset: inset };
+        }
+
+        function spellBankScaleForWord(letterCount, isMultiWord) {
             if (isMultiWord) return SPELL_SCALE_TABLET;
-            const boost = (letterCount <= SPELL_SHORT_BOOST_LETTERS) ? SPELL_SCALE_SHORT : SPELL_SCALE_TABLET;
+            return (letterCount <= SPELL_SHORT_BOOST_LETTERS) ? SPELL_SCALE_SHORT : SPELL_SCALE_TABLET;
+        }
+
+        function spellAnswerScaleForWord(L, word, letterCount, isMultiWord) {
             const avail = spellAnswerRowAvail(L);
-            let scale = boost;
+            let scale = spellBankScaleForWord(letterCount, isMultiWord);
             while (scale > SPELL_SCALE_MIN + 0.001) {
                 if (spellSingleWordWidth(L.fsPx, scale, word) <= avail) return Math.round(scale * 100) / 100;
+                scale -= 0.02;
+            }
+            return SPELL_SCALE_MIN;
+        }
+
+        function spellTileScaleForWord(L, word, letterCount, isMultiWord) {
+            if (!L.bigTiles) return SPELL_SCALE_PHONE;
+            const avail = spellAnswerRowAvail(L);
+            const boost = spellBankScaleForWord(letterCount, isMultiWord);
+            if (spellUseBankStack(L) && isMultiWord) {
+                const fitCount = Math.min(Math.max(letterCount, 1), SPELL_BANK_LINE_MAX);
+                let scale = boost;
+                while (scale > SPELL_SCALE_MIN + 0.001) {
+                    if (spellBankRowWidth(L.fsPx, scale, fitCount, SPELL_BANK_GAP_PORTRAIT) <= avail) {
+                        return Math.round(scale * 100) / 100;
+                    }
+                    scale -= 0.02;
+                }
+                return SPELL_SCALE_MIN;
+            }
+            let scale = boost;
+            while (scale > SPELL_SCALE_MIN + 0.001) {
+                const answerOk = isMultiWord || spellSingleWordWidth(L.fsPx, scale, word) <= avail;
+                const bankOk = spellBankRowWidth(L.fsPx, scale, Math.max(letterCount, 1), SPELL_BANK_GAP_PORTRAIT) <= avail;
+                if (answerOk && bankOk) return Math.round(scale * 100) / 100;
                 scale -= 0.02;
             }
             return SPELL_SCALE_MIN;
@@ -11220,8 +11421,9 @@
             else if (isMultiWordPhrase || letterCount >= 6) spellTier = 'medium';
 
             const isLongSpell = spellTier === 'long';
-            // Tablet/PC: same stack as portrait — picture on top, tiles below.
+            // Tablet/PC landscape: image left, bank grid right, underlines along the bottom.
             // Phones keep the old landscape side-by-side (picture on the left).
+            const landSplit = bigTiles && isLandscape;
             const sideBySide = !bigTiles && isLandscape && !isLongSpell;
             // Tools live as a gear overlay on the white card, not a side/top column.
             const toolsTop = false;
@@ -11230,11 +11432,21 @@
             const fsPx = Math.round(Math.min(Math.max(vw * 0.075, 36), 72));
 
             const toolGutter = toolsSide ? (isCompact ? 50 : (isDesktop ? 64 : 56)) : 12;
-            const tileScale = spellTileScaleForWord(
-                { vw, vh, bigTiles, isDesktop, isCompact, toolsSide, toolGutter, fsPx },
-                word, letterCount, isMultiWordPhrase
-            );
-            const mainClass = sideBySide ? 'spell-main-row' : 'spell-main-col';
+            const layoutHint = { vw, vh, bigTiles, isDesktop, isCompact, toolsSide, toolGutter, fsPx, isLandscape };
+            const tileScale = landSplit
+                ? spellBankScaleForWord(letterCount, isMultiWordPhrase)
+                : spellTileScaleForWord(layoutHint, word, letterCount, isMultiWordPhrase);
+            const answerScale = landSplit
+                ? spellAnswerScaleForWord(layoutHint, word, letterCount, isMultiWordPhrase)
+                : tileScale;
+            let bankCols = 0;
+            let bankRegionW = 0;
+            if (landSplit) {
+                const landBank = spellLandBankLayout(layoutHint, fsPx, tileScale, letterCount);
+                bankCols = landBank.bankCols;
+                bankRegionW = landBank.regionW;
+            }
+            const mainClass = landSplit ? 'spell-main-land' : (sideBySide ? 'spell-main-row' : 'spell-main-col');
             const tierClass = 'spell-tier-' + spellTier;
             const topChrome = toolsTop ? 56 : 28; /* room for short top-right progress bar */
 
@@ -11246,17 +11458,17 @@
             }
             if (bigTiles) {
                 imgMinH = 0;
-                // Short/medium: no cap — image fills space above the tiles.
-                // Long words: cap so extra letter rows fit.
-                imgMaxH = isLongSpell
-                    ? (isLandscape ? 'min(30vh, 200px)' : 'min(28vh, 220px)')
-                    : 'none';
+                imgMaxH = landSplit
+                    ? 'none'
+                    : ((isLongSpell && isLandscape)
+                        ? 'min(30vh, 200px)'
+                        : (isLongSpell && !isLandscape ? 'min(28vh, 220px)' : 'none'));
             }
 
             return {
-                vw, vh, isLandscape, sideBySide, isLongSpell, spellTier, letterCount,
+                vw, vh, isLandscape, sideBySide, landSplit, isLongSpell, spellTier, letterCount,
                 isMultiWordPhrase, isDesktop, isCompact, isCoarse, isPhone, bigTiles,
-                fsPx, tileScale,
+                fsPx, tileScale, answerScale, bankCols, bankRegionW,
                 toolsTop, toolsSide, toolGutter, mainClass, tierClass, topChrome,
                 spellAlign: sideBySide ? 'center' : 'flex-end',
                 outerPad: isLandscape ? '4px 0 0' : (isDesktop ? '10px 0 0' : '8px 0 0'),
@@ -11293,6 +11505,32 @@
         function spellLetterColor(ch) {
             if (!ch) return '#1a1a1a';
             return /[AEIOUaeiou]/.test(ch) ? '#ff9500' : '#35654D';
+        }
+
+        function layoutSpellBankStacks() {
+            const left = document.getElementById('spellBankLeft');
+            const right = document.getElementById('spellBankRight');
+            const row = document.getElementById('letterRow');
+            if (!left || !right) return;
+            const gap = row
+                ? (parseFloat(window.getComputedStyle(row).gap) || SPELL_BANK_GAP_PORTRAIT)
+                : SPELL_BANK_GAP_PORTRAIT;
+            const colGap = gap + 'px';
+            left.style.gap = colGap;
+            right.style.gap = colGap;
+            left.style.display = left.childElementCount ? 'flex' : 'none';
+            right.style.display = right.childElementCount ? 'flex' : 'none';
+        }
+
+        function scheduleSpellBankStacks() {
+            requestAnimationFrame(function () {
+                layoutSpellBankStacks();
+                requestAnimationFrame(layoutSpellBankStacks);
+            });
+            const img = document.getElementById('spellingImg');
+            if (img && !img.complete) {
+                img.addEventListener('load', layoutSpellBankStacks, { once: true });
+            }
         }
         function resetSpellingProgress() {
             spellingGameState.currentCardIndex = 0;
@@ -14246,7 +14484,7 @@
         function commitSingleRenameField() {
             const input = document.getElementById('singleRenameInput');
             if (!input || !cards[_singleRenameIndex]) return;
-            const newName = input.value.replace(/\s+/g, ' ').trim();
+            const newName = clampCardName(input.value.replace(/\s+/g, ' ').trim());
             if (newName !== (cards[_singleRenameIndex].backText || '')) {
                 cards[_singleRenameIndex].backText = newName;
                 delete cachedBackTextSizes[_singleRenameIndex];
@@ -14419,7 +14657,7 @@
                 '<img class="rename-thumb" src="' + src + '" alt="" draggable="false" onclick="onSessionRenameThumb(' + i + ')">' +
                 '<span class="rename-index-badge">' + (i + 1) + '.</span>' +
                 '<input type="text" class="rename-name-input" id="mc-input-' + i + '" value="' + name + '"' +
-                ' spellcheck="false" autocomplete="off" autocapitalize="off"' +
+                ' maxlength="' + SPELL_MAX_LETTERS + '" spellcheck="false" autocomplete="off" autocapitalize="off"' +
                 ' oninput="markMultiRenameDirty()"' +
                 ' onkeydown="onSessionRenameKeydown(event,' + i + ')"' +
                 ' onfocus="onSessionRenameFocus(event,' + i + ')">' +
@@ -14466,7 +14704,7 @@
             cards.forEach(function(card, i) {
                 const input = document.getElementById('mc-input-' + i);
                 if (!input) return;
-                const next = input.value.replace(/\s+/g, ' ').trim();
+                const next = clampCardName(input.value.replace(/\s+/g, ' ').trim());
                 if (next !== (card.backText || '')) markMultiRenameDirty();
                 card.backText = next;
                 delete cachedBackTextSizes[i];
@@ -16627,7 +16865,7 @@
                 Object.keys(namesByIndex).forEach(index => {
                     const cardIndex = parseInt(index);
                     if (cards[cardIndex]) {
-                        cards[cardIndex].backText = namesByIndex[index]; // Can be blank
+                        cards[cardIndex].backText = clampCardName(namesByIndex[index]); // Can be blank
                     }
                 });
 
@@ -16642,7 +16880,7 @@
             // Check if we're editing an existing card (single rename)
             if (newCard.editingIndex !== undefined && newCard.editingIndex !== null) {
                 // Update existing card
-                const backText = document.getElementById('backText').value;
+                const backText = clampCardName(document.getElementById('backText').value);
 
                 cards[newCard.editingIndex].backText = backText;
 
@@ -16735,7 +16973,7 @@
                                 const card = {
                                     id: Date.now() + i + Math.random(),
                                     frontImage: imageData,
-                                    backText: fileName,
+                                    backText: clampCardName(fileName),
                                     backImage: null
                                 };
                                 cards.push(card);
@@ -16804,7 +17042,7 @@
                 return;
             }
 
-            const backText = document.getElementById('backText').value;
+            const backText = clampCardName(document.getElementById('backText').value);
             newCard.backText = backText;
 
             const card = {
@@ -25261,7 +25499,6 @@
                 applyBombSizeButtonStyles(bombGridSize);
                 renderBombGame();
             } else if (gameType === 'spelling') {
-                const SPELL_MAX_LETTERS = 60;
                 const continueSpell = hasActiveSpellingSession();
 
                 if (!continueSpell) {
@@ -25290,7 +25527,11 @@
                 // Continue: keep gameCards, index, progress dots, scrambled bank, and answer slots
 
                 document.body.style.overflow = 'hidden';
-                document.getElementById('spellingGameModal').style.display = 'flex';
+                const spellModal = document.getElementById('spellingGameModal');
+                if (spellModal) {
+                    spellModal.classList.toggle('spell-full-width', typeof spellUseFullWidth === 'function' && !!spellUseFullWidth());
+                    spellModal.style.display = 'flex';
+                }
                 if (typeof updateSpellTimerDisplay === 'function') updateSpellTimerDisplay();
                 renderSpellingGame({ preserveState: continueSpell });
             } else if (gameType === 'match') {
@@ -28076,10 +28317,11 @@
             if (content && content.querySelector('h2') && /All words spelled/i.test(content.textContent || '')) return;
             const word = (spellingGameState.correctWord || (spellingGameState.gameCards[spellingGameState.currentCardIndex] || {}).backText || '').trim();
             const L = getSpellLayout({ word });
-            const key = [L.mainClass, L.tierClass, L.fsPx, L.tileScale, L.sideBySide ? 1 : 0, L.spellTier, L.toolsTop ? 1 : 0, L.bigTiles ? 1 : 0, Math.round(L.vw / 40), Math.round(L.vh / 40)].join('|');
+            const key = [L.mainClass, L.tierClass, L.fsPx, L.tileScale, L.answerScale, L.landSplit ? 1 : 0, L.sideBySide ? 1 : 0, L.spellTier, L.toolsTop ? 1 : 0, L.bigTiles ? 1 : 0, L.bankCols || 0, L.bankRegionW || 0, Math.round(L.vw / 40), Math.round(L.vh / 40)].join('|');
             if (key === _spellLayoutKey && document.getElementById('spellingCard')) {
                 if (typeof schedulePositionSpellGear === 'function') schedulePositionSpellGear();
                 else if (typeof positionSpellGear === 'function') positionSpellGear();
+                if (typeof scheduleSpellBankStacks === 'function') scheduleSpellBankStacks();
                 return;
             }
             _spellLayoutKey = key;
@@ -28138,24 +28380,31 @@
             const layout = getSpellLayout({ word });
             const _fsPx = layout.fsPx;
             const tileScale = layout.tileScale || 1;
+            const answerScale = (layout.answerScale != null) ? layout.answerScale : tileScale;
+            const landSplit = !!layout.landSplit;
             // Compact tiles on phones; tablet/PC use 1.2× (tileScale). Glyph sized so a
             // -0.065em lift still keeps descenders inside.
             const tileH = Math.round(_fsPx * 1.32 * tileScale);
             const tileW = Math.round(_fsPx * 0.88 * tileScale);
             const glyphPx = Math.round(_fsPx * 0.82 * tileScale);
             const lineFS = glyphPx + 'px';
-            const underInset = Math.round(tileW * 0.14);
-            const underBottom = Math.max(4, Math.round(tileH * 0.12));
-            const underH = Math.max(2, Math.round(2 * tileScale));
+            const ansH = Math.round(_fsPx * 1.32 * answerScale);
+            const ansW = Math.round(_fsPx * 0.88 * answerScale);
+            const ansGlyphPx = Math.round(_fsPx * 0.82 * answerScale);
+            const ansFS = ansGlyphPx + 'px';
+            const underInset = Math.round(ansW * 0.14);
+            const underBottom = Math.max(3, Math.round(ansH * 0.12));
+            const underH = Math.max(2, Math.round(2 * Math.max(answerScale, 0.6)));
             const glyphLift = SPELL_GLYPH_LIFT;
             const slotGap = 2;
-            const letterGap = layout.sideBySide ? 3 : 4;
+            const letterGap = landSplit ? SPELL_LAND_BANK_GAP : (layout.sideBySide ? 3 : 4);
             const radius = Math.max(8, Math.round(tileW * 0.22));
+            const ansRadius = Math.max(6, Math.round(ansW * 0.22));
 
             const makeSlot = (idx) => {
                 if (answerSlotsArray[idx] === 'HYPHEN') {
-                    return `<div class="answer-hyphen" style="min-width:14px;display:inline-flex;align-items:center;justify-content:center;height:${tileH}px;padding:0 1px;user-select:none;">
-                        <span class="answer-hyphen" style="font-size:${lineFS};font-weight:${window.SPELL_LETTER_WEIGHT||'400'};font-family:${window.SPELL_LETTER_FONT||'Fredoka, Arial, sans-serif'};color:#35654D;line-height:1;">-</span>
+                    return `<div class="answer-hyphen" style="min-width:${Math.max(10, Math.round(ansW * 0.4))}px;display:inline-flex;align-items:center;justify-content:center;height:${ansH}px;padding:0 1px;user-select:none;">
+                        <span class="answer-hyphen" style="font-size:${ansFS};font-weight:${window.SPELL_LETTER_WEIGHT||'400'};font-family:${window.SPELL_LETTER_FONT||'Fredoka, Arial, sans-serif'};color:#35654D;line-height:1;">-</span>
                     </div>`;
                 }
                 // Empty = green underline. Filled = box. Same outer size either way.
@@ -28170,13 +28419,13 @@
                 ontouchmove="spellingTouchMove(event)"
                 ontouchend="spellingTouchEnd(event)"
                 ontouchcancel="spellingTouchCancel(event)"
-                style="width:${tileW}px;height:${tileH}px;min-width:${tileW}px;min-height:${tileH}px;
+                style="width:${ansW}px;height:${ansH}px;min-width:${ansW}px;min-height:${ansH}px;
                        display:inline-flex;align-items:center;justify-content:center;
                        cursor:pointer;overflow:hidden;touch-action:none;padding:0;
                        user-select:none;box-sizing:border-box;
-                       background:transparent;border:2px solid transparent;border-radius:${radius}px;
+                       background:transparent;border:2px solid transparent;border-radius:${ansRadius}px;
                        background-clip:border-box;-webkit-background-clip:border-box;position:relative;">
-                    <span class="answer-letter" style="font-size:${lineFS};line-height:1;font-weight:${window.SPELL_LETTER_WEIGHT||'400'};font-family:${window.SPELL_LETTER_FONT||'Fredoka, Arial, sans-serif'};
+                    <span class="answer-letter" style="font-size:${ansFS};line-height:1;font-weight:${window.SPELL_LETTER_WEIGHT||'400'};font-family:${window.SPELL_LETTER_FONT||'Fredoka, Arial, sans-serif'};
                            color:#1a1a1a;display:flex;align-items:center;justify-content:center;
                            width:100%;height:100%;margin:0;padding:0;box-sizing:border-box;position:relative;z-index:1;
                            overflow:visible;transform:${glyphLift};">&nbsp;</span>
@@ -28210,7 +28459,17 @@
             };
 
             let answerRowsHTML = '';
-            if (isMultiWord) {
+            if (landSplit) {
+                const slots = answerSlotsArray.map(function (_, idx) {
+                    if (answerSlotsArray[idx] === 'SPACE') {
+                        return '<span style="width:' + wordGap + 'px;flex-shrink:0;display:inline-block;"></span>';
+                    }
+                    return makeSlot(idx);
+                }).join('');
+                answerRowsHTML = `<div id="answerRow" style="display:flex;gap:${slotGap}px;align-items:center;justify-content:center;flex-wrap:nowrap;width:100%;max-width:100%;overflow:visible;box-sizing:border-box;">
+                                      ${slots}
+                                  </div>`;
+            } else if (isMultiWord) {
                 const wordGroups = buildWordGroups();
                 if (!layout.sideBySide && wordGroups.length >= 3) {
                     const splitAt = Math.ceil(wordGroups.length / 2);
@@ -28225,7 +28484,8 @@
                 }
             } else {
                 const slots = answerSlotsArray.map((_, idx) => makeSlot(idx)).join('');
-                answerRowsHTML = `<div id="answerRow" style="display:flex;gap:${slotGap}px;row-gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;width:100%;max-width:100%;overflow:visible;box-sizing:border-box;">
+                const answerOneLine = spellSingleWordWidth(layout.fsPx, tileScale, word) <= spellAnswerRowAvail(layout) + 1;
+                answerRowsHTML = `<div id="answerRow" style="display:flex;gap:${slotGap}px;row-gap:6px;align-items:center;justify-content:center;flex-wrap:${answerOneLine ? 'nowrap' : 'wrap'};width:100%;max-width:100%;overflow:visible;box-sizing:border-box;">
                                       ${slots}
                                   </div>`;
             }
@@ -28255,11 +28515,28 @@
                            text-align:center;">
                     <span class="letter-tile-ch" style="display:flex;align-items:center;justify-content:center;
                           width:100%;height:100%;line-height:1;overflow:visible;transform:${glyphLift};">${letter}</span></span>`
-            ).join('');
+            );
 
             const L = layout;
+            const bankFitsOneLine = spellBankRowWidth(L.fsPx, tileScale, letterSpans.length, SPELL_BANK_GAP_PORTRAIT) <= spellAnswerRowAvail(L) + 1;
+            const useBankStack = spellUseBankStack(L) && letterSpans.length > SPELL_BANK_LINE_MAX && !bankFitsOneLine;
+            let letterRowHtml = letterSpans.join('');
+            let letterLeftHtml = '';
+            let letterRightHtml = '';
+            if (useBankStack) {
+                letterRowHtml = letterSpans.slice(0, SPELL_BANK_LINE_MAX).join('');
+                const extras = letterSpans.slice(SPELL_BANK_LINE_MAX);
+                letterLeftHtml = extras.filter(function (_, i) { return i % 2 === 0; }).join('');
+                letterRightHtml = extras.filter(function (_, i) { return i % 2 === 1; }).join('');
+            }
             const spellModal = document.getElementById('spellingGameModal');
-            if (spellModal) spellModal.classList.toggle('spell-big-tiles', !!L.bigTiles);
+            if (spellModal) {
+                spellModal.classList.toggle('spell-big-tiles', !!L.bigTiles);
+                spellModal.classList.toggle('spell-full-width', !!spellUseFullWidth());
+                spellModal.classList.toggle('spell-portrait', !!L.bigTiles && !L.isLandscape);
+                spellModal.classList.toggle('spell-land-split', !!landSplit);
+                spellModal.classList.toggle('spell-bank-stack', !!useBankStack);
+            }
             const imgMaxHCss = L.imgMaxH === 'none' ? '' : `max-height:${L.imgMaxH};`;
             const checkMinW = L.isCompact ? 130 : 160;
             const checkPad = L.isCompact ? '10px 20px' : '12px 28px';
@@ -28273,6 +28550,56 @@
 
             const topToolsHTML = '';
             const sideToolsHTML = '';
+            const bankCols = Math.max(1, L.bankCols || 4);
+            const letterRowStyle = landSplit
+                ? `display:grid;grid-template-columns:repeat(${bankCols},${tileW}px);gap:${bankGap}px;width:auto;box-sizing:border-box;overflow:visible;padding:0;`
+                : `width:100%;display:flex;justify-content:center;align-items:center;flex-wrap:${(useBankStack || bankFitsOneLine) ? 'nowrap' : 'wrap'};min-height:${tileH}px;gap:${bankGap}px;box-sizing:border-box;overflow:visible;padding:2px 0;`;
+            const imgHTML = `<div id="spellingImgWrap" style="position:relative;padding-top:${L.imgPadTop}px;box-sizing:border-box;overflow:hidden;
+                                        min-height:${L.imgMinH}px;${imgMaxHCss}${(L.sideBySide || landSplit) ? '' : 'width:100%;'}">
+                                <img id="spellingImg" src="${gifSrc(currentCard.frontImage)}"
+                                     alt="" draggable="false"
+                                     style="width:100%;height:100%;object-fit:contain;object-position:center;border-radius:12px;display:block;">
+                            </div>`;
+            const landBankMinW = landSplit ? Math.round((L.bankRegionW || 0) + 2 * SPELL_LAND_BANK_INSET) : 0;
+            const bankHTML = `<div id="spellLetterBank"
+                                     style="${landSplit ? `width:auto;min-width:${landBankMinW}px;` : 'width:100%;'}flex-shrink:0;position:relative;overflow:visible;
+                                            border:none;border-radius:0;padding:${landSplit ? SPELL_LAND_BANK_INSET + 'px' : '4px 2px'};box-sizing:border-box;
+                                            background:transparent;">
+                                    <div id="letterRow"
+                                         ondragover="event.preventDefault()"
+                                         ondrop="spellingDragDropToTile(event)"
+                                         style="${letterRowStyle}">
+                                        ${letterRowHtml}
+                                    </div>
+                                    <button id="checkBtn" onclick="checkSpelling()" type="button"
+                                        style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+                                               display:flex;align-items:center;justify-content:center;gap:8px;z-index:5;
+                                               min-width:${checkMinW}px;padding:${checkPad};border:none;border-radius:999px;cursor:pointer;
+                                               background:${SPELL_CONFIRM_GREEN};color:white;font-size:${checkFs};font-weight:700;font-family:inherit;
+                                               box-shadow:0 4px 16px rgba(0,200,83,0.45);touch-action:manipulation;
+                                               transition:opacity 0.15s, background 0.15s;
+                                               visibility:hidden;opacity:0;pointer-events:none;" title="Confirm spelling">
+                                        Confirm
+                                    </button>
+                                </div>`;
+            const answerHTML = `<div id="spellAnswerWrap" style="flex:${landSplit ? '0 0 auto' : '1 1 auto'};min-width:0;padding:4px 0;box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow:visible;width:100%;">
+                                    ${answerRowsHTML}
+                                </div>`;
+            const spellMainInner = landSplit
+                ? `<div id="spellLandTop">${imgHTML}${bankHTML}</div>${answerHTML}`
+                : `${imgHTML}
+                            <div id="spellColumn" style="min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;
+                                        justify-content:${L.spellAlign || (L.sideBySide ? 'center' : 'flex-end')};gap:${L.spellGap}px;
+                                        padding-top:${L.spellPadTop}px;">
+                                <div id="spellPlayBlock" style="gap:${useBankStack ? bankGap : L.spellGap}px;">
+                                <div id="spellAnswerBand" style="gap:${bankGap}px;">
+                                <div id="spellBankLeft" class="spell-bank-stack-col">${letterLeftHtml}</div>
+                                ${answerHTML}
+                                <div id="spellBankRight" class="spell-bank-stack-col">${letterRightHtml}</div>
+                                </div>
+                                ${bankHTML}
+                                </div>
+                            </div>`;
 
             content.innerHTML = `
                 <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;min-height:0;box-sizing:border-box;padding:${L.outerPad};">
@@ -28286,43 +28613,7 @@
                         ${topToolsHTML}
 
                         <div id="spellMain" class="${L.mainClass} ${L.tierClass}" style="padding-top:${L.toolsTop ? L.topChrome : 0}px;box-sizing:border-box;">
-                            <div id="spellingImgWrap" style="position:relative;padding-top:${L.imgPadTop}px;box-sizing:border-box;overflow:hidden;
-                                        min-height:${L.imgMinH}px;${imgMaxHCss}${L.sideBySide ? '' : 'width:100%;'}">
-                                <img id="spellingImg" src="${gifSrc(currentCard.frontImage)}"
-                                     alt="" draggable="false"
-                                     style="width:100%;height:100%;object-fit:contain;object-position:center;border-radius:12px;display:block;">
-                            </div>
-
-                            <div id="spellColumn" style="min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;
-                                        justify-content:${L.spellAlign || (L.sideBySide ? 'center' : 'flex-end')};gap:${L.spellGap}px;
-                                        padding-top:${L.spellPadTop}px;">
-                                <div style="width:100%;flex-shrink:0;padding:4px 4px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow:visible;">
-                                    ${answerRowsHTML}
-                                </div>
-                                <div id="spellLetterBank"
-                                     style="width:100%;flex-shrink:0;position:relative;overflow:visible;
-                                            border:none;border-radius:0;padding:4px 2px;box-sizing:border-box;
-                                            background:transparent;">
-                                    <div id="letterRow"
-                                         ondragover="event.preventDefault()"
-                                         ondrop="spellingDragDropToTile(event)"
-                                         style="width:100%;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;
-                                                min-height:${tileH}px;gap:${bankGap}px;box-sizing:border-box;overflow:visible;
-                                                padding:2px 0;">
-                                        ${letterSpans}
-                                    </div>
-                                    <button id="checkBtn" onclick="checkSpelling()" type="button"
-                                        style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-                                               display:flex;align-items:center;justify-content:center;gap:8px;z-index:5;
-                                               min-width:${checkMinW}px;padding:${checkPad};border:none;border-radius:999px;cursor:pointer;
-                                               background:${SPELL_CONFIRM_GREEN};color:white;font-size:${checkFs};font-weight:700;font-family:inherit;
-                                               box-shadow:0 4px 16px rgba(0,200,83,0.45);touch-action:manipulation;
-                                               transition:opacity 0.15s, background 0.15s;
-                                               visibility:hidden;opacity:0;pointer-events:none;" title="Confirm spelling">
-                                        Confirm
-                                    </button>
-                                </div>
-                            </div>
+                            ${spellMainInner}
                         </div>
 
                         ${sideToolsHTML}
@@ -28342,11 +28633,12 @@
             }
             if (typeof observeSpellCardForGear === 'function') observeSpellCardForGear();
             if (typeof applySpellLetterFonts === 'function') applySpellLetterFonts();
+            if (typeof scheduleSpellBankStacks === 'function') scheduleSpellBankStacks();
 
             // Remember layout so resize handler can skip no-op reflows
             try {
                 const _L = getSpellLayout({ word });
-                _spellLayoutKey = [_L.mainClass, _L.tierClass, _L.fsPx, _L.tileScale, _L.sideBySide ? 1 : 0, _L.spellTier, _L.toolsTop ? 1 : 0, _L.bigTiles ? 1 : 0, Math.round(_L.vw / 40), Math.round(_L.vh / 40)].join('|');
+                _spellLayoutKey = [_L.mainClass, _L.tierClass, _L.fsPx, _L.tileScale, _L.answerScale, _L.landSplit ? 1 : 0, _L.sideBySide ? 1 : 0, _L.spellTier, _L.toolsTop ? 1 : 0, _L.bigTiles ? 1 : 0, _L.bankCols || 0, _L.bankRegionW || 0, Math.round(_L.vw / 40), Math.round(_L.vh / 40)].join('|');
             } catch (e) { /* ignore */ }
 
             // Card swipe only OUTSIDE tiles / answer line / letter bank (never steal letter drags)
@@ -28359,6 +28651,8 @@
                     t.closest('#answerRow') ||
                     t.closest('#spellLetterBank') ||
                     t.closest('#letterRow') ||
+                    t.closest('#spellBankLeft') ||
+                    t.closest('#spellBankRight') ||
                     t.closest('#spellClearBtn') ||
                     t.closest('#checkBtn')
                 ));
@@ -29261,7 +29555,9 @@
                 }
             });
 
-            document.querySelectorAll('.letter-tile').forEach((tile, index) => {
+            document.querySelectorAll('#spellingGameModal .letter-tile').forEach((tile) => {
+                const index = parseInt(tile.getAttribute('data-index'), 10);
+                if (!isFinite(index)) return;
                 const letter = spellingGameState.scrambledLetters[index];
                 if (letter === null || letter === undefined) {
                     tile.style.visibility = 'hidden';
@@ -29334,8 +29630,13 @@
                 }
                 const bank = document.getElementById('letterRow');
                 if (bank) bank.style.visibility = allFilled ? 'hidden' : 'visible';
+                const leftCol = document.getElementById('spellBankLeft');
+                const rightCol = document.getElementById('spellBankRight');
+                if (leftCol) leftCol.style.visibility = allFilled ? 'hidden' : 'visible';
+                if (rightCol) rightCol.style.visibility = allFilled ? 'hidden' : 'visible';
             }
             if (typeof applySpellLetterFonts === 'function') applySpellLetterFonts();
+            if (typeof scheduleSpellBankStacks === 'function') scheduleSpellBankStacks();
         }
 
         let _spellPeekOn = false;
