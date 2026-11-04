@@ -626,18 +626,7 @@
             pointer-events: none;
             flex-shrink: 0;
         }
-        #matchWordSizeBox {
-            pointer-events: auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
-            min-width: 220px;
-            overflow: hidden;
-        }
-        #matchWordSizeBox .word-size-row {
-            border-bottom: none;
-            border-radius: 16px;
-        }
+
         @media (min-width: 700px) and (min-height: 520px) {
             #spellToolPanel .fullscreen-btn,
             #matchToolPanel .fullscreen-btn {
@@ -820,7 +809,8 @@
         #spellingGameModal.spell-land-split #spellLetterBank {
             flex: 0 0 auto;
             width: auto !important;
-            max-width: none;
+            max-width: 52%;
+            min-width: 0;
             display: flex;
             align-self: stretch;
             align-items: flex-start;
@@ -842,6 +832,21 @@
             margin-top: auto;
             margin-bottom: auto;
             flex-shrink: 0;
+        }
+        #spellingGameModal.spell-portrait.spell-bank-2row #letterRow {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap !important;
+            gap: 8px;
+        }
+        #spellingGameModal.spell-portrait.spell-bank-2row #answerRow {
+            display: flex !important;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap !important;
         }
         #spellingGameModal.spell-land-split #spellAnswerWrap {
             flex: 0 0 auto;
@@ -3664,20 +3669,7 @@
                 font-size: 0.78rem !important;
             }
         }
-        @media (min-width: 700px) and (min-height: 520px) {
-            #matchWordSizeBox {
-                min-width: 248px;
-            }
-            #matchWordSizeBox .word-size-label {
-                font-size: 18px !important;
-            }
-            #matchWordSizeBox .word-size-a-sm { font-size: 15px !important; }
-            #matchWordSizeBox .word-size-a-lg { font-size: 26px !important; }
-            #matchWordSizeBox .word-size-thumb {
-                width: 32px;
-                height: 32px;
-            }
-        }
+
         #matchGameModal .match-mark-layer {
             position: absolute;
             left: 0;
@@ -8206,8 +8198,25 @@
             border-left: none;
             border-bottom-color: #e6e6e6;
         }
+        #manageSidePanel .msp-unit-row.msp-just-added {
+            background: #eef6f1;
+            border: 4px dotted #7aa88a;
+            animation: mspJustAddedFade 2.4s ease both;
+        }
+        @keyframes mspJustAddedFade {
+            from {
+                opacity: 0;
+                background: #ffffff;
+                border-color: transparent;
+            }
+            to {
+                opacity: 1;
+                background: #eef6f1;
+                border-color: #7aa88a;
+            }
+        }
         @media (hover: hover) and (pointer: fine) {
-            .msp-unit-row:not(.loaded):hover {
+            .msp-unit-row:not(.loaded):not(.msp-just-added):hover {
                 background: #e4e6eb;
             }
         }
@@ -8944,7 +8953,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1562-spell-land-bank-inset">
+    <meta name="flashabc-build" content="1582-scramble-real-only">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -9960,19 +9969,6 @@
                 <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeMatchTools(); openMatchHelp();" style="color:#9c27b0;" title="Help">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 </button>
-                <div id="matchWordSizeBox" onclick="event.stopPropagation()" ontouchend="event.stopPropagation()">
-                    <div class="word-size-row">
-                        <div class="word-size-label">Word size</div>
-                        <div class="word-size-slider">
-                            <span class="word-size-a-sm" aria-hidden="true">A</span>
-                            <div class="word-size-track" id="matchWordSizeTrack" role="slider" aria-label="Word size" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
-                                <span class="word-size-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-                                <button type="button" class="word-size-thumb" id="matchWordSizeThumb" tabindex="-1" aria-hidden="true"></button>
-                            </div>
-                            <span class="word-size-a-lg" aria-hidden="true">A</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <div id="matchGameContent" style="flex:1;display:flex;flex-direction:column;min-height:0;padding:0 16px 12px;box-sizing:border-box;"></div>
@@ -10089,7 +10085,7 @@
             <button type="button" class="btn" onclick="fillMatchSimilarWords()" style="width:100%;padding:10px 12px;justify-content:center;margin-bottom:10px;background:#f0f9f4;border:1.5px solid #35654D;color:#35654D;font-weight:700;">
                 Scramble similar words
             </button>
-            <p style="color:#888;font-size:0.82rem;margin:-4px 0 10px;line-height:1.35;">Auto-fills 3–6 letter lookalikes (same length, close spelling). Skips two-word names and hyphens.</p>
+            <p style="color:#888;font-size:0.82rem;margin:-4px 0 10px;line-height:1.35;">Auto-fills real same-length words (close spelling first). Skips two-word names and hyphens. No made-up words.</p>
             <textarea id="matchExtraWordsInput" style="width:100%;height:140px;border:1.5px solid #ddd;border-radius:8px;padding:10px;font-size:15px;resize:vertical;box-sizing:border-box;" placeholder="e.g.&#10;Dog&#10;Cat&#10;Fish"></textarea>
             <div style="display:flex;gap:10px;margin-top:14px;">
                 <button class="btn btn-secondary" onclick="cancelMatchExtraWords()" style="flex:1;padding:12px;justify-content:center;">Cancel</button>
@@ -10333,8 +10329,11 @@
             <!-- Option B expand panel kept but unused since Option A selected -->
             <div id="previewExpandPanel" style="display:none;"></div>
 
-            <!-- Bottom action row: +Add | Replace | Preview -->
+            <!-- Bottom action row: Quick Load | +Add | Replace | Preview -->
             <div class="load-modal-actions">
+                <button class="btn" id="quickLoadBtn" onclick="quickLoadFromLoadDeck()" style="flex:1; display:none; background:#35654D; color:white; transition: flex 0.25s ease; white-space:nowrap;">
+                    Quick Load
+                </button>
                 <button class="btn btn-success" id="addToExistingBtn" onclick="loadSession('add')" style="flex:1; display:none; transition: flex 0.25s ease;">
                     ➕ Add
                 </button>
@@ -11267,17 +11266,25 @@
          *  medium 6–8 letters OR multi-word → side-by-side, medium image (~45%), spell min-width
          *  long   >8 letters (single only) → stack, image top (capped), spelling bottom
          *
-         * Tablet/PC tileScale: 1.5× for short single words (≤6 letters).
-         * Portrait tablet/PC: shrink tiles so a single word’s answer line and bank
-         * stay on one row (13–20 letters get smaller). Max 20 letters; no stacking.
-         * Landscape tablet/PC: image left, bank grid right (full tile size),
+         * Tablet/PC tileScale steps by letter count (1–4 / 5–8 / 9–12 / 13–16 / 17–20).
+         * Portrait tablet/PC 16–20: bank tiles two balanced rows at 0.94× (8+8 … 10+10).
+         * Answer underlines stay one shrinking line; a placed bank tile uses that smaller size.
+         * Landscape tablet/PC: image left, 4-col bank grid right at the count-based size,
          * answer underlines full-width on one line (may shrink).
          */
-        const SPELL_SHORT_BOOST_LETTERS = 6;
+        const SPELL_SHORT_BOOST_LETTERS = 4;
         const SPELL_SCALE_PHONE = 1;
         const SPELL_SCALE_TABLET = 1.2;
         const SPELL_SCALE_SHORT = 1.5;
         const SPELL_SCALE_MIN = 0.4;
+        const SPELL_SCALE_2ROW = 0.94;
+        const SPELL_SCALE_COUNT = [
+            { max: 4, scale: 1.5 },
+            { max: 8, scale: 1.32 },
+            { max: 12, scale: 1.12 },
+            { max: 16, scale: 0.94 },
+            { max: 20, scale: 0.78 }
+        ];
         const SPELL_SLOT_GAP = 2;
         const SPELL_HYPHEN_W = 14;
         const SPELL_MAX_LETTERS = 20;
@@ -11285,6 +11292,7 @@
         const SPELL_BANK_GAP_PORTRAIT = 4;
         const SPELL_LAND_BANK_INSET = 36;
         const SPELL_LAND_BANK_GAP = 10;
+        const SPELL_BANK_2ROW_MIN = 16;
 
         function clampCardName(s) {
             return String(s == null ? '' : s).slice(0, SPELL_MAX_LETTERS);
@@ -11349,20 +11357,29 @@
             const availColH = Math.max(tileH + 2 * inset, (hint.vh || 0) - 200);
             const maxGridH = Math.max(tileH, availColH - 2 * inset);
             const maxRowsByHeight = Math.max(1, Math.floor((maxGridH + gap) / (tileH + gap)));
-            let cols = Math.min(4, maxColsByWidth);
-            let rows = Math.ceil(SPELL_MAX_LETTERS / Math.max(1, cols));
+            const n = Math.max(1, letterCount || 1);
+            let cols = Math.min(4, n, maxColsByWidth);
+            let rows = Math.ceil(n / Math.max(1, cols));
             while (rows > maxRowsByHeight && cols < maxColsByWidth) {
                 cols++;
-                rows = Math.ceil(SPELL_MAX_LETTERS / cols);
+                rows = Math.ceil(n / cols);
             }
             const regionW = cols * tileW + Math.max(0, cols - 1) * gap;
-            const bankCols = Math.min(cols, Math.max(1, letterCount || 1));
+            const bankCols = cols;
             return { bankCols: bankCols, regionW: regionW, inset: inset };
         }
 
+        function spellPortraitTwoRow(L, letterCount) {
+            return !!(L && L.bigTiles && !L.isLandscape && (letterCount | 0) >= SPELL_BANK_2ROW_MIN);
+        }
+
         function spellBankScaleForWord(letterCount, isMultiWord) {
-            if (isMultiWord) return SPELL_SCALE_TABLET;
-            return (letterCount <= SPELL_SHORT_BOOST_LETTERS) ? SPELL_SCALE_SHORT : SPELL_SCALE_TABLET;
+            const n = Math.max(0, letterCount | 0);
+            const steps = SPELL_SCALE_COUNT;
+            for (let i = 0; i < steps.length; i++) {
+                if (n <= steps[i].max) return steps[i].scale;
+            }
+            return steps[steps.length - 1].scale;
         }
 
         function spellAnswerScaleForWord(L, word, letterCount, isMultiWord) {
@@ -11378,6 +11395,17 @@
         function spellTileScaleForWord(L, word, letterCount, isMultiWord) {
             if (!L.bigTiles) return SPELL_SCALE_PHONE;
             const avail = spellAnswerRowAvail(L);
+            if (spellPortraitTwoRow(L, letterCount)) {
+                const topN = Math.ceil(Math.max(letterCount, 1) / 2);
+                let scale = SPELL_SCALE_2ROW;
+                while (scale > SPELL_SCALE_MIN + 0.001) {
+                    if (spellBankRowWidth(L.fsPx, scale, topN, SPELL_BANK_GAP_PORTRAIT) <= avail) {
+                        return Math.round(scale * 100) / 100;
+                    }
+                    scale -= 0.02;
+                }
+                return SPELL_SCALE_MIN;
+            }
             const boost = spellBankScaleForWord(letterCount, isMultiWord);
             if (spellUseBankStack(L) && isMultiWord) {
                 const fitCount = Math.min(Math.max(letterCount, 1), SPELL_BANK_LINE_MAX);
@@ -11433,10 +11461,11 @@
 
             const toolGutter = toolsSide ? (isCompact ? 50 : (isDesktop ? 64 : 56)) : 12;
             const layoutHint = { vw, vh, bigTiles, isDesktop, isCompact, toolsSide, toolGutter, fsPx, isLandscape };
+            const portraitTwoRow = spellPortraitTwoRow({ bigTiles, isLandscape }, letterCount);
             const tileScale = landSplit
                 ? spellBankScaleForWord(letterCount, isMultiWordPhrase)
                 : spellTileScaleForWord(layoutHint, word, letterCount, isMultiWordPhrase);
-            const answerScale = landSplit
+            const answerScale = (landSplit || portraitTwoRow)
                 ? spellAnswerScaleForWord(layoutHint, word, letterCount, isMultiWordPhrase)
                 : tileScale;
             let bankCols = 0;
@@ -11468,7 +11497,7 @@
             return {
                 vw, vh, isLandscape, sideBySide, landSplit, isLongSpell, spellTier, letterCount,
                 isMultiWordPhrase, isDesktop, isCompact, isCoarse, isPhone, bigTiles,
-                fsPx, tileScale, answerScale, bankCols, bankRegionW,
+                fsPx, tileScale, answerScale, bankCols, bankRegionW, portraitTwoRow,
                 toolsTop, toolsSide, toolGutter, mainClass, tierClass, topChrome,
                 spellAlign: sideBySide ? 'center' : 'flex-end',
                 outerPad: isLandscape ? '4px 0 0' : (isDesktop ? '10px 0 0' : '8px 0 0'),
@@ -12454,10 +12483,6 @@
             return highlightVowelsFront(opt);
         }
         let matchWordSizeIndex = 0;
-        try {
-            const savedMatchWord = parseInt(localStorage.getItem('flashabc_match_word_size'), 10);
-            if (savedMatchWord >= 0 && savedMatchWord <= 3) matchWordSizeIndex = savedMatchWord;
-        } catch (e) {}
 
         // DOM Cache - Performance optimization to avoid repeated queries
         const domCache = {
@@ -12525,6 +12550,21 @@
                 [arr[i], arr[j]] = [arr[j], arr[i]];
             }
             return arr;
+        }
+
+        // Shuffle Spell Me bank letters. Cap retries so all-same letters (e.g. "oo")
+        // cannot spin forever and freeze the tab.
+        function spellShuffleBank(letters) {
+            const src = Array.isArray(letters) ? letters.slice() : [];
+            if (src.length <= 1) return src;
+            const ident = src.join('');
+            let out = fisherYatesShuffle(src);
+            let n = 0;
+            while (out.join('') === ident && n < 16) {
+                out = fisherYatesShuffle(src);
+                n++;
+            }
+            return out;
         }
 
         // Block all zooming — Ctrl+scroll, pinch, gesture, keyboard shortcuts
@@ -18171,6 +18211,8 @@
             document.getElementById('replaceAllBtn').style.display = 'none';
             document.getElementById('addToExistingBtn').style.display = 'none';
             document.getElementById('loadDirectBtn').style.display = 'none';
+            var qlBtn = document.getElementById('quickLoadBtn');
+            if (qlBtn) qlBtn.style.display = 'none';
             loadedSessionData = null;
         }
 
@@ -18731,6 +18773,8 @@
                         document.getElementById('loadFileCards').textContent = data.cards.length;
                         document.getElementById('loadFileInfo').style.display = 'block';
                         document.getElementById('previewBtn').style.display = '';
+                        var qlBtn = document.getElementById('quickLoadBtn');
+                        if (qlBtn) qlBtn.style.display = '';
 
                         const replaceBtn = document.getElementById('replaceAllBtn');
                         const addBtn = document.getElementById('addToExistingBtn');
@@ -18863,6 +18907,95 @@
 
             } catch (error) {
                 showToast('⚠️ Error loading session: ' + error.message, 3000);
+            }
+        }
+
+        /** Save the Load Deck file into the library as Uncategorized, using the filename. */
+        async function persistLoadedSessionToLibrary() {
+            if (!loadedSessionData || !Array.isArray(loadedSessionData.cards) || !loadedSessionData.cards.length) {
+                throw new Error('No file selected');
+            }
+            const name = String((typeof getLoadedFileName === 'function' ? getLoadedFileName() : '') || 'Untitled')
+                .replace(/\.(json|zip)$/i, '').trim() || 'Untitled';
+            const existingUnits = await loadUnitsFromDB();
+            const existing = (existingUnits || []).find(function (u) { return u.name === name; });
+            if (existing) {
+                const choice = await promptReplaceOrCancelDeck(name);
+                if (choice !== 'replace') return { cancelled: true };
+            }
+            const cardsOut = await Promise.all(loadedSessionData.cards.map(async function (card) {
+                const c = Object.assign({}, card);
+                if (c.frontImage && typeof flattenImageToWhite === 'function') {
+                    c.frontImage = await flattenImageToWhite(c.frontImage);
+                }
+                if (c.backImage && typeof flattenImageToWhite === 'function') {
+                    c.backImage = await flattenImageToWhite(c.backImage);
+                }
+                return c;
+            }));
+            const fileData = JSON.stringify(Object.assign({}, loadedSessionData, { cards: cardsOut }));
+            if (existing) {
+                await putUnitToDB(Object.assign({}, existing, {
+                    fileData: fileData,
+                    sourceType: 'file',
+                    updatedAt: Date.now()
+                }));
+                if (typeof invalidateUnitsCache === 'function') invalidateUnitsCache();
+                return { id: existing.id, name: existing.name, replaced: true };
+            }
+            const unit = {
+                name: name,
+                sourceType: 'file',
+                fileData: fileData,
+                createdAt: Date.now()
+            };
+            const newId = await saveUnitToDB(unit);
+            if (typeof invalidateUnitsCache === 'function') invalidateUnitsCache();
+            return { id: newId, name: name, replaced: false };
+        }
+
+        function highlightMspNewRow(id) {
+            const row = document.getElementById('msp-row-' + id);
+            if (!row) return;
+            row.classList.remove('msp-just-added');
+            void row.offsetWidth;
+            const start = function () {
+                row.classList.add('msp-just-added');
+                try { row.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
+            };
+            setTimeout(start, 280);
+        }
+
+        /** Load Deck → Quick Load: save under Uncategorized (filename, no rename), load it, open the slider. */
+        async function quickLoadFromLoadDeck() {
+            if (!loadedSessionData) {
+                showToast('⚠️ No file selected', 2000);
+                return;
+            }
+            const btn = document.getElementById('quickLoadBtn');
+            if (btn) {
+                if (btn.dataset.busy === '1') return;
+                btn.dataset.busy = '1';
+                btn.disabled = true;
+            }
+            try {
+                const saved = await persistLoadedSessionToLibrary();
+                if (!saved || saved.cancelled) {
+                    showToast('Quick Load cancelled', 1800);
+                    return;
+                }
+                closeLoadOptions();
+                if (typeof syncUnitsEverywhere === 'function') syncUnitsEverywhere();
+                try { localStorage.setItem('flashabc_uncat_collapsed', '0'); } catch (e) {}
+                await openManageSidePanel({ highlightId: saved.id });
+            } catch (err) {
+                console.error('quickLoadFromLoadDeck', err);
+                showToast('⚠️ Could not Quick Load: ' + ((err && err.message) ? err.message : err), 3000);
+            } finally {
+                if (btn) {
+                    btn.dataset.busy = '';
+                    btn.disabled = false;
+                }
             }
         }
 
@@ -19982,7 +20115,9 @@
         }
 
         // ── Manage Side Panel ──
-        async function openManageSidePanel() {
+        async function openManageSidePanel(opts) {
+            opts = (opts && typeof opts === 'object') ? opts : {};
+            const highlightId = opts.highlightId;
             closeMoreDropdown();
             const panel = document.getElementById('manageSidePanel');
             const overlay = document.getElementById('manageSidePanelOverlay');
@@ -19991,6 +20126,9 @@
             panel.classList.add('open');
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden';
+            if (highlightId != null) {
+                try { localStorage.setItem('flashabc_uncat_collapsed', '0'); } catch (e) {}
+            }
             list.innerHTML = '<div class="msp-empty">Loading…</div>';
 
             try {
@@ -20000,6 +20138,9 @@
                     return;
                 }
                 renderMspList(units);
+                if (highlightId != null && typeof highlightMspNewRow === 'function') {
+                    highlightMspNewRow(highlightId);
+                }
             } catch(e) {
                 list.innerHTML = '<div class="msp-empty">Error loading decks.</div>';
                 console.error('openManageSidePanel error:', e);
@@ -20854,8 +20995,13 @@
             document.body.style.overflow = '';
             _mspEditMode = false;
             updateMspEditUI();
-            // Reset to default width after slide-out completes
-            setTimeout(() => { panel.style.width = ''; }, 310);
+            // Reset to default width after slide-out completes; drop just-added highlight so the row is white next open
+            setTimeout(() => {
+                panel.style.width = '';
+                panel.querySelectorAll('.msp-unit-row.msp-just-added').forEach(function (row) {
+                    row.classList.remove('msp-just-added');
+                });
+            }, 310);
         }
 
         // Drag-to-resize side panel
@@ -24395,6 +24541,10 @@
             // ---- Spelling game keyboard input ----
             const spellingOpen = document.getElementById('spellingGameModal')?.style.display === 'flex';
             if (spellingOpen && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                // Held keys auto-repeat on PC (~20–30×/s). Backspace used to be
+                // excepted so hold-to-delete worked; that restyled every tile
+                // each repeat and froze the bank. Delete still clears all.
+                if (e.repeat) return;
                 if (e.key === 'ArrowRight') { e.preventDefault(); spellingNextCard(); return; }
                 if (e.key === 'ArrowLeft')  { e.preventDefault(); spellingPrevCard(); return; }
                 if (e.key === 'Enter')      { e.preventDefault(); checkSpelling();    return; }
@@ -24405,7 +24555,10 @@
                 if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
                     e.preventDefault();
                     const typed = e.key.toUpperCase();
-                    const idx = spellingGameState.scrambledLetters.findIndex(l => l !== null && l.toUpperCase() === typed);
+                    const bank = spellingGameState.scrambledLetters || [];
+                    const idx = bank.findIndex(function (l) {
+                        return l !== null && l !== undefined && String(l).toUpperCase() === typed;
+                    });
                     if (idx !== -1) selectLetter(idx);
                     return;
                 }
@@ -26343,18 +26496,70 @@
             'yellow ' +
             'zipper'
         ).trim().split(/\s+/);
+        const MATCH_LONG_BANK = (
+            'ability address airplane alphabet already another balloon baseball bedroom bicycle birthday blanket brother building butterfly calendar captain chicken children coconut computer costume country dinosaur dolphin drawing elephant evening example factory fishing forever friends giraffe grandma grandpa helicopter holiday hundred iceberg island jungle kitchen lantern lightning machine morning mountain muffin mushroom octopus pancake parents penguin picture popcorn pumpkin rainbow sandwich sausage schoolbag science scissors snowman soldier sparrow special strawberry sunshine teacher thunder traffic treasure triangle tropical umbrella unicorn vacation village weather weekend whisper ' +
+            'adventure afternoon alligator backpack basketball beautiful blueberry breakfast broccoli chocolate crocodile cucumber cupcake favorite flashlight hamburger lemonade pineapple playground princess snowflake sunflower together toothbrush vegetable watermelon wonderful yesterday ' +
+            'conversation construction independence information temperature development environment grandmother grandfather communication demonstration refrigerator understanding identification classification transportation congratulations characterization counterclockwise counterattack counterbalance ' +
+            'barbecue bathroom bedtime bookshelf bracelet campfire cardboard carpenter champion cinnamon classroom clipboard daughter direction doughnut envelope exercise firefighter forehead fountain friendship furniture hospital necklace notebook'
+        ).trim().split(/\s+/);
         const MATCH_SIMILAR_SET = {};
-        MATCH_SIMILAR_BANK.forEach(function (w) {
-            const k = w.toLowerCase();
-            if (!MATCH_SIMILAR_SET[k]) MATCH_SIMILAR_SET[k] = k;
-        });
-        function matchScrambleSeed(text) {
-            const w = String(text || '').trim();
-            if (!w) return null;
-            if (/\s/.test(w) || /-/.test(w)) return null;
-            if (!/^[A-Za-z]+$/.test(w)) return null;
-            if (w.length < 3 || w.length > 6) return null;
-            return w.toLowerCase();
+        const MATCH_SIMILAR_BY_LEN = {};
+        function indexMatchBankWord(w) {
+            const k = String(w || '').toLowerCase();
+            if (!k || MATCH_SIMILAR_SET[k]) return;
+            MATCH_SIMILAR_SET[k] = k;
+            const n = k.length;
+            if (!MATCH_SIMILAR_BY_LEN[n]) MATCH_SIMILAR_BY_LEN[n] = [];
+            MATCH_SIMILAR_BY_LEN[n].push(k);
+        }
+        MATCH_SIMILAR_BANK.forEach(indexMatchBankWord);
+        MATCH_LONG_BANK.forEach(indexMatchBankWord);
+        function matchSeedTokens(text) {
+            return String(text || '')
+                .split(/[\s\-_\/]+/)
+                .map(function (t) { return t.replace(/[^A-Za-z]/g, ''); })
+                .filter(function (t) { return t.length >= 2 && t.length <= 20; });
+        }
+        function matchHamming(a, b) {
+            if (a.length !== b.length) return 99;
+            let h = 0;
+            for (let i = 0; i < a.length; i++) if (a.charAt(i) !== b.charAt(i)) h++;
+            return h;
+        }
+        function matchIsAdjTranspose(a, b) {
+            if (a.length !== b.length) return false;
+            let i = 0;
+            while (i < a.length && a.charAt(i) === b.charAt(i)) i++;
+            if (i >= a.length - 1) return false;
+            return a.charAt(i) === b.charAt(i + 1) && a.charAt(i + 1) === b.charAt(i) && a.slice(i + 2) === b.slice(i + 2);
+        }
+        function matchOneEdit(a, b) {
+            const n = a.length;
+            const m = b.length;
+            if (Math.abs(n - m) > 1) return false;
+            if (n === m) return matchHamming(a, b) === 1;
+            const longer = n > m ? a : b;
+            const shorter = n > m ? b : a;
+            let i = 0;
+            let j = 0;
+            let skip = 0;
+            while (i < longer.length) {
+                if (j < shorter.length && longer.charAt(i) === shorter.charAt(j)) {
+                    i++;
+                    j++;
+                } else {
+                    skip++;
+                    i++;
+                    if (skip > 1) return false;
+                }
+            }
+            return true;
+        }
+        function matchSharedPrefix(a, b) {
+            const m = Math.min(a.length, b.length);
+            let p = 0;
+            while (p < m && a.charAt(p) === b.charAt(p)) p++;
+            return p;
         }
         function matchSimilarCase(sample, word) {
             if (!sample) return word;
@@ -26364,8 +26569,167 @@
             }
             return word.toLowerCase();
         }
+        function matchSimilarScore(s, w) {
+            if (!s || !w || s === w) return -1;
+            const n = s.length;
+            const m = w.length;
+            if (m === n) {
+                const h = matchHamming(s, w);
+                if (h === 1) return 100;
+                if (matchIsAdjTranspose(s, w)) return 92;
+                if (w.slice(1) === s.slice(1)) return 90;
+                if (w.slice(0, n - 1) === s.slice(0, n - 1)) return 88;
+                if (h === 2) return 70;
+                if (n >= 4 && w.slice(0, 2) === s.slice(0, 2) && w.slice(-2) === s.slice(-2)) return 58;
+                if (h === 3 && n >= 6) return 45;
+                return 20 + matchSharedPrefix(s, w);
+            }
+            if (Math.abs(m - n) !== 1) return -1;
+            if (m > n && w.indexOf(s) === 0) return 80;
+            if (n > m && s.indexOf(w) === 0) return 78;
+            if (matchOneEdit(s, w)) return 75;
+            const pref = matchSharedPrefix(s, w);
+            if (pref >= 3) return 50 + pref;
+            return -1;
+        }
+        const MATCH_AFFIX_PREFIX = (
+            'counter between through without against besides outside another further forward towards ' +
+            'contra circum across beyond around inside ' +
+            'under extra inter trans super multi ultra hyper after intra intro retro ' +
+            'over anti auto semi mini mega post para peri fore self ' +
+            'pre pro dis mis non sub out mid con com col cor for per ' +
+            'un re de in im ir il en em ex ab ad ob up on'
+        ).trim().split(/\s+/);
+        const MATCH_AFFIX_SUFFIX = (
+            'ification ization isation izations isations ability ibility iveness ousness fulness ational lessness ableness ' +
+            'ations itions utions ' +
+            'ation ition ution ators ator itor eter izer ences ments ality ively fully ously ' +
+            'tion sion ness ment able ible less like hood ship ward wise ally edly ical ular ious eous ' +
+            'ing ers ors ies ied ily ity ian ial ual ish ist ism ion ent ant ary ery ory ure age ate ive ous ful ' +
+            'al er or ly ed en es ty cy'
+        ).trim().split(/\s+/);
+        const MATCH_PREFIX_BY_LEN = {};
+        const MATCH_SUFFIX_BY_LEN = {};
+        (function indexMatchAffixes() {
+            function index(list, into) {
+                const seen = {};
+                list.forEach(function (aff) {
+                    const a = String(aff || '').toLowerCase();
+                    if (!a || seen[a]) return;
+                    seen[a] = 1;
+                    if (!into[a.length]) into[a.length] = [];
+                    into[a.length].push(a);
+                });
+                Object.keys(into).forEach(function (k) {
+                    into[k].sort(function (a, b) { return b.length - a.length; });
+                });
+            }
+            index(MATCH_AFFIX_PREFIX, MATCH_PREFIX_BY_LEN);
+            index(MATCH_AFFIX_SUFFIX, MATCH_SUFFIX_BY_LEN);
+        })();
+        function matchAffixListByLen(map) {
+            const all = [];
+            Object.keys(map).forEach(function (k) {
+                const list = map[k];
+                for (let i = 0; i < list.length; i++) all.push(list[i]);
+            });
+            all.sort(function (a, b) { return b.length - a.length; });
+            return all;
+        }
+        const MATCH_PREFIX_ALL = matchAffixListByLen(MATCH_PREFIX_BY_LEN);
+        const MATCH_SUFFIX_ALL = matchAffixListByLen(MATCH_SUFFIX_BY_LEN);
+        function matchMorphParses(word) {
+            const w = String(word || '').toLowerCase();
+            const parses = [];
+            const seen = {};
+            function add(pre, root, suf) {
+                if (!root || root.length < 3) return;
+                if (!/[aeiouy]/.test(root)) return;
+                const key = pre + '|' + root + '|' + suf;
+                if (seen[key]) return;
+                seen[key] = 1;
+                parses.push({ pre: pre, root: root, suf: suf });
+            }
+            for (let s = 0; s < MATCH_SUFFIX_ALL.length; s++) {
+                const suf = MATCH_SUFFIX_ALL[s];
+                if (suf.length < 2 || w.length - suf.length < 3 || w.slice(-suf.length) !== suf) continue;
+                const stem = w.slice(0, -suf.length);
+                add('', stem, suf);
+                for (let p = 0; p < MATCH_PREFIX_ALL.length; p++) {
+                    const pre = MATCH_PREFIX_ALL[p];
+                    if (pre.length < 2 || stem.length - pre.length < 3 || stem.slice(0, pre.length) !== pre) continue;
+                    add(pre, stem.slice(pre.length), suf);
+                }
+            }
+            for (let p = 0; p < MATCH_PREFIX_ALL.length; p++) {
+                const pre = MATCH_PREFIX_ALL[p];
+                if (pre.length < 2 || w.length - pre.length < 3 || w.slice(0, pre.length) !== pre) continue;
+                const rest = w.slice(pre.length);
+                add(pre, rest, '');
+                for (let s = 0; s < MATCH_SUFFIX_ALL.length; s++) {
+                    const suf = MATCH_SUFFIX_ALL[s];
+                    if (suf.length < 2 || rest.length - suf.length < 3 || rest.slice(-suf.length) !== suf) continue;
+                    add(pre, rest.slice(0, -suf.length), suf);
+                }
+            }
+            return parses;
+        }
+        function matchPushMorph(out, seen, used, w, seedLen) {
+            if (!w || w.length !== seedLen || seen[w] || used[w]) return false;
+            if (!/^[a-z]+$/.test(w) || w.length < 2 || w.length > 20) return false;
+            if (!/[aeiouy]/.test(w) || /(.)\1\1/.test(w)) return false;
+            seen[w] = 1;
+            out.push(w);
+            return true;
+        }
+        function matchMorphLookalikes(seed, used, limit) {
+            const s = String(seed || '').toLowerCase();
+            const n = s.length;
+            const out = [];
+            const seen = {};
+            seen[s] = 1;
+            if (n < 8) return out;
+            const parses = matchMorphParses(s);
+            for (let i = 0; i < parses.length && out.length < limit; i++) {
+                const p = parses[i];
+                if (p.pre) {
+                    const alts = MATCH_PREFIX_BY_LEN[p.pre.length] || [];
+                    for (let a = 0; a < alts.length && out.length < limit; a++) {
+                        if (alts[a] === p.pre) continue;
+                        matchPushMorph(out, seen, used, alts[a] + p.root + p.suf, n);
+                    }
+                }
+                if (p.suf) {
+                    const alts = MATCH_SUFFIX_BY_LEN[p.suf.length] || [];
+                    for (let a = 0; a < alts.length && out.length < limit; a++) {
+                        if (alts[a] === p.suf) continue;
+                        matchPushMorph(out, seen, used, p.pre + p.root + alts[a], n);
+                    }
+                }
+            }
+            for (let i = 0; i < parses.length && out.length < limit; i++) {
+                const p = parses[i];
+                const roots = MATCH_SIMILAR_BY_LEN[p.root.length] || [];
+                for (let r = 0; r < roots.length && out.length < limit; r++) {
+                    if (roots[r] === p.root) continue;
+                    matchPushMorph(out, seen, used, p.pre + roots[r] + p.suf, n);
+                }
+            }
+            return out;
+        }
+        function matchIsHyphenated(text) {
+            return /-/.test(String(text || ''));
+        }
+        function matchScrambleSeed(text) {
+            const w = String(text || '').trim();
+            if (!w) return null;
+            if (matchIsHyphenated(w) || /\s/.test(w)) return null;
+            if (!/^[A-Za-z]+$/.test(w)) return null;
+            if (w.length < 3 || w.length > 20) return null;
+            return w.toLowerCase();
+        }
         function matchSimilarNeighbors(seed) {
-            const s = seed.toLowerCase();
+            const s = String(seed || '').toLowerCase();
             const n = s.length;
             const rime = s.slice(1);
             const out = [];
@@ -26379,6 +26743,68 @@
                 }
             });
             return out;
+        }
+        function matchLongBankNeighbors(seed) {
+            const s = String(seed || '').toLowerCase();
+            const n = s.length;
+            const bank = MATCH_SIMILAR_BY_LEN[n] || [];
+            const scored = [];
+            for (let i = 0; i < bank.length; i++) {
+                const w = bank[i];
+                if (w === s) continue;
+                const h = matchHamming(s, w);
+                const pref = matchSharedPrefix(s, w);
+                let score = 0;
+                if (h === 1) score = 100;
+                else if (h === 2) score = 80;
+                else if (h === 3 && n >= 10) score = 62;
+                else if (pref >= 4) score = 50 + pref;
+                else if (n >= 8 && w.slice(-4) === s.slice(-4)) score = 46;
+                else continue;
+                scored.push({ w: w, score: score });
+            }
+            scored.sort(function (a, b) { return b.score - a.score; });
+            return scored.map(function (x) { return x.w; });
+        }
+        function matchMergeExtrasIntoTextarea(ta, extras, emptyMsg, added) {
+            const keep = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+            const merged = keep.slice();
+            extras.forEach(function (w) {
+                if (keep.every(function (k) { return k.toLowerCase() !== w.toLowerCase(); })) merged.push(w);
+            });
+            ta.value = merged.join('\n');
+            if (typeof showToast === 'function') {
+                if (added === 0) showToast(emptyMsg, 2200);
+                else showToast('Added ' + added + ' similar word' + (added === 1 ? '' : 's'), 2200);
+            }
+        }
+        function matchRealSameLength(seed, used) {
+            const s = String(seed || '').toLowerCase();
+            const n = s.length;
+            const bank = MATCH_SIMILAR_BY_LEN[n] || [];
+            const close = [];
+            const rest = [];
+            const seen = {};
+            seen[s] = 1;
+            for (let i = 0; i < bank.length; i++) {
+                const w = bank[i];
+                if (!w || seen[w] || (used && used[w]) || matchIsHyphenated(w)) continue;
+                if (!MATCH_SIMILAR_SET[w]) continue;
+                seen[w] = 1;
+                const h = matchHamming(s, w);
+                const rime = n >= 3 && w.slice(1) === s.slice(1);
+                const pref = typeof matchSharedPrefix === 'function' ? matchSharedPrefix(s, w) : 0;
+                if (h === 1 || rime || (h === 2 && n >= 5) || (n >= 7 && pref >= 4) || (n >= 8 && w.slice(-4) === s.slice(-4))) {
+                    close.push(w);
+                } else {
+                    rest.push(w);
+                }
+            }
+            if (typeof fisherYatesShuffle === 'function') {
+                fisherYatesShuffle(close);
+                fisherYatesShuffle(rest);
+            }
+            return close.concat(rest);
         }
         function fillMatchSimilarWords() {
             const cardsWithText = matchGameState._pendingCards || [];
@@ -26395,18 +26821,19 @@
                 if (t) existing[t.toLowerCase()] = t;
             });
             let added = 0;
-            let skipped = 0;
             const extras = [];
             cardsWithText.forEach(function (c) {
                 const raw = (c && c.backText) ? String(c.backText).trim() : '';
+                if (matchIsHyphenated(raw)) return;
                 const seed = matchScrambleSeed(raw);
-                if (!seed) { skipped++; return; }
-                let neigh = matchSimilarNeighbors(seed);
-                if (typeof fisherYatesShuffle === 'function') neigh = fisherYatesShuffle(neigh);
+                if (!seed) return;
+                const used = Object.assign({}, deckLower, existing);
+                const takeMax = seed.length <= 6 ? 4 : 6;
+                const combined = matchRealSameLength(seed, used);
                 let take = 0;
-                for (let i = 0; i < neigh.length && take < 4; i++) {
-                    const w = neigh[i];
-                    if (deckLower[w] || existing[w]) continue;
+                for (let i = 0; i < combined.length && take < takeMax; i++) {
+                    const w = combined[i];
+                    if (!w || deckLower[w] || existing[w] || matchIsHyphenated(w)) continue;
                     const cased = matchSimilarCase(raw, w);
                     existing[w] = cased;
                     extras.push(cased);
@@ -26414,16 +26841,69 @@
                     take++;
                 }
             });
-            const keep = ta.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-            const merged = keep.slice();
-            extras.forEach(function (w) {
-                if (keep.every(function (k) { return k.toLowerCase() !== w.toLowerCase(); })) merged.push(w);
-            });
-            ta.value = merged.join('\n');
-            if (typeof showToast === 'function') {
-                if (added === 0) showToast('No 3–6 letter lookalikes to add', 2200);
-                else showToast('Added ' + added + ' similar word' + (added === 1 ? '' : 's'), 2200);
+            matchMergeExtrasIntoTextarea(ta, extras, 'No lookalikes to add', added);
+        }
+        function matchDistractorScore(correct, candidate) {
+            const tokensA = matchSeedTokens(correct);
+            const tokensB = matchSeedTokens(candidate);
+            const a = (tokensA[0] || String(correct || '').replace(/[^A-Za-z]/g, '')).toLowerCase();
+            const b = (tokensB[0] || String(candidate || '').replace(/[^A-Za-z]/g, '')).toLowerCase();
+            if (!a || !b || a === b) return -1;
+            let score = 0;
+            if (b.length === a.length) {
+                score += 10;
+                const h = matchHamming(a, b);
+                if (h === 1) score += 24;
+                else if (matchIsAdjTranspose(a, b)) score += 22;
+                else if (h === 2) score += 14;
+                else if (h === 3) score += 7;
+                else score += Math.max(0, 5 - h);
+            } else {
+                score += Math.max(0, 5 - Math.abs(b.length - a.length));
             }
+            let p = 0;
+            const m = Math.min(a.length, b.length);
+            while (p < m && a.charAt(p) === b.charAt(p)) p++;
+            score += p;
+            return score;
+        }
+        function matchAnswerLen(text) {
+            return String(text || '').replace(/[^A-Za-z]/g, '').length;
+        }
+        function pickMatchWrongOptions(correct, allWords, n) {
+            const pool = allWords.filter(function (w) {
+                return w !== correct && !matchIsHyphenated(w);
+            });
+            if (pool.length <= n) return pool.slice();
+            const clen = matchAnswerLen(correct);
+            const buckets = [[], [], [], []];
+            for (let i = 0; i < pool.length; i++) {
+                const w = pool[i];
+                const d = Math.abs(matchAnswerLen(w) - clen);
+                const b = d === 0 ? 0 : d === 1 ? 1 : d === 2 ? 2 : 3;
+                buckets[b].push({ w: w, s: matchDistractorScore(correct, w) });
+            }
+            const picked = [];
+            const seen = {};
+            for (let b = 0; b < buckets.length && picked.length < n; b++) {
+                const list = buckets[b];
+                list.sort(function (a, c) { return c.s - a.s; });
+                const window = list.slice(0, Math.max(n * 3, n));
+                if (typeof fisherYatesShuffle === 'function') fisherYatesShuffle(window);
+                for (let i = 0; i < window.length && picked.length < n; i++) {
+                    const w = window[i].w;
+                    if (seen[w]) continue;
+                    seen[w] = 1;
+                    picked.push(w);
+                }
+                for (let i = 0; i < list.length && picked.length < n; i++) {
+                    const w = list[i].w;
+                    if (seen[w]) continue;
+                    seen[w] = 1;
+                    picked.push(w);
+                }
+            }
+            return picked;
         }
 
         function initMatchGame(cardsWithText) {
@@ -26435,8 +26915,7 @@
 
             matchGameState.questions = shuffled.map(card => {
                 const correct = card.backText.trim();
-                const pool = fisherYatesShuffle(allWords.filter(w => w !== correct));
-                const wrong = pool.slice(0, 2); // 2 wrong = 3 total
+                const wrong = pickMatchWrongOptions(correct, allWords, 2);
                 return { card, correct, options: fisherYatesShuffle([correct, ...wrong]) };
             });
             matchGameState.currentQ = 0;
@@ -26485,8 +26964,7 @@
             const shuffledCards = fisherYatesShuffle(matchGameState.questions.map(q => q.card));
             matchGameState.questions = shuffledCards.map(card => {
                 const correct = card.backText.trim();
-                const pool = fisherYatesShuffle(allWords.filter(w => w !== correct));
-                const wrong = pool.slice(0, 2);
+                const wrong = pickMatchWrongOptions(correct, allWords, 2);
                 return { card, correct, options: fisherYatesShuffle([correct, ...wrong]) };
             });
             matchGameState.currentQ = 0;
@@ -28317,7 +28795,7 @@
             if (content && content.querySelector('h2') && /All words spelled/i.test(content.textContent || '')) return;
             const word = (spellingGameState.correctWord || (spellingGameState.gameCards[spellingGameState.currentCardIndex] || {}).backText || '').trim();
             const L = getSpellLayout({ word });
-            const key = [L.mainClass, L.tierClass, L.fsPx, L.tileScale, L.answerScale, L.landSplit ? 1 : 0, L.sideBySide ? 1 : 0, L.spellTier, L.toolsTop ? 1 : 0, L.bigTiles ? 1 : 0, L.bankCols || 0, L.bankRegionW || 0, Math.round(L.vw / 40), Math.round(L.vh / 40)].join('|');
+            const key = [L.mainClass, L.tierClass, L.fsPx, L.tileScale, L.answerScale, L.landSplit ? 1 : 0, L.sideBySide ? 1 : 0, L.spellTier, L.toolsTop ? 1 : 0, L.bigTiles ? 1 : 0, L.bankCols || 0, L.bankRegionW || 0, L.portraitTwoRow ? 1 : 0, Math.round(L.vw / 40), Math.round(L.vh / 40)].join('|');
             if (key === _spellLayoutKey && document.getElementById('spellingCard')) {
                 if (typeof schedulePositionSpellGear === 'function') schedulePositionSpellGear();
                 else if (typeof positionSpellGear === 'function') positionSpellGear();
@@ -28328,7 +28806,11 @@
             renderSpellingGame({ preserveState: true });
         }
 
+        let _spellRenderLock = false;
         function renderSpellingGame(opts) {
+            if (_spellRenderLock) return;
+            _spellRenderLock = true;
+            try {
             const preserveState = !!(opts && opts.preserveState);
             if (!preserveState) _spellTryAgain = false;
             // Full card re-render: drop any stuck multi-touch drag ghost
@@ -28360,9 +28842,7 @@
                 answerSlotsArray = spellingGameState.answerSlots;
                 scrambledArray = spellingGameState.scrambledLetters;
             } else {
-                let scrambled;
-                do { scrambled = fisherYatesShuffle([...lettersOnly]); }
-                while (scrambled.join('') === lettersOnly.join('') && lettersOnly.length > 1);
+                const scrambled = spellShuffleBank(lettersOnly);
 
                 answerSlotsArray = [];
                 scrambledArray = [];
@@ -28483,10 +28963,10 @@
                                       </div>`;
                 }
             } else {
-                const slots = answerSlotsArray.map((_, idx) => makeSlot(idx)).join('');
-                const answerOneLine = spellSingleWordWidth(layout.fsPx, tileScale, word) <= spellAnswerRowAvail(layout) + 1;
+                const slotEls = answerSlotsArray.map((_, idx) => makeSlot(idx));
+                const answerOneLine = spellSingleWordWidth(layout.fsPx, answerScale, word) <= spellAnswerRowAvail(layout) + 1;
                 answerRowsHTML = `<div id="answerRow" style="display:flex;gap:${slotGap}px;row-gap:6px;align-items:center;justify-content:center;flex-wrap:${answerOneLine ? 'nowrap' : 'wrap'};width:100%;max-width:100%;overflow:visible;box-sizing:border-box;">
-                                      ${slots}
+                                      ${slotEls.join('')}
                                   </div>`;
             }
 
@@ -28535,6 +29015,7 @@
                 spellModal.classList.toggle('spell-full-width', !!spellUseFullWidth());
                 spellModal.classList.toggle('spell-portrait', !!L.bigTiles && !L.isLandscape);
                 spellModal.classList.toggle('spell-land-split', !!landSplit);
+                spellModal.classList.toggle('spell-bank-2row', !!L.portraitTwoRow);
                 spellModal.classList.toggle('spell-bank-stack', !!useBankStack);
             }
             const imgMaxHCss = L.imgMaxH === 'none' ? '' : `max-height:${L.imgMaxH};`;
@@ -28551,9 +29032,18 @@
             const topToolsHTML = '';
             const sideToolsHTML = '';
             const bankCols = Math.max(1, L.bankCols || 4);
+            const portraitTwoRow = !!(L.portraitTwoRow && letterSpans.length >= SPELL_BANK_2ROW_MIN);
+            if (portraitTwoRow) {
+                const topN = Math.ceil(letterSpans.length / 2);
+                const lineStyle = `display:flex;flex-direction:row;align-items:center;justify-content:center;gap:${bankGap}px;flex-shrink:0;`;
+                letterRowHtml = `<div class="spell-bank-line" style="${lineStyle}">${letterSpans.slice(0, topN).join('')}</div>` +
+                    `<div class="spell-bank-line" style="${lineStyle}">${letterSpans.slice(topN).join('')}</div>`;
+            }
             const letterRowStyle = landSplit
                 ? `display:grid;grid-template-columns:repeat(${bankCols},${tileW}px);gap:${bankGap}px;width:auto;box-sizing:border-box;overflow:visible;padding:0;`
-                : `width:100%;display:flex;justify-content:center;align-items:center;flex-wrap:${(useBankStack || bankFitsOneLine) ? 'nowrap' : 'wrap'};min-height:${tileH}px;gap:${bankGap}px;box-sizing:border-box;overflow:visible;padding:2px 0;`;
+                : (portraitTwoRow
+                    ? `width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:0;box-sizing:border-box;overflow:visible;padding:2px 0;`
+                    : `width:100%;display:flex;justify-content:center;align-items:center;flex-wrap:${(useBankStack || bankFitsOneLine) ? 'nowrap' : 'wrap'};min-height:${tileH}px;gap:${bankGap}px;box-sizing:border-box;overflow:visible;padding:2px 0;`);
             const imgHTML = `<div id="spellingImgWrap" style="position:relative;padding-top:${L.imgPadTop}px;box-sizing:border-box;overflow:hidden;
                                         min-height:${L.imgMinH}px;${imgMaxHCss}${(L.sideBySide || landSplit) ? '' : 'width:100%;'}">
                                 <img id="spellingImg" src="${gifSrc(currentCard.frontImage)}"
@@ -28562,7 +29052,7 @@
                             </div>`;
             const landBankMinW = landSplit ? Math.round((L.bankRegionW || 0) + 2 * SPELL_LAND_BANK_INSET) : 0;
             const bankHTML = `<div id="spellLetterBank"
-                                     style="${landSplit ? `width:auto;min-width:${landBankMinW}px;` : 'width:100%;'}flex-shrink:0;position:relative;overflow:visible;
+                                     style="${landSplit ? `width:auto;max-width:52%;min-width:min(${landBankMinW}px,52%);` : 'width:100%;'}flex-shrink:0;position:relative;overflow:visible;
                                             border:none;border-radius:0;padding:${landSplit ? SPELL_LAND_BANK_INSET + 'px' : '4px 2px'};box-sizing:border-box;
                                             background:transparent;">
                                     <div id="letterRow"
@@ -28638,7 +29128,7 @@
             // Remember layout so resize handler can skip no-op reflows
             try {
                 const _L = getSpellLayout({ word });
-                _spellLayoutKey = [_L.mainClass, _L.tierClass, _L.fsPx, _L.tileScale, _L.answerScale, _L.landSplit ? 1 : 0, _L.sideBySide ? 1 : 0, _L.spellTier, _L.toolsTop ? 1 : 0, _L.bigTiles ? 1 : 0, _L.bankCols || 0, _L.bankRegionW || 0, Math.round(_L.vw / 40), Math.round(_L.vh / 40)].join('|');
+                _spellLayoutKey = [_L.mainClass, _L.tierClass, _L.fsPx, _L.tileScale, _L.answerScale, _L.landSplit ? 1 : 0, _L.sideBySide ? 1 : 0, _L.spellTier, _L.toolsTop ? 1 : 0, _L.bigTiles ? 1 : 0, _L.bankCols || 0, _L.bankRegionW || 0, _L.portraitTwoRow ? 1 : 0, Math.round(_L.vw / 40), Math.round(_L.vh / 40)].join('|');
             } catch (e) { /* ignore */ }
 
             // Card swipe only OUTSIDE tiles / answer line / letter bank (never steal letter drags)
@@ -28681,6 +29171,9 @@
                         if (dx < 0) spellingNextCard(); else spellingPrevCard();
                     }
                 });
+            }
+            } finally {
+                _spellRenderLock = false;
             }
         }
 
@@ -28764,21 +29257,50 @@
             renderSpellingGameState();
         }
 
+        /** Put a letter back in the bank without growing past the on-screen tiles. */
+        function spellPlaceInBank(letter) {
+            const bank = spellingGameState.scrambledLetters;
+            if (!bank || !isSpellLetter(letter)) return -1;
+            let emptyIndex = bank.findIndex(function (l) { return l === null; });
+            if (emptyIndex === -1) {
+                const tileCount = document.querySelectorAll('#spellingGameModal .letter-tile').length;
+                if (tileCount > bank.length) {
+                    while (bank.length < tileCount) bank.push(null);
+                    emptyIndex = bank.findIndex(function (l) { return l === null; });
+                }
+            }
+            if (emptyIndex === -1) return -1;
+            bank[emptyIndex] = letter;
+            return emptyIndex;
+        }
+
+        /** Drop any in-flight PC drag / press so Backspace cannot restyle a live preview. */
+        function spellAbortPointer() {
+            if (typeof spellClearLiveQueue === 'function') spellClearLiveQueue();
+            if (typeof spellClearLivePlaceholder === 'function') spellClearLivePlaceholder();
+            if (typeof clearSpellDropHover === 'function') clearSpellDropHover();
+            if (typeof clearSpellInsertMarks === 'function') clearSpellInsertMarks();
+            if (typeof spellUnbindDocDrag === 'function') spellUnbindDocDrag();
+            if (_spellLive) {
+                spellRestoreLiveOrig();
+                _spellLive = null;
+            }
+            _spellDragSource = null;
+            if (typeof spellTileClearPress === 'function') spellTileClearPress();
+            if (typeof spellClearTouchDrag === 'function') spellClearTouchDrag({ cancelLive: false });
+        }
+
         function selectAnswerSlot(slotIndex) {
             const v = spellingGameState.answerSlots[slotIndex];
             if (!isSpellLetter(v)) return;
             spellClearTryAgain();
-            let emptyIndex = spellingGameState.scrambledLetters.findIndex(l => l === null);
-            if (emptyIndex === -1) {
-                spellingGameState.scrambledLetters.push(v);
-                emptyIndex = spellingGameState.scrambledLetters.length - 1;
-            }
-            spellingGameState.scrambledLetters[emptyIndex] = v;
+            if (spellPlaceInBank(v) === -1) return;
             spellingGameState.answerSlots[slotIndex] = null;
             renderSpellingGameState();
         }
 
         function backspaceSpellingLetter() {
+            spellAbortPointer();
             const slots = spellingGameState.answerSlots;
             if (!slots) return;
             for (let i = slots.length - 1; i >= 0; i--) {
@@ -28787,6 +29309,7 @@
                     return;
                 }
             }
+            renderSpellingGameState();
         }
 
         /** Clear placed letters and reshuffle bank (random, not spelling order). */
@@ -28807,10 +29330,7 @@
             if (!hadPlaced) return;
             spellClearTryAgain();
 
-            const correct = (spellingGameState.correctWord || '').split('').filter(l => l !== ' ' && l !== '-');
-            let scrambled;
-            do { scrambled = fisherYatesShuffle([...allLetters]); }
-            while (correct.length > 1 && scrambled.join('') === correct.join(''));
+            const scrambled = spellShuffleBank(allLetters);
 
             spellingGameState.scrambledLetters = scrambled;
             renderSpellingGameState();
@@ -29009,11 +29529,31 @@
             spellMarkLivePlaceholder(_spellLive.placeholderIdx);
         }
 
+        let _spellLiveRaf = 0;
+        let _spellLivePt = null;
+        function spellClearLiveQueue() {
+            if (_spellLiveRaf) {
+                try { cancelAnimationFrame(_spellLiveRaf); } catch (e) {}
+                _spellLiveRaf = 0;
+            }
+            _spellLivePt = null;
+        }
+        function spellQueueLivePreview(x, y) {
+            _spellLivePt = { x: x, y: y };
+            if (_spellLiveRaf) return;
+            _spellLiveRaf = requestAnimationFrame(function () {
+                _spellLiveRaf = 0;
+                const p = _spellLivePt;
+                _spellLivePt = null;
+                if (p && _spellLive) spellLivePreview(p.x, p.y);
+            });
+        }
+
         function spellingDocDragOver(e) {
             if (!_spellLive) return;
             e.preventDefault();
             try { e.dataTransfer.dropEffect = 'move'; } catch (err) {}
-            spellLivePreview(e.clientX, e.clientY);
+            spellQueueLivePreview(e.clientX, e.clientY);
         }
 
         function spellingDocDrop(e) {
@@ -29024,6 +29564,7 @@
         }
 
         function spellCommitLive() {
+            spellClearLiveQueue();
             clearSpellDropHover();
             clearSpellInsertMarks();
             spellClearLivePlaceholder();
@@ -29041,6 +29582,7 @@
         }
 
         function spellCancelLive() {
+            spellClearLiveQueue();
             clearSpellDropHover();
             clearSpellInsertMarks();
             spellClearLivePlaceholder();
@@ -29052,6 +29594,11 @@
             _spellDragSource = null;
             renderSpellingGameState();
         }
+
+        window.addEventListener('blur', function () {
+            if (_spellLive && typeof spellCancelLive === 'function') spellCancelLive();
+            if (typeof spellTileClearPress === 'function') spellTileClearPress();
+        });
 
         function spellingDragStart(e, index, type) {
             // Drag is only for rearranging letters already on the blank line.
@@ -29109,7 +29656,7 @@
         function spellingDragOver(e, destSlotIdx) {
             e.preventDefault();
             if (!_spellDragSource && !_spellLive) return;
-            spellLivePreview(e.clientX, e.clientY);
+            spellQueueLivePreview(e.clientX, e.clientY);
         }
 
         function spellingDragLeave(e) {
@@ -29142,11 +29689,7 @@
                 spellingGameState.scrambledLetters[fromIndex] = null;
                 seq.splice(destPos, 0, letter);
                 const overflow = seq.length > letterIdxs.length ? seq.pop() : null;
-                if (isSpellLetter(overflow)) {
-                    const emptyBank = spellingGameState.scrambledLetters.findIndex(l => l === null);
-                    if (emptyBank !== -1) spellingGameState.scrambledLetters[emptyBank] = overflow;
-                    else spellingGameState.scrambledLetters.push(overflow);
-                }
+                if (isSpellLetter(overflow)) spellPlaceInBank(overflow);
             } else if (fromType === 'slot') {
                 const letter = slots[fromIndex];
                 if (!isSpellLetter(letter)) return false;
@@ -29174,11 +29717,7 @@
             if (isSpellSeparator(spellingGameState.answerSlots[destSlotIdx])) return false;
             const existing = spellingGameState.answerSlots[destSlotIdx];
             if (isSpellLetter(existing)) {
-                const emptyIdx = spellingGameState.scrambledLetters.findIndex(l => l === null);
-                if (emptyIdx !== -1) spellingGameState.scrambledLetters[emptyIdx] = existing;
-                else {
-                    spellingGameState.scrambledLetters.push(existing);
-                }
+                if (spellPlaceInBank(existing) === -1) return false;
             }
             spellingGameState.answerSlots[destSlotIdx] = letter;
             spellingGameState.scrambledLetters[tileIndex] = null;
@@ -29425,7 +29964,7 @@
                     _spellTouch.ghost.style.left = (t.clientX - _spellTouch.offX) + 'px';
                     _spellTouch.ghost.style.top  = (t.clientY - _spellTouch.offY) + 'px';
                 }
-                spellLivePreview(t.clientX, t.clientY);
+                spellQueueLivePreview(t.clientX, t.clientY);
             }
         }
 
@@ -29506,19 +30045,26 @@
             spellCancelLive();
         }
 
+        let _spellStateLock = false;
         function renderSpellingGameState() {
+            if (_spellStateLock) return;
+            _spellStateLock = true;
+            try {
             if (typeof spellTileHidePop === 'function') spellTileHidePop();
             if (typeof cancelSpellPeek === 'function') cancelSpellPeek();
             const lift = SPELL_GLYPH_LIFT;
+            const modal = document.getElementById('spellingGameModal');
+            if (!modal || !spellingGameState || !spellingGameState.answerSlots) return;
 
-            document.querySelectorAll('.answer-slot').forEach((slot) => {
+            modal.querySelectorAll('.answer-slot').forEach((slot) => {
                 const index = parseInt(slot.getAttribute('data-index'), 10);
+                if (!isFinite(index)) return;
                 const value = spellingGameState.answerSlots[index];
                 const letterEl = slot.querySelector('.answer-letter');
                 const lineEl = slot.querySelector('.answer-underline');
                 const ch = isSpellLetter(value) ? value : '';
 
-                slot.classList.remove('spell-drop-hover');
+                slot.classList.remove('spell-drop-hover', 'spell-live-placeholder', 'spell-insert-before', 'spell-insert-after');
                 // Keep full tile box model so fill paints edge-to-edge (matches bank tiles)
                 slot.style.border = '2px solid transparent';
                 slot.style.boxSizing = 'border-box';
@@ -29555,13 +30101,14 @@
                 }
             });
 
-            document.querySelectorAll('#spellingGameModal .letter-tile').forEach((tile) => {
+            modal.querySelectorAll('.letter-tile').forEach((tile) => {
                 const index = parseInt(tile.getAttribute('data-index'), 10);
                 if (!isFinite(index)) return;
                 const letter = spellingGameState.scrambledLetters[index];
                 if (letter === null || letter === undefined) {
                     tile.style.visibility = 'hidden';
                     tile.style.pointerEvents = 'none';
+                    tile.classList.remove('spell-tile-press');
                     return;
                 }
                 // Full style restore when a letter returns from the answer line
@@ -29614,9 +30161,9 @@
                 clearBtn.style.pointerEvents = hasPlaced ? 'auto' : 'none';
             }
 
+            const allFilled = spellingGameState.answerSlots.every(s => s !== null && s !== undefined);
             const checkBtn = document.getElementById('checkBtn');
             if (checkBtn) {
-                const allFilled = spellingGameState.answerSlots.every(s => s !== null && s !== undefined);
                 checkBtn.style.visibility = allFilled ? 'visible' : 'hidden';
                 checkBtn.style.opacity = allFilled ? '1' : '0';
                 checkBtn.style.pointerEvents = allFilled ? 'auto' : 'none';
@@ -29628,15 +30175,28 @@
                     checkBtn.textContent = 'Confirm';
                     checkBtn.style.background = SPELL_CONFIRM_GREEN;
                 }
-                const bank = document.getElementById('letterRow');
-                if (bank) bank.style.visibility = allFilled ? 'hidden' : 'visible';
-                const leftCol = document.getElementById('spellBankLeft');
-                const rightCol = document.getElementById('spellBankRight');
-                if (leftCol) leftCol.style.visibility = allFilled ? 'hidden' : 'visible';
-                if (rightCol) rightCol.style.visibility = allFilled ? 'hidden' : 'visible';
+            }
+            const showBank = !allFilled;
+            const bank = document.getElementById('letterRow');
+            if (bank) {
+                bank.style.visibility = showBank ? 'visible' : 'hidden';
+                bank.style.pointerEvents = showBank ? 'auto' : 'none';
+            }
+            const leftCol = document.getElementById('spellBankLeft');
+            const rightCol = document.getElementById('spellBankRight');
+            if (leftCol) {
+                leftCol.style.visibility = showBank ? 'visible' : 'hidden';
+                leftCol.style.pointerEvents = showBank ? 'auto' : 'none';
+            }
+            if (rightCol) {
+                rightCol.style.visibility = showBank ? 'visible' : 'hidden';
+                rightCol.style.pointerEvents = showBank ? 'auto' : 'none';
             }
             if (typeof applySpellLetterFonts === 'function') applySpellLetterFonts();
             if (typeof scheduleSpellBankStacks === 'function') scheduleSpellBankStacks();
+            } finally {
+                _spellStateLock = false;
+            }
         }
 
         let _spellPeekOn = false;
@@ -29709,6 +30269,7 @@
                 return;
             }
 
+            if (_spellTryAgain) return;
             playSound('errorSound');
             _spellTryAgain = true;
             const checkBtn = document.getElementById('checkBtn');
