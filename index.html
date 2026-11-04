@@ -227,16 +227,36 @@
             transform: translateZ(0);
             position: relative;
             z-index: 1;
-            transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
         }
-        /* iPhone-keyboard style: enlarge & lift while pressed */
+        /* Pressed key stays in the row (no scale/flash). Magnifier is #spellKeyPop. */
         #spellingGameModal .letter-tile.spell-tile-press {
-            z-index: 80;
-            -webkit-transform: scale(1.55) translateY(-42%) translateZ(0) !important;
-            transform: scale(1.55) translateY(-42%) translateZ(0) !important;
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
-            background: #ffffff !important;
-            border-color: #cfe0d6 !important;
+            z-index: 2;
+            -webkit-transform: translateZ(0) !important;
+            transform: translateZ(0) !important;
+            box-shadow: none;
+            background: #e4eee8 !important;
+            border-color: transparent !important;
+        }
+        .spell-key-pop {
+            position: fixed;
+            z-index: 100050;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.06);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .spell-key-pop-ch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            line-height: 1;
+            transform: translateY(-0.065em);
         }
         /* Shared glyph box: flex-center every letter the same way (g/y/p match a/e/n). */
         #spellingGameModal .letter-tile-ch,
@@ -4338,7 +4358,7 @@
             color: inherit;
             font-family: inherit;
         }
-        /* Tablet/PC: settings help mark scales with #settingsMenu scale(2) */
+        /* Tablet: settings help mark scales with #settingsMenu scale(2); PC is 1× */
         .dialog-card {
             background: #fff;
             border-radius: 20px;
@@ -7406,7 +7426,7 @@
             }
         }
 
-        /* Gear menu: 2× whole panel — tablet & PC only (phone keeps base sizes) */
+        /* Gear menu: 2× whole panel — tablet only (phone and PC use real sizes) */
         @media (min-width: 700px) and (min-height: 520px) {
             #settingsMenu {
                 min-width: 0;
@@ -7415,6 +7435,18 @@
             }
             #settingsMenu .settings-menu-main button:not(.resize-btn) {
                 white-space: nowrap;
+            }
+        }
+        /* PC mouse: no 2× transform (blurry + oversized). Sit above the 40px gear. */
+        @media (hover: hover) and (pointer: fine) {
+            #settingsMenu {
+                transform: none !important;
+            }
+            body.settings-menu-open #settingsGearBtn {
+                transform: none !important;
+            }
+            body.settings-menu-open #settingsMenu {
+                bottom: 52px !important;
             }
         }
 
@@ -8792,7 +8824,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1550-menu-stack-lower">
+    <meta name="flashabc-build" content="1553-spell-pop-slot">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -28358,15 +28390,65 @@
             }
         }
 
+        function spellTileHidePop() {
+            const pop = document.getElementById('spellKeyPop');
+            if (pop && pop.parentNode) pop.parentNode.removeChild(pop);
+        }
+        function spellNextEmptySlotEl() {
+            const slots = spellingGameState && spellingGameState.answerSlots;
+            if (!slots) return null;
+            const idx = slots.findIndex(function (s) { return s === null; });
+            if (idx < 0) return null;
+            return document.querySelector('#spellingGameModal .answer-slot[data-index="' + idx + '"]');
+        }
+        function spellTileShowPop(tile) {
+            spellTileHidePop();
+            if (!tile) return;
+            const dest = spellNextEmptySlotEl();
+            const anchor = dest || tile;
+            const rect = anchor.getBoundingClientRect();
+            if (rect.width < 4 || rect.height < 4) return;
+            const inner = tile.querySelector('.letter-tile-ch');
+            const letter = ((inner ? inner.textContent : tile.textContent) || '').trim();
+            if (!letter) return;
+            const scale = 1.28;
+            const popW = Math.round(rect.width * scale);
+            const popH = Math.round(rect.height * scale);
+            const cs = window.getComputedStyle(tile);
+            const pop = document.createElement('div');
+            pop.id = 'spellKeyPop';
+            pop.className = 'spell-key-pop';
+            pop.setAttribute('aria-hidden', 'true');
+            const ch = document.createElement('span');
+            ch.className = 'spell-key-pop-ch';
+            ch.textContent = letter;
+            pop.appendChild(ch);
+            pop.style.width = popW + 'px';
+            pop.style.height = popH + 'px';
+            pop.style.fontSize = Math.round(parseFloat(cs.fontSize) * scale) + 'px';
+            pop.style.fontFamily = cs.fontFamily;
+            pop.style.fontWeight = cs.fontWeight;
+            pop.style.color = cs.color;
+            pop.style.borderRadius = cs.borderRadius;
+            let left = rect.left + rect.width / 2 - popW / 2;
+            let top = rect.top + rect.height / 2 - popH / 2;
+            left = Math.max(6, Math.min(left, window.innerWidth - popW - 6));
+            top = Math.max(6, Math.min(top, window.innerHeight - popH - 6));
+            pop.style.left = left + 'px';
+            pop.style.top = top + 'px';
+            document.body.appendChild(pop);
+        }
         function spellTileClearPress() {
             document.querySelectorAll('#spellingGameModal .letter-tile.spell-tile-press').forEach(function (el) {
                 el.classList.remove('spell-tile-press');
             });
+            spellTileHidePop();
         }
         function spellTileSetPress(el) {
             spellTileClearPress();
             if (el && el.classList && el.classList.contains('letter-tile')) {
                 el.classList.add('spell-tile-press');
+                spellTileShowPop(el);
             }
         }
         function spellTilePressMouse(e) {
@@ -28988,20 +29070,24 @@
             if (!t) return;
             const rect = e.currentTarget.getBoundingClientRect();
 
-            const ghostSize = Math.max(44, Math.min(rect.width, rect.height));
-            const ghost = document.createElement('div');
-            ghost.className = 'spell-touch-ghost';
-            ghost.textContent = letter;
-            ghost.setAttribute('aria-hidden', 'true');
-            ghost.style.cssText = `position:fixed;z-index:99999;pointer-events:none;
-                width:${ghostSize}px;height:${ghostSize}px;
-                background:white;border-radius:8px;border:2.5px solid #35654D;
-                display:flex;align-items:center;justify-content:center;
-                font-size:1.4rem;font-weight:${window.SPELL_LETTER_WEIGHT||'400'};font-family:${window.SPELL_LETTER_FONT||'Fredoka, Arial, sans-serif'};
-                color:#35654D;box-shadow:0 6px 20px rgba(0,0,0,0.35);
-                opacity:0;transition:opacity 0.1s;
-                top:${t.clientY - ghostSize/2}px;left:${t.clientX - ghostSize/2}px;`;
-            document.body.appendChild(ghost);
+            let ghost = null;
+            let ghostSize = Math.max(44, Math.min(rect.width, rect.height));
+            // Bank tiles tap in place — no finger-following ghost (that reads as flying).
+            if (type === 'slot') {
+                ghost = document.createElement('div');
+                ghost.className = 'spell-touch-ghost';
+                ghost.textContent = letter;
+                ghost.setAttribute('aria-hidden', 'true');
+                ghost.style.cssText = `position:fixed;z-index:99999;pointer-events:none;
+                    width:${ghostSize}px;height:${ghostSize}px;
+                    background:white;border-radius:8px;border:2.5px solid #35654D;
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:1.4rem;font-weight:${window.SPELL_LETTER_WEIGHT||'400'};font-family:${window.SPELL_LETTER_FONT||'Fredoka, Arial, sans-serif'};
+                    color:#35654D;box-shadow:0 6px 20px rgba(0,0,0,0.35);
+                    opacity:0;transition:opacity 0.1s;
+                    top:${t.clientY - ghostSize/2}px;left:${t.clientX - ghostSize/2}px;`;
+                document.body.appendChild(ghost);
+            }
 
             _spellTouch = {
                 type, index, ghost, letter,
@@ -29127,6 +29213,7 @@
         }
 
         function renderSpellingGameState() {
+            if (typeof spellTileHidePop === 'function') spellTileHidePop();
             if (typeof cancelSpellPeek === 'function') cancelSpellPeek();
             const lift = SPELL_GLYPH_LIFT;
 
