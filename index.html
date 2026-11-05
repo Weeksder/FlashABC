@@ -68,7 +68,8 @@
         html.is-edge #spellingGameModal .letter-tile,
         html.is-edge #spellingGameModal .letter-tile-ch,
         html.is-edge #spellingGameModal .answer-hyphen,
-        html.is-edge #spellingGameModal #checkBtn {
+        html.is-edge #spellingGameModal #checkBtn,
+        html.is-edge #spellingGameModal #spellUndoBtn {
             font-family: Fredoka, "Chalkboard SE", "Marker Felt", Arial, sans-serif !important;
             font-weight: 400 !important;
         }
@@ -76,7 +77,8 @@
         html.is-other-browser #spellingGameModal .letter-tile,
         html.is-other-browser #spellingGameModal .letter-tile-ch,
         html.is-other-browser #spellingGameModal .answer-hyphen,
-        html.is-other-browser #spellingGameModal #checkBtn {
+        html.is-other-browser #spellingGameModal #checkBtn,
+        html.is-other-browser #spellingGameModal #spellUndoBtn {
             font-family: "Comic Neue", "Comic Sans MS", "Chalkboard SE", cursive, sans-serif !important;
             font-weight: 700 !important;
         }
@@ -302,6 +304,73 @@
             justify-content: center;
             width: 100%;
             box-sizing: border-box;
+            overflow: visible;
+        }
+        #spellingGameModal #spellAnswerWrap {
+            position: relative;
+            overflow: visible;
+        }
+        #spellingGameModal #spellLetterBank {
+            position: relative;
+        }
+        #spellingGameModal #spellActionRow {
+            display: none;
+            position: absolute;
+            inset: 0;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin: 0;
+            z-index: 8;
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+        #spellingGameModal #spellActionRow.is-open {
+            display: flex;
+        }
+        #spellingGameModal #spellUndoBtn,
+        #spellingGameModal #checkBtn {
+            pointer-events: auto;
+        }
+        #spellingGameModal #spellUndoBtn svg,
+        #spellingGameModal #checkBtn svg {
+            flex-shrink: 0;
+            display: block;
+        }
+        #spellingGameModal.spell-correct-settle .answer-slot,
+        #spellingGameModal.spell-correct-settle .letter-tile,
+        #spellingGameModal.spell-correct-settle #spellUndoBtn,
+        #spellingGameModal.spell-correct-settle #checkBtn {
+            pointer-events: none !important;
+        }
+        #spellingGameModal.spell-correct-settle #spellActionRow {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #spellingGameModal.spell-correct-settle .answer-slot.spell-slot-filled {
+            transition: background 0.7s ease, background-color 0.7s ease !important;
+        }
+        #spellingGameModal.spell-correct-settle.spell-correct-fade .answer-slot.spell-slot-filled {
+            background: transparent !important;
+            background-color: transparent !important;
+        }
+        #spellingGameModal.spell-correct-settle .answer-letter {
+            transition: color 0.7s ease, transform 0.7s ease !important;
+        }
+        #spellingGameModal.spell-correct-settle.spell-correct-fade .answer-letter {
+            color: #1a1a1a !important;
+        }
+        #spellingGameModal.spell-correct-settle .answer-slot.spell-slot-filled .answer-underline {
+            display: none !important;
+        }
+        #spellingGameModal.spell-correct-settle .answer-slot {
+            overflow: visible !important;
+        }
+        #spellingGameModal.spell-correct-settle #answerRow,
+        #spellingGameModal.spell-correct-settle #spellAnswerWrap,
+        #spellingGameModal.spell-correct-settle .spell-word-group {
             overflow: visible;
         }
         #spellingGameModal #spellPlayBlock {
@@ -680,6 +749,7 @@
             align-items: stretch;
             gap: 10px;
             height: 100%;
+            overflow: visible;
         }
         #spellingGameModal #spellingImgWrap {
             display: flex;
@@ -788,6 +858,7 @@
             height: 100%;
             min-height: 0;
             min-width: 0;
+            overflow: visible;
         }
         #spellingGameModal.spell-land-split #spellLandTop {
             flex: 1 1 auto;
@@ -3217,9 +3288,9 @@
         #matchGameModal [id^="matchLabel"] {
             display: block;
             width: 100%;
-            white-space: normal !important;
-            overflow-wrap: break-word !important;
-            word-break: normal !important;
+            white-space: nowrap !important;
+            overflow-wrap: normal !important;
+            word-break: keep-all !important;
             max-width: 100%;
             hyphens: none;
             padding-bottom: 0.2em;
@@ -3232,10 +3303,20 @@
             min-width: 0;
             max-width: 100%;
             border-bottom: none !important;
+            transition: opacity 0.5s ease, background 0.15s ease;
         }
         #matchGameModal #matchChoicesWrap button:not(:last-child) {
             border-bottom: 2.5px solid #8ed4c2 !important;
             padding-bottom: 18px !important;
+        }
+        #matchGameModal #matchChoicesWrap button.match-opt-fade {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        #matchGameModal #matchChoicesWrap.match-answered button:not(:last-child),
+        #matchGameModal #matchShell[data-long-words="1"] #matchChoicesWrap.match-answered button:not(:last-child) {
+            border-bottom: none !important;
         }
         #matchGameModal #matchImageWrap {
             min-width: 0;
@@ -3266,6 +3347,39 @@
             flex: 0 1 auto;
             min-height: 0;
             max-height: 55%;
+        }
+        /* Landscape + 14–20 letter words: stack like portrait, shrink the image */
+        #matchGameModal #matchShell[data-long-words="1"] #matchMain {
+            flex-direction: column !important;
+            gap: 0 !important;
+        }
+        #matchGameModal #matchShell[data-long-words="1"] #matchImageWrap {
+            min-width: 0 !important;
+            min-height: 0 !important;
+            width: 100%;
+            flex: 1 1 0 !important;
+            max-height: none !important;
+        }
+        #matchGameModal #matchShell[data-long-words="1"] #matchChoicesWrap {
+            width: 100% !important;
+            max-width: none !important;
+            flex: 0 0 auto !important;
+            min-height: 0;
+            margin-top: auto;
+            justify-content: flex-end !important;
+            padding: 2px 12px 40px !important;
+            gap: 0 !important;
+        }
+        #matchGameModal #matchShell[data-long-words="1"] #matchChoicesWrap button {
+            padding: 2px 8px 1px !important;
+        }
+        #matchGameModal #matchShell[data-long-words="1"] #matchChoicesWrap button:not(:last-child) {
+            padding-bottom: 3px !important;
+            border-bottom: 2.5px solid #8ed4c2 !important;
+        }
+        #matchGameModal #matchShell[data-long-words="1"] [id^="matchLabel"] {
+            padding-bottom: 0 !important;
+            line-height: 1.05 !important;
         }
         #matchGameModal #matchProgressBar {
             /* shared duo-progress rules: short bar, top-right */
@@ -4441,6 +4555,55 @@
             padding: 12px 14px 14px;
             max-width: 400px;
             border-radius: 20px;
+        }
+        #matchExtraWordsModal #matchExtraHelpPanel {
+            display: none;
+            margin: 0 0 12px;
+            padding: 10px 12px;
+            background: #f6f8f7;
+            border-radius: 12px;
+            color: #555;
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+        #matchExtraWordsModal #matchExtraHelpPanel.is-open {
+            display: block;
+        }
+        #matchExtraWordsModal #matchExtraHelpPanel p {
+            margin: 0 0 8px;
+        }
+        #matchExtraWordsModal #matchExtraHelpPanel p:last-child {
+            margin-bottom: 0;
+        }
+        #matchExtraWordsModal #matchExtraHelpBtn[aria-expanded="true"] {
+            color: #35654D;
+            font-weight: 700;
+        }
+        #matchExtraWordsModal .match-extra-field {
+            display: none;
+            margin: 10px 0 0;
+        }
+        #matchExtraWordsModal .match-extra-field.is-open {
+            display: block;
+        }
+        #matchExtraWordsModal .match-extra-label {
+            display: block;
+            margin: 0 0 6px;
+            color: #6b7a72;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+        #matchExtraWordsModal #matchExtraSimilarBtn {
+            width: 100%;
+            padding: 8px 12px;
+            margin: 2px 0 0;
+            justify-content: center;
+            background: #fff;
+            border: 1.5px solid #d7e3dc;
+            color: #35654D;
+            font-weight: 700;
+            font-size: 0.92rem;
         }
         #guessGameHelpModal .modal-content,
         #bombGameHelpModal .modal-content {
@@ -8953,7 +9116,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="flashabc-build" content="1582-scramble-real-only">
+    <meta name="flashabc-build" content="1612-match-wrong-lines">
 
     <!-- JSZip loaded on demand when user saves as ZIP -->
 
@@ -8994,7 +9157,7 @@
         function applySpellLetterFonts() {
             var font = window.SPELL_LETTER_FONT || 'Fredoka, Arial, sans-serif';
             var weight = window.SPELL_LETTER_WEIGHT || '400';
-            var sel = '#spellingGameModal .answer-letter, #spellingGameModal .letter-tile, #spellingGameModal .letter-tile-ch, #spellingGameModal .answer-hyphen, #spellingGameModal #checkBtn';
+            var sel = '#spellingGameModal .answer-letter, #spellingGameModal .letter-tile, #spellingGameModal .letter-tile-ch, #spellingGameModal .answer-hyphen, #spellingGameModal #checkBtn, #spellingGameModal #spellUndoBtn';
             try {
                 document.querySelectorAll(sel).forEach(function (el) {
                     el.style.setProperty('font-family', font, 'important');
@@ -9938,9 +10101,6 @@
                 <button type="button" class="fullscreen-btn" onclick="event.stopPropagation(); closeSpellTools(); peekSpelling();" ontouchend="event.stopPropagation(); event.preventDefault(); closeSpellTools(); peekSpelling();" style="color:#9c27b0;" title="Peek">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
-                <button type="button" class="fullscreen-btn" id="spellClearBtn" onclick="event.stopPropagation(); closeSpellTools(); clearSpellingAnswer();" style="color:#1565c0;display:none;" title="Clear all letters">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                </button>
             </div>
         </div>
         <div id="spellingGameContent" style="flex:1;display:flex;flex-direction:column;min-height:0;padding:0 16px 12px;box-sizing:border-box;overflow-y:auto;"></div>
@@ -10076,21 +10236,25 @@
     <div class="modal" id="matchExtraWordsModal">
         <div class="modal-content" style="max-width:400px;">
             <div class="save-modal-header">
-                <div class="save-modal-title">Extra Answer Words</div>
+                <div class="save-modal-title">Match the Picture</div>
                 <div class="save-modal-header-actions">
+                    <button type="button" class="save-help-btn" onclick="toggleMatchExtraHelp()" title="Help" aria-label="Help" aria-expanded="false" id="matchExtraHelpBtn">?</button>
                     <button type="button" class="save-modal-close" onclick="cancelMatchExtraWords()" aria-label="Close">✕</button>
                 </div>
             </div>
-            <p style="color:#666;margin:0 0 10px;">Add extra words to make the choices harder. One word per line.</p>
-            <button type="button" class="btn" onclick="fillMatchSimilarWords()" style="width:100%;padding:10px 12px;justify-content:center;margin-bottom:10px;background:#f0f9f4;border:1.5px solid #35654D;color:#35654D;font-weight:700;">
-                Scramble similar words
-            </button>
-            <p style="color:#888;font-size:0.82rem;margin:-4px 0 10px;line-height:1.35;">Auto-fills real same-length words (close spelling first). Skips two-word names and hyphens. No made-up words.</p>
-            <textarea id="matchExtraWordsInput" style="width:100%;height:140px;border:1.5px solid #ddd;border-radius:8px;padding:10px;font-size:15px;resize:vertical;box-sizing:border-box;" placeholder="e.g.&#10;Dog&#10;Cat&#10;Fish"></textarea>
-            <div style="display:flex;gap:10px;margin-top:14px;">
-                <button class="btn btn-secondary" onclick="cancelMatchExtraWords()" style="flex:1;padding:12px;justify-content:center;">Cancel</button>
-                <button class="btn btn-success" onclick="confirmMatchExtraWords()" style="flex:1;padding:12px;justify-content:center;">Start Game</button>
+            <div id="matchExtraHelpPanel" role="region" aria-label="Why this window">
+                <p>This screen is optional. Tap <strong>Start Game</strong> to play right away.</p>
+                <p>Match the Picture shows a card image and three word choices. <strong>Scramble new words</strong> adds real same-length lookalikes as <strong>wrong answers</strong>, then opens the list so you can edit.</p>
+                <p>One word per line. Names with a hyphen are skipped. Leave the list closed or empty to use only your deck.</p>
             </div>
+            <button type="button" class="btn" id="matchExtraSimilarBtn" onclick="fillMatchSimilarWords()">
+                Scramble new words
+            </button>
+            <div id="matchExtraWordsField" class="match-extra-field">
+                <label class="match-extra-label" for="matchExtraWordsInput">Extra words</label>
+                <textarea id="matchExtraWordsInput" style="width:100%;height:128px;border:1.5px solid #ddd;border-radius:8px;padding:10px;font-size:15px;resize:vertical;box-sizing:border-box;" placeholder="One word per line"></textarea>
+            </div>
+            <button class="btn btn-success" onclick="confirmMatchExtraWords()" style="width:100%;padding:12px;justify-content:center;margin-top:12px;">Start Game</button>
         </div>
     </div>
 
@@ -11254,11 +11418,164 @@
         const SPELL_GLYPH_LIFT = 'translateY(-0.065em)';
         const SPELL_FILL_BG = '#f0f8f3';
         const SPELL_CONFIRM_GREEN = '#00c853';
+        const SPELL_UNDO_BLUE = '#6d5efc';
+        const SPELL_UNDO_BG = '#6d5efc';
+        const SPELL_ICON_CHECK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+        const SPELL_ICON_UNDO = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>';
+        function spellActionBtnHTML(icon, label) {
+            return icon + '<span>' + label + '</span>';
+        }
         const SPELL_DRAG_THRESHOLD = 12;
         const SPELL_CARD_SWIPE_MIN = 60;
         let _spellTryAgain = false;
         let _spellAdvancing = false;
+        let _spellSettleTimer = null;
+        const SPELL_CORRECT_COLOR_MS = 700;
+        const SPELL_CORRECT_HOLD_MS = 800;
+        const SPELL_CORRECT_SETTLE_MS = SPELL_CORRECT_COLOR_MS + SPELL_CORRECT_HOLD_MS;
+        const SPELL_CORRECT_ZOOM = 1.34;
+        const SPELL_CORRECT_ZOOM_TIERS = [
+            { max: 4, zoom: 1.72 },
+            { max: 8, zoom: 1.58 },
+            { max: 12, zoom: 1.48 },
+            { max: 15, zoom: 1.40 },
+            { max: 20, zoom: 1.34 }
+        ];
+        function spellCorrectZoomForCount(letterCount) {
+            const n = Math.max(0, letterCount | 0);
+            const steps = SPELL_CORRECT_ZOOM_TIERS;
+            for (let i = 0; i < steps.length; i++) {
+                if (n <= steps[i].max) return steps[i].zoom;
+            }
+            return SPELL_CORRECT_ZOOM;
+        }
         function spellClearTryAgain() { _spellTryAgain = false; }
+        function spellCancelSettle() {
+            if (_spellSettleTimer) {
+                clearTimeout(_spellSettleTimer);
+                _spellSettleTimer = null;
+            }
+            const modal = document.getElementById('spellingGameModal');
+            if (modal) {
+                modal.classList.remove('spell-correct-settle');
+                modal.classList.remove('spell-correct-fade');
+            }
+        }
+        function spellAnswerClusterWidth(row) {
+            const items = row.querySelectorAll('.answer-slot, .answer-hyphen');
+            if (!items.length) return 0;
+            let minL = Infinity;
+            let maxR = -Infinity;
+            items.forEach(function (el) {
+                const r = el.getBoundingClientRect();
+                if (r.width < 1) return;
+                minL = Math.min(minL, r.left);
+                maxR = Math.max(maxR, r.right);
+            });
+            return maxR > minL ? maxR - minL : 0;
+        }
+        function spellPlayCorrectZoom(modal, fadeSec) {
+            let targets = modal.querySelectorAll('.spell-word-group');
+            if (!targets.length) {
+                const row = modal.querySelector('#answerRow');
+                targets = row ? [row] : [];
+            }
+            targets.forEach(function (row) {
+                const slots = Array.prototype.filter.call(row.children, function (el) {
+                    return el.classList && (el.classList.contains('answer-slot') || el.classList.contains('answer-hyphen'));
+                });
+                if (!slots.length) return;
+                const letterN = slots.filter(function (el) { return el.classList.contains('answer-slot'); }).length;
+                const S = spellCorrectZoomForCount(letterN || slots.length);
+                const origW = spellAnswerClusterWidth(row);
+                if (origW < 8) return;
+                const parent = row.parentElement;
+                const avail = parent ? parent.clientWidth : origW;
+                const maxW = Math.max(8, Math.min(origW, avail));
+                const n = slots.length;
+                let sumW = 0;
+                slots.forEach(function (el) { sumW += el.getBoundingClientRect().width; });
+                const avgW = sumW / n;
+                const letter1 = avgW * 0.9 * S;
+                let pitch;
+                if (n === 1) {
+                    pitch = Math.min(avgW, maxW);
+                } else {
+                    pitch = (maxW - letter1) / (n - 1);
+                    const origPitch = origW / n;
+                    pitch = Math.min(origPitch * 0.84, pitch);
+                    pitch = Math.max(letter1 * 0.8, pitch);
+                    if ((n - 1) * pitch + letter1 > maxW) {
+                        pitch = Math.max(letter1 * 0.78, (maxW - letter1) / (n - 1));
+                    }
+                }
+                row.style.width = 'max-content';
+                row.style.maxWidth = 'none';
+                row.style.marginLeft = 'auto';
+                row.style.marginRight = 'auto';
+                row.style.transition = 'gap ' + fadeSec + ' ease';
+                row.style.gap = '0px';
+                row.style.transform = 'none';
+                slots.forEach(function (el) {
+                    const prev = el.style.transition || '';
+                    el.style.transition = (prev ? prev + ', ' : '') + 'width ' + fadeSec + ' ease, min-width ' + fadeSec + ' ease';
+                    el.style.width = pitch + 'px';
+                    el.style.minWidth = pitch + 'px';
+                    el.style.flexShrink = '0';
+                    el.style.overflow = 'visible';
+                    const letterEl = el.querySelector('.answer-letter');
+                    if (letterEl) {
+                        letterEl.style.transition = 'color ' + fadeSec + ' ease, transform ' + fadeSec + ' ease';
+                        letterEl.style.transformOrigin = 'center center';
+                        letterEl.style.transform = SPELL_GLYPH_LIFT + ' scale(' + S + ')';
+                    }
+                    const hyphenCh = el.querySelector('span.answer-hyphen');
+                    if (hyphenCh) {
+                        hyphenCh.style.transition = 'transform ' + fadeSec + ' ease, color ' + fadeSec + ' ease';
+                        hyphenCh.style.transformOrigin = 'center center';
+                        hyphenCh.style.transform = 'scale(' + S + ')';
+                        hyphenCh.style.color = '#1a1a1a';
+                    }
+                });
+                Array.prototype.forEach.call(row.children, function (el) {
+                    if (el.classList && (el.classList.contains('answer-slot') || el.classList.contains('answer-hyphen'))) return;
+                    const w = el.getBoundingClientRect().width;
+                    if (w < 2) return;
+                    el.style.transition = 'width ' + fadeSec + ' ease, min-width ' + fadeSec + ' ease';
+                    el.style.width = Math.max(8, w * 0.7) + 'px';
+                    el.style.minWidth = Math.max(8, w * 0.7) + 'px';
+                    el.style.flexShrink = '0';
+                });
+            });
+        }
+        function spellPlayCorrectSettle() {
+            const modal = document.getElementById('spellingGameModal');
+            if (!modal) return;
+            const actionRow = document.getElementById('spellActionRow');
+            if (actionRow) {
+                actionRow.style.transition = 'opacity 0.35s ease';
+                actionRow.style.opacity = '0';
+                actionRow.style.pointerEvents = 'none';
+            }
+            const fadeSec = (SPELL_CORRECT_COLOR_MS / 1000) + 's';
+            modal.querySelectorAll('.answer-slot.spell-slot-filled').forEach(function (slot) {
+                const lineEl = slot.querySelector('.answer-underline');
+                if (lineEl) {
+                    lineEl.style.display = 'none';
+                    lineEl.style.opacity = '';
+                    lineEl.style.transition = '';
+                }
+                slot.style.transition = 'background ' + fadeSec + ' ease, background-color ' + fadeSec + ' ease';
+                const letterEl = slot.querySelector('.answer-letter');
+                if (letterEl) letterEl.style.transition = 'color ' + fadeSec + ' ease';
+            });
+            modal.classList.add('spell-correct-settle');
+            void modal.offsetWidth;
+            requestAnimationFrame(function () {
+                modal.classList.add('spell-correct-fade');
+                spellPlayCorrectZoom(modal, fadeSec);
+            });
+        }
 
         /**
          * Spell Me layout — option 2: word-length tiers + min spell-column width.
@@ -11363,6 +11680,10 @@
             while (rows > maxRowsByHeight && cols < maxColsByWidth) {
                 cols++;
                 rows = Math.ceil(n / cols);
+            }
+            if (n === 4 && maxColsByWidth >= 2 && maxRowsByHeight >= 2) {
+                cols = 2;
+                rows = 2;
             }
             const regionW = cols * tileW + Math.max(0, cols - 1) * gap;
             const bankCols = cols;
@@ -12384,6 +12705,8 @@
             spellingGameState.correctWord = '';
             spellingGameState.deckSig = '';
             _spellTryAgain = false;
+            _spellAdvancing = false;
+            if (typeof spellCancelSettle === 'function') spellCancelSettle();
             if (typeof resetSpellTimer === 'function') resetSpellTimer();
         }
 
@@ -12452,6 +12775,59 @@
         const MATCH_IMAGE_MIN_FRAC = 0.45;
         function matchOptionLetters(text) {
             return String(text || '').replace(/[^A-Za-z0-9]/g, '').length;
+        }
+        function matchQuestionMaxLetters(q) {
+            let max = 0;
+            if (!q) return 0;
+            if (q.correct) max = Math.max(max, matchOptionLetters(q.correct));
+            const opts = q.options || [];
+            for (let i = 0; i < opts.length; i++) max = Math.max(max, matchOptionLetters(opts[i]));
+            return max;
+        }
+        let _matchMeasureEl = null;
+        function matchMeasureLinePx(text, fontPx) {
+            if (!_matchMeasureEl) {
+                _matchMeasureEl = document.createElement('span');
+                _matchMeasureEl.setAttribute('aria-hidden', 'true');
+                _matchMeasureEl.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden;white-space:nowrap;pointer-events:none;line-height:1;';
+                document.body.appendChild(_matchMeasureEl);
+            }
+            _matchMeasureEl.style.fontFamily = window.SPELL_LETTER_FONT || 'Fredoka, Arial, sans-serif';
+            _matchMeasureEl.style.fontWeight = window.SPELL_LETTER_WEIGHT || '400';
+            _matchMeasureEl.style.fontSize = Math.max(8, fontPx || 16) + 'px';
+            _matchMeasureEl.textContent = String(text || '');
+            return _matchMeasureEl.getBoundingClientRect().width;
+        }
+        function matchLandscapeSideColPx() {
+            const vw = window.innerWidth || 1100;
+            const idx = Math.max(0, Math.min(3, matchWordSizeIndex | 0));
+            const frac = parseFloat(String(MATCH_CHOICE_WIDTHS[idx] || '42')) / 100;
+            const shellW = Math.max(280, vw - 28);
+            return Math.floor(shellW * frac - 44);
+        }
+        function matchNeedsWideChoices(q) {
+            if (!q) return false;
+            const texts = [];
+            if (q.correct) texts.push(q.correct);
+            const opts = q.options || [];
+            for (let i = 0; i < opts.length; i++) texts.push(opts[i]);
+            const avail = matchLandscapeSideColPx();
+            const root = parseFloat((document.documentElement && getComputedStyle(document.documentElement).fontSize) || '16') || 16;
+            const fontPx = 2 * root;
+            for (let i = 0; i < texts.length; i++) {
+                const t = String(texts[i] || '').trim();
+                if (!t) continue;
+                if (matchMeasureLinePx(t, fontPx) > avail) return true;
+            }
+            return false;
+        }
+        /* Landscape 14–20 letters: image stays larger; choice rows are tight. ~42vh at 14 → ~28vh at 20 (floor 160px). */
+        function matchLongLandImageMaxH(letters, vh) {
+            const n = Math.max(14, Math.min(20, letters | 0));
+            const t = (n - 14) / 6;
+            const vhFrac = 42 - t * 14;
+            const px = Math.round((vh || 640) * vhFrac / 100);
+            return Math.max(160, px);
         }
         function matchOptionWordCount(text) {
             return String(text || '').trim().split(/[\s,;&/+\-]+/).filter(Boolean).length;
@@ -22727,10 +23103,32 @@
             if (isPhone && t.id !== 'gameMenuModal') return;
             closeGameMenu();
         }
+        function setMatchExtraHelpOpen(open) {
+            const help = document.getElementById('matchExtraHelpPanel');
+            const helpBtn = document.getElementById('matchExtraHelpBtn');
+            if (help) help.classList.toggle('is-open', !!open);
+            if (helpBtn) helpBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+        function setMatchExtraFieldOpen(open) {
+            const field = document.getElementById('matchExtraWordsField');
+            if (field) field.classList.toggle('is-open', !!open);
+        }
+        function resetMatchExtraStartUi() {
+            setMatchExtraHelpOpen(false);
+            setMatchExtraFieldOpen(false);
+            const ta = document.getElementById('matchExtraWordsInput');
+            if (ta) ta.value = '';
+        }
         function cancelMatchExtraWords() {
             const m = document.getElementById('matchExtraWordsModal');
             if (m) m.classList.remove('active');
+            resetMatchExtraStartUi();
             if (typeof openGameMenu === 'function') openGameMenu();
+        }
+        function toggleMatchExtraHelp() {
+            const help = document.getElementById('matchExtraHelpPanel');
+            if (!help) return;
+            setMatchExtraHelpOpen(!help.classList.contains('is-open'));
         }
         function closeGameMenu() {
             if (typeof window._closeGameMenu === 'function') {
@@ -24539,18 +24937,43 @@
             }
 
             // ---- Spelling game keyboard input ----
+            // Spell Me is display:flex, not .modal.active. Ctrl/Alt/Meta+Delete used to
+            // fall through to the main-view Delete shortcut and call deleteCard(), which
+            // blanks the tiles (resetAllGameSessions) and removes cards from the deck.
             const spellingOpen = document.getElementById('spellingGameModal')?.style.display === 'flex';
-            if (spellingOpen && !e.ctrlKey && !e.metaKey && !e.altKey) {
-                // Held keys auto-repeat on PC (~20–30×/s). Backspace used to be
-                // excepted so hold-to-delete worked; that restyled every tile
-                // each repeat and froze the bank. Delete still clears all.
+            function flashabcGameOverlayOpen() {
+                function overlayOpen(id) {
+                    const el = document.getElementById(id);
+                    if (!el) return false;
+                    if (el.classList.contains('active')) return true;
+                    const d = el.style.display;
+                    return d === 'flex' || d === 'block';
+                }
+                return overlayOpen('spellingGameModal') || overlayOpen('matchGameModal')
+                    || overlayOpen('findLetterModal') || overlayOpen('guessGameModal')
+                    || overlayOpen('bombGameModal');
+            }
+            if (spellingOpen) {
+                if (_spellAdvancing) {
+                    if (e.key === 'Escape') { e.preventDefault(); requestEndGame('spell'); }
+                    else e.preventDefault();
+                    return;
+                }
+                if (e.key === 'Backspace' || e.key === 'Delete') {
+                    e.preventDefault();
+                    if (e.repeat) return;
+                    if (e.key === 'Backspace' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                        backspaceSpellingLetter();
+                    } else {
+                        clearSpellingAnswer();
+                    }
+                    return;
+                }
+                if (e.ctrlKey || e.metaKey || e.altKey) return;
                 if (e.repeat) return;
                 if (e.key === 'ArrowRight') { e.preventDefault(); spellingNextCard(); return; }
                 if (e.key === 'ArrowLeft')  { e.preventDefault(); spellingPrevCard(); return; }
                 if (e.key === 'Enter')      { e.preventDefault(); checkSpelling();    return; }
-                // Backspace = remove one letter; Delete = clear-all (undo button)
-                if (e.key === 'Backspace')  { e.preventDefault(); backspaceSpellingLetter(); return; }
-                if (e.key === 'Delete')     { e.preventDefault(); clearSpellingAnswer(); return; }
                 if (e.key === 'Escape')     { e.preventDefault(); requestEndGame('spell'); return; }
                 if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
                     e.preventDefault();
@@ -24562,6 +24985,7 @@
                     if (idx !== -1) selectLetter(idx);
                     return;
                 }
+                return;
             }
 
             // Keyboard navigation for main flashcard view only
@@ -24570,9 +24994,10 @@
             const inDropdown = document.getElementById('quickLoadDropdown')?.style.display === 'block' ||
                               document.getElementById('moreDropdown')?.querySelector('.dropdown-content.show');
             const inInput = ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
+            const inGame = flashabcGameOverlayOpen();
 
             // Only enable keyboard shortcuts if we're in main flashcard view
-            if (!inModal && !inDropdown && !inInput && cards.length > 0) {
+            if (!inModal && !inDropdown && !inInput && !inGame && cards.length > 0) {
                 // Right Arrow - Next card
                 if (e.key === 'ArrowRight') {
                     e.preventDefault();
@@ -25702,7 +26127,7 @@
                 }
                 matchGameState.extraWords = [];
                 matchGameState._pendingCards = cardsWithText;
-                document.getElementById('matchExtraWordsInput').value = '';
+                if (typeof resetMatchExtraStartUi === 'function') resetMatchExtraStartUi();
                 document.body.style.overflow = 'hidden';
                 document.getElementById('matchExtraWordsModal').classList.add('active');
             } else if (gameType === 'findletter') {
@@ -26393,9 +26818,10 @@
         // ==================== END SAY THE WORD GAME ====================
 
         function confirmMatchExtraWords() {
-            document.getElementById('matchExtraWordsModal').classList.remove('active');
             const raw = document.getElementById('matchExtraWordsInput').value;
             matchGameState.extraWords = raw.split('\n').map(s => s.trim()).filter(Boolean);
+            document.getElementById('matchExtraWordsModal').classList.remove('active');
+            if (typeof resetMatchExtraStartUi === 'function') resetMatchExtraStartUi();
             initMatchGame(matchGameState._pendingCards);
         }
 
@@ -26807,9 +27233,11 @@
             return close.concat(rest);
         }
         function fillMatchSimilarWords() {
+            if (typeof setMatchExtraFieldOpen === 'function') setMatchExtraFieldOpen(true);
             const cardsWithText = matchGameState._pendingCards || [];
             const ta = document.getElementById('matchExtraWordsInput');
             if (!ta) return;
+            try { ta.focus(); } catch (e) {}
             const deckLower = {};
             cardsWithText.forEach(function (c) {
                 const t = (c && c.backText) ? String(c.backText).trim() : '';
@@ -27135,14 +27563,21 @@
             const isCompact = vh <= 520;
             const isPhone = Math.min(vw, vh) <= 500;
             const sizeIdx = Math.max(0, Math.min(3, matchWordSizeIndex | 0));
+            const maxLetters = matchQuestionMaxLetters(q);
+            const longLand = isLandscape && (maxLetters > 13 || matchNeedsWideChoices(q));
+            const stackLayout = !isLandscape || longLand;
             const shellBorder = isLandscape ? '#e53935' : '#35654D';
             const choiceWidth = MATCH_CHOICE_WIDTHS[sizeIdx] || '42%';
-            const choicesWrap = isLandscape
-                ? `width:${choiceWidth};flex-shrink:0;justify-content:center;padding:12px 12px 56px;gap:6px;min-width:0;box-sizing:border-box;`
-                : 'width:100%;flex-shrink:0;justify-content:flex-start;padding:4px 12px 56px;gap:4px;min-width:0;box-sizing:border-box;';
-            const imageWrap = isLandscape
-                ? 'flex:1 1 0;min-width:40%;min-height:0;border:3px solid #35654D;border-radius:14px;overflow:hidden;'
-                : 'flex:1 1 0;min-height:45%;min-width:0;width:100%;overflow:hidden;';
+            const choicesWrap = longLand
+                ? 'width:100%;flex:0 0 auto;justify-content:flex-end;padding:2px 12px 40px;gap:0;min-width:0;box-sizing:border-box;margin-top:auto;'
+                : (stackLayout
+                    ? 'width:100%;flex-shrink:0;justify-content:flex-end;padding:4px 12px 40px;gap:4px;min-width:0;box-sizing:border-box;'
+                    : `width:${choiceWidth};flex-shrink:0;justify-content:flex-end;padding:12px 12px 40px;gap:6px;min-width:0;box-sizing:border-box;`);
+            const imageWrap = longLand
+                ? 'flex:1 1 0;min-height:0;min-width:0;width:100%;overflow:hidden;'
+                : (isLandscape
+                    ? 'flex:1 1 0;min-width:40%;min-height:0;border:3px solid #35654D;border-radius:14px;overflow:hidden;'
+                    : 'flex:1 1 0;min-height:45%;min-width:0;width:100%;overflow:hidden;');
             const timerHTML = (typeof gameClockIsPhone === 'function' && gameClockIsPhone())
                 ? ''
                 : '<div id="matchTimer" aria-hidden="true">00:00</div>';
@@ -27165,14 +27600,14 @@
 
             content.innerHTML = `
                 <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;min-height:0;box-sizing:border-box;padding:${isLandscape ? '4px 0 0' : (isDesktop ? '10px 0 0' : '8px 0 0')};">
-                <div id="matchShell" data-orient="${isLandscape ? 'landscape' : 'portrait'}"
+                <div id="matchShell" data-orient="${isLandscape ? 'landscape' : 'portrait'}"${longLand ? ' data-long-words="1"' : ''}
                      style="width:100%;flex:1;min-height:0;background:white;border-radius:20px;
                             box-shadow:0 10px 40px rgba(0,0,0,0.2);border:3px solid ${shellBorder};
                             display:flex;flex-direction:column;padding:${cardPad};box-sizing:border-box;overflow:hidden;position:relative;">
                     ${progressHTML}
-                    <div id="matchMain" style="flex:1;min-height:0;min-width:0;display:flex;flex-direction:${isLandscape ? 'row' : 'column'};
-                                gap:${isLandscape ? '10px' : '0'};padding-top:${mainPadTop}px;box-sizing:border-box;">
-                    ${isLandscape ? choicesBlock + imageBlock : imageBlock + choicesBlock}
+                    <div id="matchMain" style="flex:1;min-height:0;min-width:0;display:flex;flex-direction:${stackLayout ? 'column' : 'row'};
+                                gap:${stackLayout ? '0' : '10px'};padding-top:${mainPadTop}px;box-sizing:border-box;">
+                    ${stackLayout ? imageBlock + choicesBlock : choicesBlock + imageBlock}
                     ${tabletLift}
                     </div>
                     <div id="matchIndex" aria-live="polite">${currentQ + 1} / ${questions.length}</div>
@@ -27186,6 +27621,17 @@
             if (typeof observeMatchShellForGear === 'function') observeMatchShellForGear();
             positionMatchTimer();
             document.fonts.ready.then(() => requestAnimationFrame(() => {
+                const shellAfterFont = document.getElementById('matchShell');
+                const qAfterFont = matchGameState.questions && matchGameState.questions[matchGameState.currentQ];
+                if (!matchGameState._wideRelayout && shellAfterFont && qAfterFont
+                    && shellAfterFont.getAttribute('data-orient') === 'landscape'
+                    && shellAfterFont.getAttribute('data-long-words') !== '1'
+                    && matchNeedsWideChoices(qAfterFont)) {
+                    matchGameState._wideRelayout = true;
+                    renderMatchGame();
+                    return;
+                }
+                matchGameState._wideRelayout = false;
                 scaleMatchLabels();
                 if (typeof schedulePositionMatchGear === 'function') schedulePositionMatchGear();
                 else positionMatchGear();
@@ -27372,7 +27818,7 @@
             const choices = document.getElementById('matchChoicesWrap');
             const lift = document.getElementById('matchTabletLift');
             const idx = Math.max(0, Math.min(3, matchWordSizeIndex | 0));
-            if (shell && choices && shell.getAttribute('data-orient') === 'landscape') {
+            if (shell && choices && shell.getAttribute('data-orient') === 'landscape' && shell.getAttribute('data-long-words') !== '1') {
                 choices.style.width = MATCH_CHOICE_WIDTHS[idx] || '42%';
             }
             if (lift) lift.style.display = idx === 0 ? '' : 'none';
@@ -27439,6 +27885,7 @@
             const shell = document.getElementById('matchShell');
             const choices = document.getElementById('matchChoicesWrap');
             const isLandscape = !!(shell && shell.getAttribute('data-orient') === 'landscape');
+            const longLand = !!(shell && shell.getAttribute('data-long-words') === '1');
 
             function applyAll(size) {
                 for (let i = 0; i < numOpts; i++) {
@@ -27446,9 +27893,9 @@
                     if (!el) continue;
                     el.style.display = 'block';
                     el.style.width = '100%';
-                    el.style.whiteSpace = 'normal';
-                    el.style.overflowWrap = 'break-word';
-                    el.style.wordBreak = 'normal';
+                    el.style.setProperty('white-space', 'nowrap', 'important');
+                    el.style.setProperty('overflow-wrap', 'normal', 'important');
+                    el.style.setProperty('word-break', 'keep-all', 'important');
                     el.style.maxWidth = '100%';
                     el.style.fontSize = size + 'rem';
                     el.style.lineHeight = '1.2';
@@ -27481,7 +27928,26 @@
             const image = document.getElementById('matchImageWrap');
             if (main && choices) {
                 let budget;
-                if (isLandscape) {
+                if (longLand) {
+                    const chrome = 40;
+                    const minChoices = 100;
+                    if (image) {
+                        image.style.minWidth = '0';
+                        image.style.minHeight = '0';
+                        image.style.maxHeight = 'none';
+                        image.style.flex = '1 1 0';
+                        image.style.width = '100%';
+                    }
+                    choices.style.maxWidth = 'none';
+                    choices.style.width = '100%';
+                    choices.style.flex = '0 0 auto';
+                    choices.style.marginTop = 'auto';
+                    choices.style.justifyContent = 'flex-end';
+                    choices.style.paddingBottom = chrome + 'px';
+                    budget = Math.max(minChoices, main.clientHeight - chrome);
+                    choices.style.maxHeight = Math.min(budget, Math.round(main.clientHeight * 0.45)) + 'px';
+                    budget = parseInt(choices.style.maxHeight, 10) || budget;
+                } else if (isLandscape) {
                     budget = Math.max(80, main.clientHeight - 8);
                     if (image) image.style.minWidth = '40%';
                     choices.style.maxWidth = '48%';
@@ -27505,6 +27971,19 @@
 
         function scaleMatchWordText() {} // kept for safety
 
+        const MATCH_CORRECT_SETTLE_MS = 1800;
+        function matchPaintChoiceColor(btnIdx, color) {
+            const label = document.getElementById('matchLabel' + btnIdx);
+            if (!label) return;
+            label.style.color = color;
+            label.querySelectorAll('*').forEach(function (el) { el.style.color = color; });
+        }
+        function matchClearChoiceColor(btnIdx) {
+            const label = document.getElementById('matchLabel' + btnIdx);
+            if (!label) return;
+            label.style.color = '';
+            label.querySelectorAll('*').forEach(function (el) { el.style.color = ''; });
+        }
         function checkMatchAnswer(chosen, btnIdx) {
             const q = matchGameState.questions[matchGameState.currentQ];
             const correct = q.correct;
@@ -27512,20 +27991,24 @@
 
             const btns = document.querySelectorAll('[id^="matchOpt"]');
             btns.forEach(b => { b.onclick = null; b.style.cursor = 'default'; });
-
-            const tickSVG = `<svg viewBox="0 0 100 100" fill="none"><path class="match-draw" d="M12 56 C 28 70, 36 86, 43 88 C 52 66, 72 32, 92 14" stroke="#22e35a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-            const crossSVG = `<svg viewBox="0 0 100 100" fill="none"><path class="match-draw" d="M18 16 C 40 40, 60 64, 84 86" stroke="#ff3b30" stroke-width="12" stroke-linecap="round"/><path class="match-draw match-draw-x2" d="M84 16 C 62 40, 40 64, 18 86" stroke="#ff3b30" stroke-width="12" stroke-linecap="round"/></svg>`;
-
-            const label = document.getElementById(`matchLabel${btnIdx}`);
-            const mark = document.getElementById(`matchMark${btnIdx}`);
+            const wrap = document.getElementById('matchChoicesWrap');
 
             if (isCorrect) {
+                if (wrap) wrap.classList.add('match-answered');
                 const chosenBtn = document.getElementById(`matchOpt${btnIdx}`);
-                if (mark) mark.innerHTML = tickSVG;
-                if (chosenBtn) {
-                    chosenBtn.style.background = 'rgba(46,125,50,0.12)';
-                    chosenBtn.style.transition = 'background 0.15s ease';
-                }
+                if (chosenBtn) chosenBtn.style.background = 'transparent';
+                matchPaintChoiceColor(btnIdx, '#1a1a1a');
+                btns.forEach(function (b) {
+                    if (b === chosenBtn) return;
+                    b.style.transition = 'opacity 0.5s ease';
+                    b.style.pointerEvents = 'none';
+                });
+                requestAnimationFrame(function () {
+                    btns.forEach(function (b) {
+                        if (b === chosenBtn) return;
+                        b.classList.add('match-opt-fade');
+                    });
+                });
                 if (!matchGameState.wrongAttempt) matchGameState.score++;
                 playSound('correctSound');
                 ensureMatchSets();
@@ -27534,22 +28017,23 @@
                 setTimeout(() => {
                     matchGameState.wrongAttempt = false;
                     matchNextQuestion();
-                }, 800);
+                }, MATCH_CORRECT_SETTLE_MS);
             } else {
                 matchGameState.wrongAttempt = true;
                 const chosenBtn = document.getElementById(`matchOpt${btnIdx}`);
-                if (mark) mark.innerHTML = crossSVG;
-                if (chosenBtn) {
-                    chosenBtn.style.background = 'rgba(198,40,40,0.12)';
-                    chosenBtn.style.transition = 'background 0.15s ease';
-                }
+                if (chosenBtn) chosenBtn.style.background = 'transparent';
+                matchPaintChoiceColor(btnIdx, '#ff3b30');
                 playSound('errorSound');
+                const matchShakeEl = document.getElementById('matchShell') || document.getElementById('matchGameContent');
+                if (matchShakeEl) {
+                    matchShakeEl.style.animation = 'none';
+                    void matchShakeEl.offsetWidth;
+                    matchShakeEl.style.animation = 'shake 0.5s';
+                    setTimeout(function () { matchShakeEl.style.animation = ''; }, 500);
+                }
                 setTimeout(() => {
-                    if (label) label.style.color = '#1a1a1a';
-                    if (mark) mark.innerHTML = '';
-                    if (chosenBtn) {
-                        chosenBtn.style.background = 'transparent';
-                    }
+                    matchClearChoiceColor(btnIdx);
+                    if (chosenBtn) chosenBtn.style.background = 'transparent';
                     btns.forEach((b, i) => {
                         b.onclick = () => checkMatchAnswer(q.options[i], i);
                         b.style.cursor = 'pointer';
@@ -28628,6 +29112,8 @@
             el.textContent = i + ' / ' + n;
         }
         function closeSpellingGame() {
+            if (typeof spellCancelSettle === 'function') spellCancelSettle();
+            _spellAdvancing = false;
             if (typeof hideGameEndConfirm === 'function') hideGameEndConfirm();
             if (typeof stopCheersSound === 'function') stopCheersSound();
             if (typeof pauseSpellTimer === 'function') pauseSpellTimer();
@@ -28720,10 +29206,12 @@
         }
 
         function skipSpellingCard() {
+            if (_spellAdvancing) return;
             spellingNextCard();
         }
 
         function spellingNextCard() {
+            if (typeof spellCancelSettle === 'function') spellCancelSettle();
             _spellAdvancing = false;
             ensureSpellSets();
             const { gameCards, spelledCards, currentCardIndex } = spellingGameState;
@@ -28753,6 +29241,7 @@
         }
 
         function spellingPrevCard() {
+            if (_spellAdvancing) return;
             ensureSpellSets();
             const { spelledCards, currentCardIndex } = spellingGameState;
             // No wrap: last word only via next (swipe left)
@@ -29022,6 +29511,10 @@
             const checkMinW = L.isCompact ? 130 : 160;
             const checkPad = L.isCompact ? '10px 20px' : '12px 28px';
             const checkFs = L.isCompact ? '0.95rem' : '1.05rem';
+            const actionBtnBase = `display:none;align-items:center;justify-content:center;gap:8px;z-index:5;
+                                               min-width:${checkMinW}px;padding:${checkPad};border:none;border-radius:999px;cursor:pointer;
+                                               color:white;font-size:${checkFs};font-weight:700;font-family:inherit;
+                                               touch-action:manipulation;transition:opacity 0.15s, background 0.15s;`;
             const bankGap = letterGap;
 
             const progressHTML = `
@@ -29039,11 +29532,15 @@
                 letterRowHtml = `<div class="spell-bank-line" style="${lineStyle}">${letterSpans.slice(0, topN).join('')}</div>` +
                     `<div class="spell-bank-line" style="${lineStyle}">${letterSpans.slice(topN).join('')}</div>`;
             }
+            const landFour = !!(layout.isLandscape && (layout.letterCount === 4 || letterSpans.length === 4));
+            const fourGridW = (2 * tileW) + bankGap;
             const letterRowStyle = landSplit
                 ? `display:grid;grid-template-columns:repeat(${bankCols},${tileW}px);gap:${bankGap}px;width:auto;box-sizing:border-box;overflow:visible;padding:0;`
                 : (portraitTwoRow
                     ? `width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:0;box-sizing:border-box;overflow:visible;padding:2px 0;`
-                    : `width:100%;display:flex;justify-content:center;align-items:center;flex-wrap:${(useBankStack || bankFitsOneLine) ? 'nowrap' : 'wrap'};min-height:${tileH}px;gap:${bankGap}px;box-sizing:border-box;overflow:visible;padding:2px 0;`);
+                    : (landFour
+                        ? `width:${fourGridW}px;max-width:${fourGridW}px;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;min-height:${tileH}px;gap:${bankGap}px;box-sizing:border-box;overflow:visible;padding:2px 0;`
+                        : `width:100%;display:flex;justify-content:center;align-items:center;flex-wrap:${(useBankStack || bankFitsOneLine) ? 'nowrap' : 'wrap'};min-height:${tileH}px;gap:${bankGap}px;box-sizing:border-box;overflow:visible;padding:2px 0;`));
             const imgHTML = `<div id="spellingImgWrap" style="position:relative;padding-top:${L.imgPadTop}px;box-sizing:border-box;overflow:hidden;
                                         min-height:${L.imgMinH}px;${imgMaxHCss}${(L.sideBySide || landSplit) ? '' : 'width:100%;'}">
                                 <img id="spellingImg" src="${gifSrc(currentCard.frontImage)}"
@@ -29061,18 +29558,18 @@
                                          style="${letterRowStyle}">
                                         ${letterRowHtml}
                                     </div>
-                                    <button id="checkBtn" onclick="checkSpelling()" type="button"
-                                        style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-                                               display:flex;align-items:center;justify-content:center;gap:8px;z-index:5;
-                                               min-width:${checkMinW}px;padding:${checkPad};border:none;border-radius:999px;cursor:pointer;
-                                               background:${SPELL_CONFIRM_GREEN};color:white;font-size:${checkFs};font-weight:700;font-family:inherit;
-                                               box-shadow:0 4px 16px rgba(0,200,83,0.45);touch-action:manipulation;
-                                               transition:opacity 0.15s, background 0.15s;
-                                               visibility:hidden;opacity:0;pointer-events:none;" title="Confirm spelling">
-                                        Confirm
-                                    </button>
+                                    <div id="spellActionRow">
+                                        <button id="spellUndoBtn" onclick="clearSpellingAnswer()" type="button"
+                                            style="${actionBtnBase}background:${SPELL_UNDO_BG};color:#fff;box-shadow:0 3px 12px rgba(109,94,252,0.32);" title="Undo">
+                                            ${spellActionBtnHTML(SPELL_ICON_UNDO, 'Undo')}
+                                        </button>
+                                        <button id="checkBtn" onclick="checkSpelling()" type="button"
+                                            style="${actionBtnBase}background:${SPELL_CONFIRM_GREEN};box-shadow:0 4px 16px rgba(0,200,83,0.45);" title="Confirm spelling">
+                                            ${spellActionBtnHTML(SPELL_ICON_CHECK, 'Confirm')}
+                                        </button>
+                                    </div>
                                 </div>`;
-            const answerHTML = `<div id="spellAnswerWrap" style="flex:${landSplit ? '0 0 auto' : '1 1 auto'};min-width:0;padding:4px 0;box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow:visible;width:100%;">
+            const answerHTML = `<div id="spellAnswerWrap" style="flex:${landSplit ? '0 0 auto' : '1 1 auto'};min-width:0;padding:4px 0;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:visible;width:100%;position:relative;">
                                     ${answerRowsHTML}
                                 </div>`;
             const spellMainInner = landSplit
@@ -29143,7 +29640,8 @@
                     t.closest('#letterRow') ||
                     t.closest('#spellBankLeft') ||
                     t.closest('#spellBankRight') ||
-                    t.closest('#spellClearBtn') ||
+                    t.closest('#spellActionRow') ||
+                    t.closest('#spellUndoBtn') ||
                     t.closest('#checkBtn')
                 ));
                 _card.addEventListener('touchstart', (e) => {
@@ -29156,6 +29654,7 @@
                     const dx = e.changedTouches[0].clientX - sx;
                     const dy = e.changedTouches[0].clientY - sy;
                     if (Math.abs(dx) > SPELL_CARD_SWIPE_MIN && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                        if (_spellAdvancing) return;
                         if (dx < 0) spellingNextCard(); else spellingPrevCard();
                     }
                 }, { passive: true });
@@ -29168,6 +29667,7 @@
                     if (!md) return; md = false;
                     const dx = e.clientX - mx;
                     if (Math.abs(dx) > SPELL_CARD_SWIPE_MIN) {
+                        if (_spellAdvancing) return;
                         if (dx < 0) spellingNextCard(); else spellingPrevCard();
                     }
                 });
@@ -29246,6 +29746,7 @@
             spellTileSetPress(tile);
         }
         function selectLetter(letterIndex) {
+            if (_spellAdvancing) return;
             spellTileClearPress();
             const letter = spellingGameState.scrambledLetters[letterIndex];
             if (letter === null) return;
@@ -29291,6 +29792,7 @@
         }
 
         function selectAnswerSlot(slotIndex) {
+            if (_spellAdvancing) return;
             const v = spellingGameState.answerSlots[slotIndex];
             if (!isSpellLetter(v)) return;
             spellClearTryAgain();
@@ -29300,6 +29802,7 @@
         }
 
         function backspaceSpellingLetter() {
+            if (_spellAdvancing) return;
             spellAbortPointer();
             const slots = spellingGameState.answerSlots;
             if (!slots) return;
@@ -29314,6 +29817,7 @@
 
         /** Clear placed letters and reshuffle bank (random, not spelling order). */
         function clearSpellingAnswer() {
+            if (_spellAdvancing) return;
             const slots = spellingGameState.answerSlots;
             const bank = spellingGameState.scrambledLetters;
             if (!slots || !bank) return;
@@ -30047,6 +30551,7 @@
 
         let _spellStateLock = false;
         function renderSpellingGameState() {
+            if (_spellAdvancing) return;
             if (_spellStateLock) return;
             _spellStateLock = true;
             try {
@@ -30152,28 +30657,32 @@
                 inner.style.overflow = 'visible';
             });
 
-            const clearBtn = document.getElementById('spellClearBtn');
-            if (clearBtn) {
-                const hasPlaced = spellingGameState.answerSlots.some(isSpellLetter);
-                clearBtn.style.display = hasPlaced ? 'flex' : 'none';
-                clearBtn.style.visibility = hasPlaced ? 'visible' : 'hidden';
-                clearBtn.style.opacity = hasPlaced ? '1' : '0';
-                clearBtn.style.pointerEvents = hasPlaced ? 'auto' : 'none';
-            }
-
             const allFilled = spellingGameState.answerSlots.every(s => s !== null && s !== undefined);
+            const actionRow = document.getElementById('spellActionRow');
+            if (actionRow) {
+                actionRow.style.display = allFilled ? 'flex' : 'none';
+                actionRow.classList.toggle('is-open', allFilled);
+            }
+            const undoBtn = document.getElementById('spellUndoBtn');
+            if (undoBtn) {
+                undoBtn.style.display = allFilled ? 'flex' : 'none';
+                undoBtn.style.pointerEvents = allFilled ? 'auto' : 'none';
+                undoBtn.style.background = SPELL_UNDO_BG;
+                undoBtn.style.color = '#fff';
+                undoBtn.style.boxShadow = '0 3px 12px rgba(109,94,252,0.32)';
+            }
             const checkBtn = document.getElementById('checkBtn');
             if (checkBtn) {
-                checkBtn.style.visibility = allFilled ? 'visible' : 'hidden';
-                checkBtn.style.opacity = allFilled ? '1' : '0';
+                checkBtn.style.display = allFilled ? 'flex' : 'none';
                 checkBtn.style.pointerEvents = allFilled ? 'auto' : 'none';
                 if (_spellTryAgain && allFilled) {
-                    checkBtn.textContent = 'Try again';
+                    checkBtn.innerHTML = spellActionBtnHTML(SPELL_ICON_CHECK, 'Try again');
                     checkBtn.style.background = '#ff1744';
                 } else {
                     if (!allFilled) _spellTryAgain = false;
-                    checkBtn.textContent = 'Confirm';
+                    checkBtn.innerHTML = spellActionBtnHTML(SPELL_ICON_CHECK, 'Confirm');
                     checkBtn.style.background = SPELL_CONFIRM_GREEN;
+                    checkBtn.style.boxShadow = '0 4px 16px rgba(0,200,83,0.45)';
                 }
             }
             const showBank = !allFilled;
@@ -30182,15 +30691,29 @@
                 bank.style.visibility = showBank ? 'visible' : 'hidden';
                 bank.style.pointerEvents = showBank ? 'auto' : 'none';
             }
+            const bankWrap = document.getElementById('spellLetterBank');
+            if (bankWrap) {
+                bankWrap.style.visibility = 'visible';
+                bankWrap.style.height = '';
+                bankWrap.style.minHeight = '';
+                bankWrap.style.overflow = '';
+                bankWrap.style.padding = '';
+                bankWrap.style.margin = '';
+                bankWrap.style.pointerEvents = showBank ? 'auto' : 'none';
+            }
             const leftCol = document.getElementById('spellBankLeft');
             const rightCol = document.getElementById('spellBankRight');
             if (leftCol) {
                 leftCol.style.visibility = showBank ? 'visible' : 'hidden';
                 leftCol.style.pointerEvents = showBank ? 'auto' : 'none';
+                leftCol.style.height = '';
+                leftCol.style.overflow = '';
             }
             if (rightCol) {
                 rightCol.style.visibility = showBank ? 'visible' : 'hidden';
                 rightCol.style.pointerEvents = showBank ? 'auto' : 'none';
+                rightCol.style.height = '';
+                rightCol.style.overflow = '';
             }
             if (typeof applySpellLetterFonts === 'function') applySpellLetterFonts();
             if (typeof scheduleSpellBankStacks === 'function') scheduleSpellBankStacks();
@@ -30265,7 +30788,11 @@
                 const doneIdx = spellingGameState.currentCardIndex;
                 spellingGameState.spelledCards.add(doneIdx);
                 spellingGameState.skippedCards.delete(doneIdx);
-                setTimeout(() => spellingNextCard(), 400);
+                if (typeof spellPlayCorrectSettle === 'function') spellPlayCorrectSettle();
+                _spellSettleTimer = setTimeout(function () {
+                    _spellSettleTimer = null;
+                    spellingNextCard();
+                }, SPELL_CORRECT_SETTLE_MS);
                 return;
             }
 
@@ -30275,7 +30802,7 @@
             const checkBtn = document.getElementById('checkBtn');
             if (checkBtn) {
                 checkBtn.style.background = '#ff1744';
-                checkBtn.textContent = 'Try again';
+                checkBtn.innerHTML = spellActionBtnHTML(SPELL_ICON_CHECK, 'Try again');
             }
             const contentEl = document.getElementById('spellingGameContent');
             if (contentEl) {
